@@ -1,0 +1,59 @@
+# --- Build output
+/build/
+/build-*/
+/out/
+/dist/
+cmake-build-*/
+CMakeUserPresets.json
+
+# CMake generated files, if an in-source build was ever run
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+compile_commands.json
+*_autogen/
+
+# Compiled objects and binaries
+*.obj
+*.o
+*.lib
+*.a
+*.exp
+*.pdb
+*.ilk
+*.dll
+*.exe
+*.qm
+
+# Kept even though *.exe is ignored: external tool shipped with the project (INT decompiler)
+!/tools/int2ssl.exe
+
+# --- IDE / editor
+.vs/
+.vscode/
+.idea/
+.cache/
+.claude/
+*.user
+*.autosave
+*.suo
+*.vcxproj.user
+CMakeLists.txt.user*
+
+# --- Python (tools/*.py)
+__pycache__/
+*.pyc
+
+# --- Logs and temporary files
+*.log
+*.tmp
+*.bak
+
+# --- OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- Local test artefacts (screenshots, scratch output)
+/shots/

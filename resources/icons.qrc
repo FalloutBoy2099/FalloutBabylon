@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>icons/icon_16.png</file>
+        <file>icons/icon_24.png</file>
+        <file>icons/icon_32.png</file>
+        <file>icons/icon_48.png</file>
+        <file>icons/icon_64.png</file>
+        <file>icons/icon_128.png</file>
+        <file>icons/icon_256.png</file>
+        <file>icons/icon_512.png</file>
+    </qresource>
+</RCC>

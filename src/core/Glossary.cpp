@@ -1,0 +1,140 @@
+#include "Glossary.h"
+
+#include <QHash>
+#include <QSet>
+#include <algorithm>
+
+void Glossary::clear()
+{
+    m_raw.clear();
+    m_terms.clear();
+    m_sourceMatcher.reset();
+    m_targetMatcher.reset();
+}
+
+void Glossary::add(const QString &source, const QString &target, const QString &category, const QString &origin)
+{
+    const QString s = source.simplified();
+    if (s.isEmpty())
+        return;
+    m_raw.push_back({s, target.simplified(), category, origin});
+}
+
+void Glossary::finalize(const QString &sourceLanguage, const QString &targetLanguage)
+{
+    m_terms.clear();
+
+    struct Group {
+        GlossaryTerm term;
+        QHash<QString, int> counts;       // lower-cased target -> occurrences
+        QHash<QString, QString> spelling; // lower-cased target -> first spelling seen
+    };
+    QVector<Group> groups;
+    QHash<QString, int> byKey;
+
+    for (const Raw &r : std::as_const(m_raw)) {
+        QStringList key;
+        for (const auto &t : Stemmer::tokenize(r.source, sourceLanguage))
+            key << t.normalized;
+        if (key.isEmpty())
+            continue;
+        const QString k = key.join(QLatin1Char(' '));
+        int idx = byKey.value(k, -1);
+        if (idx < 0) {
+            idx = groups.size();
+            byKey.insert(k, idx);
+            groups.push_back({});
+            groups.back().term.source = r.source;
+            groups.back().term.category = r.category;
+        }
+        Group &g = groups[idx];
+        g.term.origins << r.origin;
+        if (!r.target.isEmpty()) {
+            const QString lower = r.target.toLower();
+            g.counts[lower] += 1;
+            if (!g.spelling.contains(lower))
+                g.spelling.insert(lower, r.target);
+        }
+    }
+
+    for (Group &g : groups) {
+        QList<QString> keys = g.counts.keys();
+        std::sort(keys.begin(), keys.end(), [&](const QString &a, const QString &b) {
+            const int ca = g.counts.value(a), cb = g.counts.value(b);
+            return ca != cb ? ca > cb : a < b;
+        });
+        for (const QString &k : std::as_const(keys))
+            g.term.targets << g.spelling.value(k);
+        m_terms.push_back(g.term);
+    }
+    std::sort(m_terms.begin(), m_terms.end(), [](const GlossaryTerm &a, const GlossaryTerm &b) {
+        return a.source.compare(b.source, Qt::CaseInsensitive) < 0;
+    });
+
+    m_sourceMatcher = std::make_unique<TermMatcher>(sourceLanguage);
+    m_targetMatcher = std::make_unique<TermMatcher>(targetLanguage);
+    for (int i = 0; i < m_terms.size(); ++i) {
+        m_sourceMatcher->add(m_terms.at(i).source, i);
+        for (const QString &t : m_terms.at(i).targets)
+            m_targetMatcher->add(t, i);
+    }
+    m_sourceMatcher->build();
+    m_targetMatcher->build();
+    m_raw.clear();
+    m_raw.squeeze();
+}
+
+int Glossary::conflictCount() const
+{
+    int n = 0;
+    for (const GlossaryTerm &t : m_terms)
+        n += t.conflict() ? 1 : 0;
+    return n;
+}
+
+QVector<Glossary::Hit> Glossary::findInSource(const QString &text) const
+{
+    QVector<Hit> hits;
+    if (!m_sourceMatcher)
+        return hits;
+    for (const auto &m : m_sourceMatcher->find(text))
+        hits.push_back({m, &m_terms.at(m.termId)});
+    return hits;
+}
+
+QVector<Glossary::Hit> Glossary::findInTarget(const QString &text) const
+{
+    QVector<Hit> hits;
+    if (!m_targetMatcher)
+        return hits;
+    for (const auto &m : m_targetMatcher->find(text))
+        hits.push_back({m, &m_terms.at(m.termId)});
+    return hits;
+}
+
+QVector<Glossary::Issue> Glossary::checkConsistency(const QString &source, const QString &target) const
+{
+    QVector<Issue> issues;
+    if (target.trimmed().isEmpty() || !m_sourceMatcher)
+        return issues;
+
+    QSet<const GlossaryTerm *> presentInTarget;
+    for (const Hit &h : findInTarget(target))
+        presentInTarget.insert(h.term);
+
+    QSet<const GlossaryTerm *> reported;
+    for (const Hit &h : findInSource(source)) {
+        // Weak matches (a common word written with a different capitalisation) are not worth an alert.
+        if (!h.match.caseMatch || h.term->targets.isEmpty())
+            continue;
+        if (presentInTarget.contains(h.term) || reported.contains(h.term))
+            continue;
+        reported.insert(h.term);
+        Issue issue;
+        issue.term = h.term;
+        issue.sourceMatch = h.match;
+        issue.message = QStringLiteral("%1 → %2").arg(h.term->source, h.term->targets.join(QStringLiteral(" / ")));
+        issues.push_back(issue);
+    }
+    return issues;
+}
