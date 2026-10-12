@@ -26,6 +26,7 @@ void buildColors()
         g_colors.fuzzyTerm = QColor(0x8c, 0xc6, 0xff);
         g_colors.issue = QColor(0xff, 0xa8, 0x3d);
         g_colors.spelling = QColor(0xff, 0x6b, 0x6b);
+        g_colors.grammar = QColor(0xc2, 0x8c, 0xff);
         g_colors.untranslated = QColor(0xc0, 0x50, 0x50, 55);
         g_colors.translated = QColor(0x50, 0xa0, 0x60, 40);
         g_colors.review = QColor(0xd0, 0xa0, 0x30, 70);
@@ -38,6 +39,7 @@ void buildColors()
         g_colors.fuzzyTerm = QColor(0x3d, 0x8b, 0xe8);
         g_colors.issue = QColor(0xd9, 0x77, 0x06);
         g_colors.spelling = QColor(0xd9, 0x30, 0x25);
+        g_colors.grammar = QColor(0x7b, 0x3f, 0xb8);
         g_colors.untranslated = QColor(0xe0, 0x60, 0x60, 45);
         g_colors.translated = QColor(0x40, 0xa0, 0x50, 35);
         g_colors.review = QColor(0xe0, 0xa0, 0x20, 70);

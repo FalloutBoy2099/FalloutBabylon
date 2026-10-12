@@ -4,11 +4,21 @@
 #include <QDirIterator>
 #include <QFile>
 #include <QFileInfo>
+#include <QRegularExpression>
 #include <algorithm>
 
 namespace {
 
 const QString kTextPrefix = QStringLiteral("text/");
+
+// Indexed paths: everything under text/ (messages) and the compiled scripts under scripts/ (dialogue trees).
+bool isIndexed(const QString &normalizedPath)
+{
+    // Interface fonts (font1.aaf...) are read to measure text for the Pip-Boy.
+    static const QRegularExpression font(QStringLiteral("^font\\d+\\.aaf$"));
+    return normalizedPath.startsWith(kTextPrefix) || font.match(normalizedPath).hasMatch()
+        || (normalizedPath.startsWith(QLatin1String("scripts/")) && normalizedPath.endsWith(QLatin1String(".int")));
+}
 
 bool isDatFile(const QString &path)
 {
@@ -58,13 +68,16 @@ QStringList VirtualFileSystem::discoverSources(const QString &folder)
 {
     QStringList result;
     const QDir dir(folder);
-    QFileInfoList dats = dir.entryInfoList({QStringLiteral("*.dat"), QStringLiteral("*.DAT")}, QDir::Files);
+    // Archives: master.dat / critter.dat / patches as files, or extracted into a folder of the same name.
+    QFileInfoList dats = dir.entryInfoList({QStringLiteral("*.dat"), QStringLiteral("*.DAT")},
+                                           QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
     std::stable_sort(dats.begin(), dats.end(), [](const QFileInfo &a, const QFileInfo &b) {
         const int ra = datRank(a.fileName()), rb = datRank(b.fileName());
         return ra != rb ? ra < rb : a.fileName().compare(b.fileName(), Qt::CaseInsensitive) < 0;
     });
     for (const QFileInfo &fi : std::as_const(dats))
-        result << fi.absoluteFilePath();
+        if (!result.contains(fi.absoluteFilePath()))
+            result << fi.absoluteFilePath();
     const QString data = childDir(dir, QStringLiteral("data"));
     if (!data.isEmpty())
         result << dir.filePath(data);
@@ -121,7 +134,7 @@ void VirtualFileSystem::setSources(const QStringList &sources, QStringList *erro
             layer.dat = std::move(archive);
             const auto &entries = layer.dat->entries();
             for (int i = 0; i < entries.size(); ++i) {
-                if (!entries.at(i).path.startsWith(kTextPrefix))
+                if (!isIndexed(entries.at(i).path))
                     continue;
                 File f;
                 f.path = entries.at(i).path;
@@ -131,15 +144,27 @@ void VirtualFileSystem::setSources(const QStringList &sources, QStringList *erro
             }
         } else if (info.isDir()) {
             const QString root = resolveFolderRoot(source);
-            const QString textName = childDir(QDir(root), QStringLiteral("text"));
-            const QString textDir = textName.isEmpty() ? QString() : QDir(root).filePath(textName);
-            if (!textDir.isEmpty()) {
-                QDirIterator it(textDir, QDir::Files, QDirIterator::Subdirectories);
-                const QDir rootDir(root);
+            const QDir rootDir(root);
+            for (const QString &name : rootDir.entryList(QDir::Files)) {
+                File f;
+                f.path = DatArchive::normalizePath(name);
+                if (!isIndexed(f.path))
+                    continue;
+                f.layer = layerIndex;
+                f.absolutePath = rootDir.filePath(name);
+                m_files.insert(f.path, f);
+            }
+            for (const char *sub : {"text", "scripts"}) {
+                const QString name = childDir(rootDir, QString::fromLatin1(sub));
+                if (name.isEmpty())
+                    continue;
+                QDirIterator it(rootDir.filePath(name), QDir::Files, QDirIterator::Subdirectories);
                 while (it.hasNext()) {
                     const QString abs = it.next();
                     File f;
                     f.path = DatArchive::normalizePath(rootDir.relativeFilePath(abs));
+                    if (!isIndexed(f.path))
+                        continue;
                     f.layer = layerIndex;
                     f.absolutePath = abs;
                     m_files.insert(f.path, f);

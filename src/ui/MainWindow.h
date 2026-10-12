@@ -8,7 +8,9 @@
 #include <atomic>
 #include <memory>
 
+class DialogTreePanel;
 class GlossaryPanel;
+class PipboyPanel;
 class ProjectTree;
 class QAction;
 class QDockWidget;
@@ -19,6 +21,7 @@ class QStackedWidget;
 class QTabWidget;
 class StatsPanel;
 class TodoPanel;
+class TranslationService;
 class TranslationEditor;
 
 class MainWindow : public QMainWindow
@@ -80,6 +83,7 @@ private:
     void scheduleGlossaryRebuild(const QString &id);
     void updateProgress();
     void refreshTodo();
+    void refreshDialogTree();
 
     // files
     TranslationEditor *currentEditor() const;
@@ -110,6 +114,9 @@ private:
     StatsPanel *m_statsPanel = nullptr;
     QLabel *m_statusLabel = nullptr;
     QProgressBar *m_progress = nullptr;
+    DialogTreePanel *m_dialogPanel = nullptr;
+    PipboyPanel *m_pipboyPanel = nullptr;
+    QTimer m_dialogTimer;
     TodoPanel *m_todoPanel = nullptr;
     QTimer m_todoTimer;
     QTimer m_glossaryTimer;
@@ -120,6 +127,8 @@ private:
     QAction *m_actNext = nullptr, *m_actPrev = nullptr, *m_actNextUntranslated = nullptr, *m_actPrevUntranslated = nullptr;
     QAction *m_actFind = nullptr, *m_actSettings = nullptr, *m_actExport = nullptr, *m_actRefresh = nullptr;
     QAction *m_actRebuild = nullptr, *m_actCloseProject = nullptr;
+    QAction *m_actTranslateLine = nullptr, *m_actMassTranslate = nullptr, *m_actAppSettings = nullptr;
+    TranslationService *m_service = nullptr;
     QList<QAction *> m_dockToggles;
     QMenu *m_recentMenu = nullptr;
     QMenu *m_savedMenu = nullptr;

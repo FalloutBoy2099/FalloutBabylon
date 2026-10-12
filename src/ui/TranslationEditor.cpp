@@ -1,8 +1,14 @@
 #include "TranslationEditor.h"
 
+#include "MassTranslateDialog.h"
 #include "MsgTableModel.h"
 #include "SciEdit.h"
 #include "Theme.h"
+#include "TranslationService.h"
+#include "core/AppSettings.h"
+#include "core/Statistics.h"
+
+#include <QPointer>
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -111,6 +117,10 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
         updateIssueLabel();
     });
 
+    m_checkTimer.setSingleShot(true);
+    m_checkTimer.setInterval(700);
+    connect(&m_checkTimer, &QTimer::timeout, this, [this] { runCheck(); });
+
     connect(m_table->selectionModel(), &QItemSelectionModel::currentRowChanged, this, [this] { onCurrentChanged(); });
     connect(m_search, &QLineEdit::textChanged, this, [this] { applyFilters(); });
     connect(m_filter, &QComboBox::currentIndexChanged, this, [this] { applyFilters(); });
@@ -146,9 +156,20 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
             break;
         }
     });
-    connect(m_target, &SciEdit::contextMenuAboutToShow, this, [this](QMenu *menu, int) {
+    connect(m_target, &SciEdit::contextMenuAboutToShow, this, [this](QMenu *menu, int charIndex) {
         if (m_currentRow < 0)
             return;
+        if (const GrammarIssue *issue = issueAt(charIndex)) {
+            menu->addSeparator();
+            menu->addAction(issue->message)->setEnabled(false);
+            const int start = issue->start, length = issue->length;
+            for (const QString &s : issue->suggestions)
+                menu->addAction(tr("Replace with \"%1\"").arg(s), [this, start, length, s] { m_target->replaceRange(start, length, s); });
+        }
+        if (m_service) {
+            menu->addSeparator();
+            menu->addAction(tr("Translate this line with DeepL"), [this] { translateCurrent(); });
+        }
         const auto hits = m_project->glossary().findInSource(m_model->row(m_currentRow).source);
         QStringList done;
         bool first = true;
@@ -181,6 +202,14 @@ QVector<TodoItem> TranslationEditor::reviewItems() const
         if (row.review)
             items.push_back({m_doc.relPath, row.id, row.source, row.target});
     return items;
+}
+
+QHash<int, DialogLine> TranslationEditor::dialogLines() const
+{
+    QHash<int, DialogLine> lines;
+    for (const TranslationRow &row : m_model->doc().rows)
+        lines.insert(row.id, {row.source, row.target, Project::statusOf(row)});
+    return lines;
 }
 
 bool TranslationEditor::isDirty() const
@@ -233,6 +262,8 @@ void TranslationEditor::onCurrentChanged()
     m_loading = false;
     updateHighlights();
     updateIssueLabel();
+    m_grammarIssues.clear();
+    m_checkTimer.start(150);
 }
 
 void TranslationEditor::onTargetEdited()
@@ -241,6 +272,8 @@ void TranslationEditor::onTargetEdited()
         return;
     m_model->setTarget(m_currentRow, m_target->plainText());
     m_highlightTimer.start();
+    m_grammarIssues.clear();     // their offsets no longer match the text
+    m_checkTimer.start(700);
 }
 
 void TranslationEditor::updateHighlights()
@@ -267,6 +300,156 @@ void TranslationEditor::updateHighlights()
         (hit.match.fuzzy ? fuzzy : exact).push_back({hit.match.start, hit.match.length});
     m_target->setSpans(SciEdit::TermIndicator, exact);
     m_target->setSpans(SciEdit::FuzzyTermIndicator, fuzzy);
+    applyIssueSpans();
+}
+
+void TranslationEditor::applyIssueSpans()
+{
+    QVector<SciEdit::Span> spelling, grammar;
+    for (const GrammarIssue &g : std::as_const(m_grammarIssues))
+        (g.kind == GrammarIssue::Spelling ? spelling : grammar).push_back({g.start, g.length});
+    m_target->setSpans(SciEdit::SpellingIndicator, spelling);
+    m_target->setSpans(SciEdit::GrammarIndicator, grammar);
+}
+
+const GrammarIssue *TranslationEditor::issueAt(int charIndex) const
+{
+    for (const GrammarIssue &g : m_grammarIssues)
+        if (charIndex >= g.start && charIndex <= g.start + g.length)
+            return &g;
+    return nullptr;
+}
+
+void TranslationEditor::runCheck()
+{
+    if (!m_service || m_currentRow < 0 || !m_service->checkAvailable(*m_project)) {
+        if (!m_grammarIssues.isEmpty()) {
+            m_grammarIssues.clear();
+            applyIssueSpans();
+        }
+        return;
+    }
+    const QString text = m_target->plainText();
+    if (text.trimmed().isEmpty()) {
+        m_grammarIssues.clear();
+        applyIssueSpans();
+        return;
+    }
+    const int serial = ++m_checkSerial;
+    QPointer<TranslationEditor> self(this);
+    m_service->checkText(*m_project, text, [self, serial, text](const QVector<GrammarIssue> &issues, const QString &error) {
+        // Drop answers for text that has changed since (or for another line).
+        if (!self || serial != self->m_checkSerial || self->m_target->plainText() != text)
+            return;
+        if (!error.isEmpty()) {
+            self->m_grammarIssues.clear();
+            self->applyIssueSpans();
+            return;
+        }
+        self->m_grammarIssues = issues;
+        self->applyIssueSpans();
+    });
+}
+
+void TranslationEditor::showMessage(const QString &html)
+{
+    m_issues->setText(html);
+    m_issues->show();
+}
+
+void TranslationEditor::setService(TranslationService *service)
+{
+    m_service = service;
+    m_checkTimer.start(150);
+}
+
+int TranslationEditor::currentId() const
+{
+    return m_currentRow < 0 ? -1 : m_model->row(m_currentRow).id;
+}
+
+void TranslationEditor::refreshCurrent()
+{
+    if (m_currentRow < 0)
+        return;
+    m_loading = true;
+    m_target->setPlainText(m_model->row(m_currentRow).target);
+    m_loading = false;
+    updateHighlights();
+    updateIssueLabel();
+    m_grammarIssues.clear();
+    m_checkTimer.start(150);
+}
+
+QString TranslationEditor::contextFor(const TranslationDoc &doc, int row)
+{
+    QStringList parts;
+    parts << QStringLiteral("Dialogue line from the video game Fallout (%1).").arg(Statistics::displayNameFor(doc.relPath));
+    auto line = [&](int i) {
+        return i >= 0 && i < doc.rows.size() ? doc.rows.at(i).source.simplified().left(160) : QString();
+    };
+    const QString before = (line(row - 2) + QLatin1Char(' ') + line(row - 1)).trimmed();
+    const QString after = line(row + 1);
+    if (!before.isEmpty())
+        parts << QStringLiteral("Previous lines: ") + before;
+    if (!after.isEmpty())
+        parts << QStringLiteral("Next line: ") + after;
+    return parts.join(QLatin1Char('\n')).left(700);
+}
+
+void TranslationEditor::translateCurrent()
+{
+    if (m_currentRow < 0 || !m_service || m_translating)
+        return;
+    if (!m_service->deeplConfigured()) {
+        QMessageBox::information(this, tr("DeepL"), tr("Enter your DeepL API key in Tools > Settings first."));
+        return;
+    }
+    const int row = m_currentRow;
+    const QString source = m_model->row(row).source;
+    if (!Statistics::isTranslatable(source))
+        return;
+    m_translating = true;
+    showMessage(tr("Translating with DeepL..."));
+    QPointer<TranslationEditor> self(this);
+    m_service->ensureGlossary(m_project, [self, row, source](const QString &glossaryId, const QString &warning) {
+        if (!self)
+            return;
+        DeepLClient::Options options = self->m_service->deeplOptions(*self->m_project);
+        options.glossaryId = glossaryId;
+        const QString context = AppSettings::deeplUseContext() ? contextFor(self->m_model->doc(), row) : QString();
+        self->m_service->deepl()->translate(source, context, options, [self, row, warning](const QString &text, const QString &error) {
+            if (!self)
+                return;
+            self->m_translating = false;
+            if (text.isEmpty()) {
+                self->showMessage(QStringLiteral("<span style='color:%1'>✖ %2</span>")
+                                      .arg(Theme::colors().spelling.name(), error.toHtmlEscaped()));
+                return;
+            }
+            self->m_model->setTarget(row, text);
+            if (AppSettings::deeplMarkReview())
+                self->m_model->setReview(row, true);
+            if (row == self->m_currentRow)
+                self->refreshCurrent();
+            const QString note = !error.isEmpty() ? error : warning;
+            if (!note.isEmpty())
+                self->showMessage(QStringLiteral("<span style='color:%1'>⚠ %2</span>")
+                                      .arg(Theme::colors().issue.name(), note.toHtmlEscaped()));
+        });
+    });
+}
+
+void TranslationEditor::massTranslate()
+{
+    if (!m_service)
+        return;
+    QVector<int> selected;
+    for (const QModelIndex &idx : m_table->selectionModel()->selectedRows())
+        selected << m_proxy->mapToSource(idx).row();
+    MassTranslateDialog dialog(m_service, m_project, m_model, selected, this);
+    dialog.exec();
+    refreshCurrent();
 }
 
 void TranslationEditor::updateIssueLabel()
@@ -312,6 +495,15 @@ void TranslationEditor::showTermTooltip(SciEdit *edit, bool inSource, int charIn
 {
     if (m_currentRow < 0)
         return;
+    if (!inSource) {
+        if (const GrammarIssue *issue = issueAt(charIndex)) {
+            QString html = QStringLiteral("<b>%1</b>").arg(issue->message.toHtmlEscaped());
+            if (!issue->suggestions.isEmpty())
+                html += QStringLiteral("<br>→ ") + issue->suggestions.mid(0, 4).join(QStringLiteral(" / ")).toHtmlEscaped();
+            QToolTip::showText(globalPos, html, edit);
+            return;
+        }
+    }
     const Glossary &glossary = m_project->glossary();
     const QString text = inSource ? m_model->row(m_currentRow).source : edit->plainText();
     const auto hits = inSource ? glossary.findInSource(text) : glossary.findInTarget(text);

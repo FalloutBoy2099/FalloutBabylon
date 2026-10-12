@@ -32,7 +32,8 @@ SciEdit::SciEdit(bool readOnly, QWidget *parent)
     send(SCI_INDICSETSTYLE, FuzzyTermIndicator, INDIC_DOTS);
     send(SCI_INDICSETSTYLE, IssueIndicator, INDIC_SQUIGGLE);
     send(SCI_INDICSETSTYLE, SpellingIndicator, INDIC_SQUIGGLE);
-    for (int i = 0; i <= SpellingIndicator; ++i) {
+    send(SCI_INDICSETSTYLE, GrammarIndicator, INDIC_SQUIGGLE);
+    for (int i = 0; i <= GrammarIndicator; ++i) {
         send(SCI_INDICSETUNDER, i, 0);
         send(SCI_INDICSETALPHA, i, 255);
         send(SCI_INDICSETOUTLINEALPHA, i, 255);
@@ -77,6 +78,7 @@ void SciEdit::applyTheme()
     send(SCI_INDICSETFORE, FuzzyTermIndicator, Theme::toScintilla(c.fuzzyTerm));
     send(SCI_INDICSETFORE, IssueIndicator, Theme::toScintilla(c.issue));
     send(SCI_INDICSETFORE, SpellingIndicator, Theme::toScintilla(c.spelling));
+    send(SCI_INDICSETFORE, GrammarIndicator, Theme::toScintilla(c.grammar));
 }
 
 int SciEdit::byteOffset(int charIndex) const
@@ -137,7 +139,7 @@ void SciEdit::clearSpans(Indicator indicator)
 
 void SciEdit::clearAllSpans()
 {
-    for (int i = 0; i <= SpellingIndicator; ++i)
+    for (int i = 0; i <= GrammarIndicator; ++i)
         clearSpans(Indicator(i));
 }
 
@@ -162,6 +164,19 @@ void SciEdit::insertAtCaret(const QString &text)
         return;
     send(SCI_REPLACESEL, 0, reinterpret_cast<sptr_t>(text.toUtf8().constData()));
     setFocus();
+}
+
+void SciEdit::replaceRange(int start, int length, const QString &text)
+{
+    if (m_readOnly)
+        return;
+    m_text = plainText();
+    if (start < 0 || length < 0 || start + length > m_text.size())
+        return;
+    const int from = byteOffset(start);
+    const int to = byteOffset(start + length);
+    send(SCI_SETTARGETRANGE, from, to);
+    send(SCI_REPLACETARGET, text.toUtf8().size(), reinterpret_cast<sptr_t>(text.toUtf8().constData()));
 }
 
 void SciEdit::contextMenuEvent(QContextMenuEvent *event)

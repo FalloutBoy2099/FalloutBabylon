@@ -1,10 +1,14 @@
 #include "MainWindow.h"
 
+#include "DialogTreePanel.h"
 #include "GlossaryPanel.h"
+#include "PipboyPanel.h"
 #include "SlowGuard.h"
 #include "ProjectDialog.h"
 #include "ProjectTree.h"
+#include "SettingsDialog.h"
 #include "StatsPanel.h"
+#include "TranslationService.h"
 #include "TodoPanel.h"
 #include <algorithm>
 #include "Theme.h"
@@ -50,6 +54,7 @@ const UiLanguage kUiLanguages[] = {
 
 MainWindow::MainWindow()
 {
+    m_service = new TranslationService(this);
     setWindowTitle(QStringLiteral("Fallout Babylon"));
     resize(1500, 900);
 
@@ -93,6 +98,9 @@ MainWindow::MainWindow()
     statusBar()->addWidget(m_statusLabel, 1);
     statusBar()->addPermanentWidget(m_progress);
 
+    m_dialogTimer.setSingleShot(true);
+    m_dialogTimer.setInterval(250);
+    connect(&m_dialogTimer, &QTimer::timeout, this, [this] { refreshDialogTree(); });
     m_todoTimer.setSingleShot(true);
     m_todoTimer.setInterval(300);
     connect(&m_todoTimer, &QTimer::timeout, this, [this] { refreshTodo(); });
@@ -112,6 +120,10 @@ MainWindow::MainWindow()
             setActiveProject(projectIdOf(e));
             m_statsPanel->setCurrentFile(e->relPath());
         }
+        m_dialogTimer.start();
+        m_pipboyPanel->setEditor(currentEditor());
+        if (currentEditor())
+            m_pipboyPanel->showId(currentEditor()->currentId());
         updateUi();
     });
 
@@ -154,8 +166,24 @@ void MainWindow::createDocks()
     todoDock->setObjectName(QStringLiteral("dockTodo"));
     todoDock->setWidget(m_todoPanel);
     addDockWidget(Qt::RightDockWidgetArea, todoDock);
+    m_dialogPanel = new DialogTreePanel;
+    auto *dialogDock = new QDockWidget(tr("Dialogue tree"), this);
+    dialogDock->setObjectName(QStringLiteral("dockDialogTree"));
+    dialogDock->setWidget(m_dialogPanel);
+    addDockWidget(Qt::RightDockWidgetArea, dialogDock);
+    connect(m_dialogPanel, &DialogTreePanel::idActivated, this, [this](int id) {
+        if (TranslationEditor *e = currentEditor())
+            e->selectId(id);
+    });
     tabifyDockWidget(glossaryDock, statsDock);
     tabifyDockWidget(statsDock, todoDock);
+    m_pipboyPanel = new PipboyPanel;
+    auto *pipboyDock = new QDockWidget(tr("Pip-Boy holodisk"), this);
+    pipboyDock->setObjectName(QStringLiteral("dockPipboy"));
+    pipboyDock->setWidget(m_pipboyPanel);
+    addDockWidget(Qt::RightDockWidgetArea, pipboyDock);
+    tabifyDockWidget(todoDock, dialogDock);
+    tabifyDockWidget(dialogDock, pipboyDock);
     glossaryDock->raise();
     connect(m_todoPanel, &TodoPanel::itemActivated, this, [this](const QString &rel, int id) {
         openFile(m_activeProject, rel);
@@ -182,7 +210,7 @@ void MainWindow::createDocks()
     });
 
     m_dockToggles << projectDock->toggleViewAction() << glossaryDock->toggleViewAction() << statsDock->toggleViewAction()
-                  << todoDock->toggleViewAction();
+                  << todoDock->toggleViewAction() << dialogDock->toggleViewAction() << pipboyDock->toggleViewAction();
 }
 
 void MainWindow::createActions()
@@ -225,6 +253,18 @@ void MainWindow::createActions()
     m_actPrevUntranslated = editorAction(tr("Previous untranslated line"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Up),
                                          [](TranslationEditor *e) { e->goToNextUntranslated(false); });
     m_actFind = editorAction(tr("&Find in this file"), QKeySequence::Find, [](TranslationEditor *e) { e->focusSearch(); });
+
+    m_actTranslateLine = editorAction(tr("&Translate this line with DeepL"), QKeySequence(Qt::CTRL | Qt::Key_T),
+                                      [](TranslationEditor *e) { e->translateCurrent(); });
+    m_actMassTranslate = editorAction(tr("&Mass translation with DeepL..."), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_T),
+                                      [](TranslationEditor *e) { e->massTranslate(); });
+    m_actAppSettings = new QAction(tr("&Settings..."), this);
+    connect(m_actAppSettings, &QAction::triggered, this, [this] {
+        SettingsDialog dialog(m_service, this);
+        if (dialog.exec() == QDialog::Accepted)
+            for (TranslationEditor *e : editors())
+                e->setService(m_service);   // re-check the current line with the new servers
+    });
 
     m_actSettings = new QAction(tr("Project &settings..."), this);
     connect(m_actSettings, &QAction::triggered, this, [this] { editProjectSettings(m_activeProject); });
@@ -291,8 +331,13 @@ void MainWindow::createMenus()
     edit->addAction(m_actFind);
 
     QMenu *tools = menuBar()->addMenu(tr("&Tools"));
+    tools->addAction(m_actTranslateLine);
+    tools->addAction(m_actMassTranslate);
+    tools->addSeparator();
     tools->addAction(m_actRefresh);
     tools->addAction(m_actRebuild);
+    tools->addSeparator();
+    tools->addAction(m_actAppSettings);
 
     QMenu *view = menuBar()->addMenu(tr("&View"));
     for (QAction *a : std::as_const(m_dockToggles))
@@ -491,6 +536,17 @@ void MainWindow::setActiveProject(const QString &id)
     if (TranslationEditor *e = currentEditor())
         m_statsPanel->setCurrentFile(e->relPath());
     updateUi();
+}
+
+void MainWindow::refreshDialogTree()
+{
+    TranslationEditor *e = currentEditor();
+    const auto it = e ? m_sessions.constFind(projectIdOf(e)) : m_sessions.constEnd();
+    if (!e || it == m_sessions.constEnd()) {
+        m_dialogPanel->clear();
+        return;
+    }
+    m_dialogPanel->showFile(it->project, e->relPath(), e->dialogLines());
 }
 
 void MainWindow::refreshTodo()
@@ -728,6 +784,7 @@ void MainWindow::openFile(const QString &id, const QString &relPath)
     SlowGuard openGuard("MainWindow::openFile (after load)");
     auto *editor = new TranslationEditor(it->project, std::move(doc));
     editor->setProperty("projectId", id);
+    editor->setService(m_service);
     connect(editor, &TranslationEditor::dirtyChanged, this, [this, editor](bool dirty) {
         updateTabTitle(editor);
         m_tree->setFileDirty(projectIdOf(editor), editor->relPath(), dirty);
@@ -735,6 +792,12 @@ void MainWindow::openFile(const QString &id, const QString &relPath)
             scheduleGlossaryRebuild(projectIdOf(editor)); // names may have been translated
     });
     connect(editor, &TranslationEditor::statsChanged, this, [this, editor](const FileStats &s) { onEditorStats(editor, s); });
+    connect(editor, &TranslationEditor::currentIdChanged, this, [this, editor](int id) {
+        if (editor == currentEditor()) {
+            m_dialogPanel->selectId(id);
+            m_pipboyPanel->showId(id);
+        }
+    });
 
     const int index = m_tabs->addTab(editor, QString());
     updateTabTitle(editor);
@@ -759,6 +822,8 @@ void MainWindow::onEditorStats(TranslationEditor *editor, const FileStats &stats
 {
     SlowGuard guard("MainWindow::onEditorStats");
     m_todoTimer.start();
+    if (editor == currentEditor())
+        m_dialogTimer.start();
     const QString id = projectIdOf(editor);
     auto it = m_sessions.find(id);
     if (it == m_sessions.end())
@@ -900,7 +965,7 @@ void MainWindow::updateUi()
     const bool anyProject = !m_sessions.isEmpty();
     m_stack->setCurrentIndex(anyEditor ? 1 : (m_tabs->count() > 0 ? 1 : 0));
     for (QAction *a : {m_actSave, m_actCloseTab, m_actReview, m_actCopySource, m_actConfirm, m_actNext, m_actPrev,
-                       m_actNextUntranslated, m_actPrevUntranslated, m_actFind})
+                       m_actNextUntranslated, m_actPrevUntranslated, m_actFind, m_actTranslateLine, m_actMassTranslate})
         a->setEnabled(anyEditor);
     m_actSaveAll->setEnabled(anyEditor);
     for (QAction *a : {m_actSettings, m_actExport, m_actRefresh, m_actRebuild, m_actCloseProject})

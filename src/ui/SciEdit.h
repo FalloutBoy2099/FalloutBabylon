@@ -15,7 +15,7 @@ class SciEdit : public ScintillaEditBase
     Q_OBJECT
 
 public:
-    enum Indicator { TermIndicator = 0, FuzzyTermIndicator = 1, IssueIndicator = 2, SpellingIndicator = 3 };
+    enum Indicator { TermIndicator = 0, FuzzyTermIndicator = 1, IssueIndicator = 2, SpellingIndicator = 3, GrammarIndicator = 4 };
     using Span = QPair<int, int>;   // start, length in QString (UTF-16) units
 
     explicit SciEdit(bool readOnly, QWidget *parent = nullptr);
@@ -31,6 +31,7 @@ public:
     int charIndexAt(const QPoint &viewportPoint) const;  // -1 when not over text
     int caretCharIndex() const;
     void insertAtCaret(const QString &text);
+    void replaceRange(int start, int length, const QString &text);   // QString units; one undo step
     void applyTheme();
 
 signals:

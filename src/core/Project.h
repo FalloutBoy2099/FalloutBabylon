@@ -83,6 +83,13 @@ public:
     QString targetPath(const QString &rel) const;   // normalised path inside text/
     QString targetDiskPath(const QString &rel) const;
 
+    // Compiled script (scripts/<stem>.int) that drives a dialogue file; empty if there is none.
+    // dialog/abel.msg -> scripts/abel.int
+    QByteArray readDialogScript(const QString &relPath, QString *error = nullptr) const;
+
+    // Interface font (font1.aaf is the Pip-Boy's): text/<target language>/, text/<source language>/, then the root.
+    QByteArray readInterfaceFont(int index) const;
+
     TranslationDoc loadDocument(const QString &rel, QString *error = nullptr) const;
     // Returns false on error. `unencodable` receives characters the target encoding cannot hold.
     bool saveDocument(const TranslationDoc &doc, QString *error = nullptr, QString *unencodable = nullptr);

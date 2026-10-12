@@ -18,7 +18,7 @@ bool isDark();
 
 struct Colors {
     QColor editorBack, editorFore, editorSelection, caretLine;
-    QColor term, fuzzyTerm, issue, spelling;
+    QColor term, fuzzyTerm, issue, spelling, grammar;
     QColor untranslated, translated, review;   // row tints
 };
 const Colors &colors();

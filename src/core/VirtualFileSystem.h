@@ -10,7 +10,7 @@
 // A merged, case-insensitive view of several game sources (DAT archives and loose folders).
 // Sources are given from lowest to highest priority; a later source overrides an earlier one,
 // like the game does with master.dat < critter.dat < patch000.dat < data/.
-// Only the "text/" subtree is indexed: this is a translation tool.
+// Only the "text/" subtree and scripts/*.int are indexed: this is a translation tool.
 class VirtualFileSystem
 {
 public:

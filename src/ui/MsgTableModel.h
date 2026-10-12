@@ -29,6 +29,10 @@ public:
     void setTarget(int row, const QString &text);
     void setReview(int row, bool review);
     void confirm(int row);   // accept the current target (even if identical to the source)
+    int rowForId(int id) const;     // index of the record with this id, -1 if none
+    // Adds a record that exists only in the translation (e.g. extra Pip-Boy lines); returns its row.
+    int addRow(int id);
+    void removeOrphan(int row);   // removes a record added with addRow() (ignored for records of the source)
 
     // Glossary changed: recompute the alerts of every row.
     void refreshIssues();

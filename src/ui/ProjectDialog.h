@@ -19,6 +19,9 @@ public:
 
     ProjectConfig config() const;
 
+    // Where translated files go by default for these sources (see the implementation for the rules).
+    static QString defaultOutputFor(const QStringList &sources, const QString &projectName);
+
     // Adds a game folder: detects the DAT archives and data folder it contains.
     void addInstallation(const QString &folder);
 
@@ -27,6 +30,7 @@ private:
     void detectLanguages();
     void updateTargetEncoding();
     void updateOutputDefault();
+    void updateOutputHint();
     void accept() override;
 
     ProjectConfig m_config;
@@ -40,4 +44,5 @@ private:
     QComboBox *m_sourceEncoding = nullptr;
     QComboBox *m_targetEncoding = nullptr;
     QLabel *m_hint = nullptr;
+    QLabel *m_outputHint = nullptr;
 };

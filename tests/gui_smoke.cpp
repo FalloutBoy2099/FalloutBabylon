@@ -2,15 +2,26 @@
 // Set BABYLON_SHOT_DIR to also write screenshots there.
 
 #include "ui/MainWindow.h"
+#include "core/AppSettings.h"
+#include "core/DialogGraph.h"
+#include "core/Int2Ssl.h"
+#include "core/ProjectStore.h"
+#include "ui/DialogTreePanel.h"
+#include "ui/MassTranslateDialog.h"
 #include "ui/MsgTableModel.h"
+#include "ui/PipboyPanel.h"
+#include "ui/ProjectDialog.h"
 #include "ui/ProjectTree.h"
 #include "ui/SciEdit.h"
 #include "ui/Theme.h"
 #include "ui/TodoPanel.h"
+#include "ui/TranslationService.h"
 #include "ui/TranslationEditor.h"
 #include "core/VirtualFileSystem.h"
 
 #include <QDir>
+#include <QDockWidget>
+#include <QSettings>
 #include <QFile>
 #include <QStandardPaths>
 #include <QTranslator>
@@ -50,6 +61,220 @@ private slots:
         }
     }
 
+    void defaultOutputFolder()
+    {
+        QTemporaryDir dir;
+        const QString inst = dir.path() + "/F2";
+        for (const char *sub : {"master.dat", "critter.dat", "data", "mods/x.dat", "ModFolder"})
+            QVERIFY(QDir().mkpath(inst + "/" + sub));
+        auto norm = [](const QString &p) { return QDir::cleanPath(p); };
+
+        // an installation: the data folder, never an extracted archive folder or the last mod
+        const QStringList install = VirtualFileSystem::discoverSources(inst);
+        QCOMPARE(norm(ProjectDialog::defaultOutputFor(install, "x")), norm(inst + "/data"));
+        // data folder wins even when a mod comes after it
+        QCOMPARE(norm(ProjectDialog::defaultOutputFor({inst + "/master.dat", inst + "/data", inst + "/mods/x.dat"}, "x")),
+                 norm(inst + "/data"));
+        // only archive folders: a folder of its own, not the archive
+        const QString own = ProjectDialog::defaultOutputFor({inst + "/master.dat", inst + "/critter.dat"}, "My mod");
+        QVERIFY(own.endsWith("FalloutBabylon/My mod/data"));
+        // a plain mod folder is used as is
+        QCOMPARE(norm(ProjectDialog::defaultOutputFor({inst + "/master.dat", inst + "/ModFolder"}, "x")), norm(inst + "/ModFolder"));
+
+        // the dialog itself, on a real installation when one is given
+        const QString real = qEnvironmentVariable("BABYLON_SAMPLE_INSTALL");
+        const QByteArray shotDir = qgetenv("BABYLON_SHOT_DIR");
+        if (!real.isEmpty() && !shotDir.isEmpty()) {
+            ProjectDialog dialog(ProjectConfig(), true);
+            dialog.addInstallation(real);
+            dialog.show();
+            QTest::qWait(300);
+            dialog.grab().save(QString::fromLocal8Bit(shotDir) + "/dialog.png");
+            QCOMPARE(norm(dialog.config().outputDir), norm(real + "/data"));
+        }
+    }
+
+    void pipboyPanelWorkflow()
+    {
+        QTemporaryDir dir;
+        const QString mod = dir.path() + "/mod";
+        write(mod + "/text/english/game/pipboy.msg",
+              "{100}{}{Back}\r\n{101}{}{More}\r\n"
+              "{300}{}{Disk title}\r\n{301}{}{First line of the disk, cut by hand}\r\n{302}{}{**END-PAR**}\r\n"
+              "{303}{}{Second paragraph.}\r\n{304}{}{**END-DISK**}\r\n"
+              "{310}{}{Unrelated label}\r\n");
+        ProjectConfig cfg;
+        cfg.id = "pipboy1";
+        cfg.name = "Pipboy";
+        cfg.sources = {mod};
+        cfg.outputDir = dir.path() + "/out";
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+        AppSettings::setPipboyMaxWidth(374);
+        AppSettings::setPipboyFallbackChars(53);   // no font in the fake data: 53 characters per line
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);
+        window.openFile(cfg.id, "game/pipboy.msg");
+        auto *editor = window.findChild<TranslationEditor *>();
+        auto *panel = window.findChild<PipboyPanel *>();
+        QVERIFY(editor && panel);
+
+        // not a holodisk line: the panel stays idle
+        editor->selectId(100);
+        QTest::qWait(100);
+        QVERIFY(!panel->hasBlock());
+        // a holodisk line: the panel loads the whole body as paragraphs
+        editor->selectId(301);
+        QTRY_VERIFY_WITH_TIMEOUT(panel->hasBlock(), 3000);
+        QVERIFY(panel->targetEdit()->plainText().isEmpty());   // nothing translated yet
+
+        auto *model = editor->model();
+        const QString paragraph1 = QString::fromUtf8("Voici la première ligne du disque, qui est assez longue pour dépasser largement une seule ligne du Pip-Boy, "
+                                                     "et qu'il faut donc couper automatiquement aux bons endroits.");
+        const QString paragraph2 = QString::fromUtf8("Deuxième paragraphe.");
+        panel->targetEdit()->insertAtCaret(paragraph1 + "\n\n" + paragraph2);
+        panel->applyNow();
+        QStringList entries = panel->entries();
+        QVERIFY(entries.size() > 5);                              // more entries than the source disk had
+        QCOMPARE(entries.last(), QString("**END-DISK**"));
+        QVERIFY(entries.contains("**END-PAR**"));
+        for (const QString &e : entries)
+            if (!e.startsWith("**"))
+                QVERIFY2(e.size() <= 53, qPrintable(e));          // fallback width: 53 characters
+        const int last = 300 + int(entries.size()) - 1;
+        QVERIFY(last < 310);
+        for (int i = 0; i < entries.size(); ++i) {
+            const int row = model->rowForId(300 + i);
+            QVERIFY2(row >= 0, qPrintable(QString::number(300 + i)));
+            QCOMPARE(model->row(row).target, entries.at(i));
+        }
+        QVERIFY(!model->row(model->rowForId(last)).inSource);      // extra records were added
+        QVERIFY(editor->isDirty());
+
+        // too long for the free ids (record 310 is something else): nothing is written
+        const QStringList before = entries;
+        panel->targetEdit()->insertAtCaret(QString("\n\n") + QString("mot ").repeated(400));
+        panel->applyNow();
+        QCOMPARE(model->row(model->rowForId(300)).target, before.first());
+        QVERIFY(model->rowForId(310) >= 0);
+        QCOMPARE(model->row(model->rowForId(310)).target, QString());   // untouched
+
+        // a shorter text again: surplus source records keep their text (counted as done), extra ones disappear
+        panel->targetEdit()->setPlainText("Court. Fin.");
+        panel->applyNow();
+        QCOMPARE(panel->entries(), (QStringList{"Court. Fin.", "**END-DISK**"}));
+        QCOMPARE(model->row(model->rowForId(300)).target, QString("Court. Fin."));
+        QCOMPARE(model->row(model->rowForId(301)).target, QString("**END-DISK**"));
+        QCOMPARE(model->row(model->rowForId(303)).target, model->row(model->rowForId(303)).source);
+        QVERIFY(model->row(model->rowForId(303)).confirmed);
+        QCOMPARE(model->rowForId(last), -1);                       // orphans removed
+
+        // saved file: the engine reads ids 300.. until END-DISK
+        QVERIFY(editor->save());
+        QFile out(cfg.outputDir + "/text/french/game/pipboy.msg");
+        QVERIFY(out.open(QIODevice::ReadOnly));
+        const QByteArray saved = out.readAll();
+        QVERIFY(saved.contains("{300}{}{Court. Fin.}"));
+        QVERIFY(saved.contains("{301}{}{**END-DISK**}"));
+        QVERIFY(saved.contains("{310}{}{Unrelated label}"));
+    }
+
+    void servicesWorkflow()
+    {
+        // Needs the real services: BABYLON_GRAMMALECTE_URL, BABYLON_DEEPL_KEY (kept in the environment only).
+        const QString grammalecte = qEnvironmentVariable("BABYLON_GRAMMALECTE_URL");
+        const QString deeplKey = qEnvironmentVariable("BABYLON_DEEPL_KEY");
+        if (grammalecte.isEmpty() && deeplKey.isEmpty())
+            QSKIP("BABYLON_GRAMMALECTE_URL / BABYLON_DEEPL_KEY not set");
+
+        QTemporaryDir dir;
+        const QString mod = dir.path() + "/mod";
+        write(mod + "/text/english/dialog/trader.msg",
+              "{100}{}{Hello, stranger. Need some Stimpaks?}\r\n"
+              "{101}{}{I can sell you Leather Armor, cheap.}\r\n"
+              "{102}{}{Take this, @Name@. It costs %d caps.}\r\n"
+              "{103}{}{Goodbye.}\r\n");
+        write(mod + "/text/english/game/pro_item.msg", "{100}{}{Stimpak}\r\n{200}{}{Leather Armor}\r\n");
+        write(mod + "/text/french/game/pro_item.msg", "{100}{}{Stimpak}\r\n{200}{}{Armure en cuir}\r\n");
+
+        ProjectConfig cfg;
+        cfg.id = "services1";
+        cfg.name = "Services";
+        cfg.sources = {mod};
+        cfg.outputDir = dir.path() + "/out";
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+
+        AppSettings::setGrammalecteUrl(grammalecte);
+        AppSettings::setDeeplKey(deeplKey);
+        AppSettings::setDeeplMarkReview(true);
+        AppSettings::setCheckEnabled(true);
+        struct Cleanup {   // never leave the key or the test servers in the settings store
+            ~Cleanup()
+            {
+                AppSettings::setDeeplKey({});
+                AppSettings::setGrammalecteUrl({});
+                QSettings().remove(QStringLiteral("deepl/glossary/services1"));
+            }
+        } cleanup;
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);
+        window.openFile(cfg.id, "dialog/trader.msg");
+        auto *editor = window.findChild<TranslationEditor *>();
+        QVERIFY(editor);
+
+        if (!grammalecte.isEmpty()) {
+            editor->model()->setTarget(0, QStringLiteral("Je suis aller au marché."));
+            editor->refreshCurrent();
+            QTRY_VERIFY_WITH_TIMEOUT(editor->grammarIssueCount() > 0, 8000);
+            qInfo() << "grammar issues underlined:" << editor->grammarIssueCount();
+            editor->model()->setTarget(0, QString());
+            editor->refreshCurrent();
+        }
+
+        if (!deeplKey.isEmpty()) {
+            // one line: row 1 mentions the glossary terms
+            auto *table = editor->findChild<QTableView *>();
+            table->selectRow(1);
+            editor->translateCurrent();
+            QTRY_VERIFY_WITH_TIMEOUT(!editor->model()->row(1).target.isEmpty(), 20000);
+            qInfo() << "DeepL line:" << editor->model()->row(1).target;
+            QVERIFY(editor->model()->row(1).review);   // machine translation is flagged
+
+            // mass translation of every untranslated line, on a model of its own
+            auto project = std::make_shared<Project>(cfg);
+            project->reload();
+            project->setGlossary(project->buildGlossary());
+            MsgTableModel model(project, project->loadDocument("dialog/trader.msg"));
+            TranslationService service;
+            MassTranslateDialog mass(&service, project, &model, {});
+            mass.show();
+            mass.run(false);
+            QTRY_VERIFY_WITH_TIMEOUT(!mass.isRunning(), 60000);
+            const int applied = mass.applyProposals();
+            qInfo() << "mass translation applied" << applied << "lines";
+            QCOMPARE(applied, 4);
+            for (int i = 0; i < 4; ++i)
+                QVERIFY(!model.row(i).target.isEmpty());
+            QVERIFY(model.row(2).target.contains("@Name@"));    // placeholders survive
+            QVERIFY(model.row(2).target.contains("%d"));
+            QVERIFY(model.row(2).review);
+            qInfo() << "line 102:" << model.row(2).target;
+        }
+    }
+
     void realInstall()
     {
         // BABYLON_SAMPLE_INSTALL=C:\Fallout2\F2_RPU_2.4.34 : opens the whole game and screenshots the result.
@@ -81,8 +306,25 @@ private slots:
         probe.reload();
         QString dialogFile;
         for (const QString &f : probe.messageFiles())
-            if (dialogFile.isEmpty() && Project::kindOf(f) == FileKind::Dialog && f.contains("acb"))
+            if (dialogFile.isEmpty() && Project::kindOf(f) == FileKind::Dialog
+                && (f.endsWith("/abel.msg") || f.endsWith("/cassidy.msg") || f.endsWith("/myron.msg")))
                 dialogFile = f;
+        if (dialogFile.isEmpty()) {
+            // Fall back on the first dialogue whose script is in the sources and talks.
+            int tried = 0;
+            for (const QString &f : probe.messageFiles()) {
+                if (Project::kindOf(f) != FileKind::Dialog || tried >= 80)
+                    continue;
+                const QByteArray script = probe.readDialogScript(f);
+                if (script.isEmpty())
+                    continue;
+                ++tried;
+                if (DialogGraph::parseSsl(Int2Ssl::decompile(script)).hasDialogue()) {
+                    dialogFile = f;
+                    break;
+                }
+            }
+        }
         qInfo() << "dialog file used:" << dialogFile;
         QVERIFY(!dialogFile.isEmpty());
         {
@@ -104,11 +346,43 @@ private slots:
         qInfo() << "openFile pro_item ms" << timer.restart();
         window.openFile(cfg.id, dialogFile);
         qInfo() << "openFile dialog ms" << timer.restart();
+        auto *tree = window.findChild<DialogTreePanel *>();
+        QVERIFY(tree);
+        QTest::qWait(1500);
+        qInfo() << "tree status:" << tree->statusText();
+        QTRY_VERIFY_WITH_TIMEOUT(tree->nodeCount() > 0, 3000);
+        qInfo() << "dialogue tree:" << tree->nodeCount() << "nodes," << tree->statusText();
         qInfo() << "two files opened in ms" << timer.elapsed();
         QTest::qWait(500);
+        if (auto *dock = window.findChild<QDockWidget *>("dockDialogTree"))
+            dock->raise();
+        QTest::qWait(300);
         const QByteArray shotDir = qgetenv("BABYLON_SHOT_DIR");
         if (!shotDir.isEmpty())
             window.grab().save(QString::fromLocal8Bit(shotDir) + "/real.png");
+
+        // Pip-Boy holodisk panel on the real game files (font1.aaf, 374 px)
+        if (probe.messageFiles().contains("game/pipboy.msg")) {
+            window.openFile(cfg.id, "game/pipboy.msg");
+            auto *pipboy = window.findChild<PipboyPanel *>();
+            TranslationEditor *current = nullptr;
+            for (auto *e : window.findChildren<TranslationEditor *>())
+                if (e->relPath() == "game/pipboy.msg")
+                    current = e;
+            QVERIFY(current && pipboy);
+            current->selectId(1001);
+            QTRY_VERIFY_WITH_TIMEOUT(pipboy->hasBlock(), 3000);
+            pipboy->targetEdit()->insertAtCaret(QString::fromUtf8(
+                "Ce holodisque indique l'emplacement de l'Abri 13. L'emplacement a été marqué sur votre carte du monde.\n\n"
+                "Bonne chance, étranger : le chemin sera long et dangereux, mais l'avenir de votre communauté en dépend."));
+            QTest::qWait(900);
+            qInfo() << "pipboy entries:" << pipboy->entries();
+            if (auto *dock = window.findChild<QDockWidget *>("dockPipboy"))
+                dock->raise();
+            QTest::qWait(300);
+            if (!shotDir.isEmpty())
+                window.grab().save(QString::fromLocal8Bit(shotDir) + "/real_pipboy.png");
+        }
     }
 
     void fullWorkflow()
@@ -150,6 +424,7 @@ private slots:
         cfg.sourceLanguage = "english";
         cfg.targetLanguage = "french";
 
+        QFile::remove(ProjectStore::stateFile(cfg.id));   // flags saved by a previous run of this test
         Theme::apply(Theme::Mode::Light);
         MainWindow window;
         window.resize(1500, 900);

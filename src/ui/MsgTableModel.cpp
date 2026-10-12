@@ -92,6 +92,50 @@ void MsgTableModel::confirm(int row)
     touchRow(row);
 }
 
+int MsgTableModel::rowForId(int id) const
+{
+    for (int i = 0; i < m_doc.rows.size(); ++i)
+        if (m_doc.rows.at(i).id == id)
+            return i;
+    return -1;
+}
+
+int MsgTableModel::addRow(int id)
+{
+    const int existing = rowForId(id);
+    if (existing >= 0)
+        return existing;
+    int position = int(m_doc.rows.size());
+    for (int i = 0; i < m_doc.rows.size(); ++i)
+        if (m_doc.rows.at(i).id > id) {
+            position = i;
+            break;
+        }
+    TranslationRow row;
+    row.id = id;
+    row.inSource = false;
+    row.leading = QStringLiteral("\n");
+    beginInsertRows(QModelIndex(), position, position);
+    m_doc.rows.insert(position, row);
+    m_issues.insert(position, 0);
+    endInsertRows();
+    m_dirty = true;
+    emit changed();
+    return position;
+}
+
+void MsgTableModel::removeOrphan(int row)
+{
+    if (row < 0 || row >= m_doc.rows.size() || m_doc.rows.at(row).inSource)
+        return;
+    beginRemoveRows(QModelIndex(), row, row);
+    m_doc.rows.remove(row);
+    m_issues.remove(row);
+    endRemoveRows();
+    m_dirty = true;
+    emit changed();
+}
+
 int MsgTableModel::rowCount(const QModelIndex &parent) const
 {
     return parent.isValid() ? 0 : int(m_doc.rows.size());

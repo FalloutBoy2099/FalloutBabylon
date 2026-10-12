@@ -1,13 +1,17 @@
 #include <QDir>
+#include <QFileInfo>
 #include <QFile>
 #include <QTemporaryDir>
 #include <QtTest>
 
 #include "core/DatArchive.h"
 #include "core/DatWriter.h"
+#include "core/DialogGraph.h"
 #include "core/Glossary.h"
+#include "core/Int2Ssl.h"
 #include "core/Lzss.h"
 #include "core/MsgFile.h"
+#include "core/PipboyText.h"
 #include "core/Project.h"
 #include "core/TermMatcher.h"
 #include "core/TextCodec.h"
@@ -210,6 +214,11 @@ private slots:
         auto archive = DatArchive::open(QString::fromLocal8Bit(env), &error);
         QVERIFY2(archive, qPrintable(error));
         QVERIFY(!archive->entries().isEmpty());
+        int compressed = 0;
+        for (const DatEntry &e : archive->entries())
+            compressed += e.compressed ? 1 : 0;
+        qInfo() << "DAT format" << (archive->format() == DatArchive::Format::Fallout1 ? "Fallout 1" : "Fallout 2")
+                << "entries" << archive->entries().size() << "compressed" << compressed;
         int ok = 0;
         const int limit = qEnvironmentVariableIntValue("BABYLON_SAMPLE_DAT_LIMIT") > 0 ? qEnvironmentVariableIntValue("BABYLON_SAMPLE_DAT_LIMIT") : 200;
         for (int i = 0; i < archive->entries().size() && ok < limit; ++i, ++ok) {
@@ -292,6 +301,312 @@ private slots:
         qInfo() << "stats files" << count << "lines" << total.lines << "untranslated" << total.untranslated
                 << "words left" << total.wordsRemaining << "ms" << timer.elapsed();
         QVERIFY(total.lines > 1000);
+    }
+
+    void installWithExtractedArchives()
+    {
+        // master.dat / critter.dat extracted into folders of the same name must be used like archive files
+        QTemporaryDir dir;
+        const QString inst = dir.path() + "/F2";
+        writeFile(inst + "/master.dat/text/english/game/skill.msg", "{100}{}{Small Guns}\r\n");
+        writeFile(inst + "/master.dat/scripts/abel.int", "x");
+        writeFile(inst + "/critter.dat/text/english/game/skill.msg", "{100}{}{Small Guns (critter)}\r\n");
+        writeFile(inst + "/patch000.dat/text/english/game/pipboy.msg", "{100}{}{Back}\r\n");
+        writeFile(inst + "/data/text/english/game/skill.msg", "{100}{}{Small Guns (patch)}\r\n");
+        writeFile(inst + "/mods/mods_order.txt", "b.dat\r\na.dat\r\n");
+        writeFile(inst + "/mods/a.dat/text/english/game/x.msg", "{1}{}{a}\r\n");
+        writeFile(inst + "/mods/b.dat/text/english/game/x.msg", "{1}{}{b}\r\n");
+
+        const QStringList sources = VirtualFileSystem::discoverSources(inst);
+        auto name = [](const QString &p) { return QFileInfo(p).fileName(); };
+        QStringList names;
+        for (const QString &s : sources)
+            names << name(s);
+        QCOMPARE(names, (QStringList{"master.dat", "critter.dat", "patch000.dat", "data", "b.dat", "a.dat"}));
+
+        VirtualFileSystem vfs;
+        QStringList errors;
+        vfs.setSources(sources, &errors);
+        QVERIFY(errors.isEmpty());
+        QVERIFY(vfs.exists("scripts/abel.int"));
+        QVERIFY(vfs.exists("text/english/game/pipboy.msg"));
+        // priority: master < critter < patch < data (the later one wins)
+        QCOMPARE(QString::fromLatin1(vfs.read("text/english/game/skill.msg")), QString("{100}{}{Small Guns (patch)}\r\n"));
+        // mods_order.txt: the last listed mod wins
+        QCOMPARE(QString::fromLatin1(vfs.read("text/english/game/x.msg")), QString("{1}{}{a}\r\n"));
+    }
+
+    void dialogGraphFromSsl()
+    {
+        const QString ssl = QStringLiteral(
+            "procedure start;\n"
+            "procedure talk_p_proc;\n"
+            "procedure Node00;\n procedure Node01;\n procedure Node02;\n procedure Combat;\n"
+            "// a comment with procedure Fake begin\n"
+            "procedure talk_p_proc\nbegin\n"
+            "   start_gdialog(359, self_obj, 4, -1, -1);\n"
+            "   gsay_start;\n"
+            "   if (local_var(4) == 1) then begin\n      call Combat();\n   end\n"
+            "   else begin\n      call Node00();\n   end\n"
+            "   gsay_end;\n"
+            "end\n"
+            "procedure Node00\nbegin\n"
+            "   gsay_reply(359, 102);\n"
+            "   giq_option(-3, 359, 103, Node01, 0);\n"
+            "   giq_option(4, 359, 104, Node02, 0);\n"
+            "   giq_option(5, 359, 105, Combat, 0);\n"
+            "end\n"
+            "procedure Node01\nbegin\n"
+            "   gsay_reply(359, 106 + 0);\n"
+            "   gsay_reply(359, 107);\n"
+            "   giq_option(-3, 359, 108, Node02, 0);\n"
+            "end\n"
+            "procedure Node02\nbegin\n"
+            "   gsay_message(359, 110, 0);\n"
+            "   call Combat();\n"
+            "end\n"
+            "procedure Combat\nbegin\n"
+            "   field_change := \"begin end\";\n"
+            "   call Combat();\n"
+            "end\n");
+        const DialogGraph g = DialogGraph::parseSsl(ssl);
+        QVERIFY(g.hasDialogue());
+        QCOMPARE(g.roots(), QStringList{"talk_p_proc"});
+        QVERIFY(g.proc("Node00"));
+        QCOMPARE(g.proc("Node00")->events.size(), 4);
+        QCOMPARE(g.proc("Node00")->events.at(1).iq, -3);
+        QCOMPARE(g.proc("Node00")->events.at(1).target, QStringLiteral("Node01"));
+        QCOMPARE(g.proc("Node01")->events.at(0).msgId, -1); // not a literal: kept but unnumbered
+        QVERIFY(g.proc("Combat")->events.size() == 1);       // strings do not break procedure boundaries
+        QVERIFY(!g.proc("Fake"));
+
+        const QVector<DialogNode> tree = g.buildTree();
+        QCOMPARE(tree.size(), 1);
+        const DialogNode &root = tree.first();
+        QCOMPARE(root.proc, QStringLiteral("talk_p_proc"));
+        // talk_p_proc -> call Combat, call Node00
+        QCOMPARE(root.children.size(), 2);
+        QCOMPARE(root.children.at(0).proc, QStringLiteral("Combat"));
+        const DialogNode &node00 = root.children.at(1);   // Call Node00
+        QCOMPARE(node00.type, DialogNode::Call);
+        QCOMPARE(node00.children.size(), 1);               // its NPC reply (102)
+        const DialogNode &reply = node00.children.first();
+        QCOMPARE(reply.type, DialogNode::Npc);
+        QCOMPARE(reply.msgId, 102);
+        QCOMPARE(reply.children.size(), 3);                // 3 player options
+        QCOMPARE(reply.children.at(0).type, DialogNode::Player);
+        QCOMPARE(reply.children.at(0).msgId, 103);
+        // option 103 -> Node01 (expanded here), whose option 108 -> Node02
+        QVERIFY(!reply.children.at(0).children.isEmpty());
+        // option 104 -> Node02, already expanded under 108: a reference
+        QCOMPARE(reply.children.at(1).children.first().type, DialogNode::Reference);
+        // option 105 -> Combat, already shown first: a reference
+        QCOMPARE(reply.children.at(2).children.first().type, DialogNode::Reference);
+        QCOMPARE(g.usedMessageIds(), (QVector<int>{102, 103, 104, 105, 107, 108, 110}));
+    }
+
+    void int2sslIfAvailable()
+    {
+        // BABYLON_SAMPLE_DAT=master.dat of a Fallout 2 install: decompiles scripts/abel.int and reads its tree.
+        const QString datPath = qEnvironmentVariable("BABYLON_SAMPLE_DAT");
+        if (datPath.isEmpty() || Int2Ssl::findExecutable().isEmpty())
+            QSKIP("BABYLON_SAMPLE_DAT or int2ssl not available");
+        QString error;
+        auto archive = DatArchive::open(datPath, &error);
+        QVERIFY2(archive, qPrintable(error));
+        const int index = archive->indexOf(QStringLiteral("scripts/abel.int"));
+        if (index < 0)
+            QSKIP("scripts/abel.int is not in this archive");
+        const QString ssl = Int2Ssl::decompile(archive->read(index), &error);
+        QVERIFY2(!ssl.isEmpty(), qPrintable(error));
+        const DialogGraph g = DialogGraph::parseSsl(ssl);
+        QVERIFY(g.hasDialogue());
+        QCOMPARE(g.roots(), QStringList{"talk_p_proc"});
+        QVERIFY(g.usedMessageIds().contains(102));
+        QVERIFY(g.usedMessageIds().contains(118));
+        QVERIFY(!g.buildTree().isEmpty());
+    }
+
+    void fallout1ScriptsIfAvailable()
+    {
+        // BABYLON_F1_SCRIPTS = folder of Fallout 1 .int scripts (read only): decompile and read the dialogue trees.
+        const QString folder = qEnvironmentVariable("BABYLON_F1_SCRIPTS");
+        if (folder.isEmpty() || Int2Ssl::findExecutable().isEmpty())
+            QSKIP("BABYLON_F1_SCRIPTS or int2ssl not available");
+        const QFileInfoList files = QDir(folder).entryInfoList({"*.int", "*.INT"}, QDir::Files);
+        QVERIFY(!files.isEmpty());
+        int ok = 0, failed = 0, withDialogue = 0, fallout1Mode = 0, nodes = 0;
+        QStringList failures;
+        for (const QFileInfo &fi : files) {
+            QFile f(fi.absoluteFilePath());
+            QVERIFY(f.open(QIODevice::ReadOnly));
+            QString error;
+            bool f1 = false;
+            const QString ssl = Int2Ssl::decompile(f.readAll(), &error, &f1);
+            if (ssl.isEmpty()) {
+                ++failed;
+                if (failures.size() < 5)
+                    failures << fi.fileName() + ": " + error.left(80);
+                continue;
+            }
+            ++ok;
+            fallout1Mode += f1 ? 1 : 0;
+            const DialogGraph g = DialogGraph::parseSsl(ssl);
+            if (g.hasDialogue()) {
+                ++withDialogue;
+                nodes += int(g.buildTree().size());
+            }
+        }
+        qInfo() << "F1 scripts:" << files.size() << "decompiled" << ok << "failed" << failed << "fallout1-mode" << fallout1Mode
+                << "with dialogue" << withDialogue << "root nodes" << nodes << failures;
+        QVERIFY(ok > files.size() / 2);
+        QVERIFY(withDialogue > 20);
+    }
+
+    void pipboyLayoutWithSyntheticFont()
+    {
+        // font: lower case 6 px, upper case 7 px, others 5 px; letter spacing 1, word spacing 4 (space = 5 px)
+        QByteArray aaf("AAFF");
+        auto be16 = [&](int v) { aaf.append(char((v >> 8) & 0xFF)); aaf.append(char(v & 0xFF)); };
+        be16(9); be16(1); be16(4); be16(1);
+        for (int ch = 0; ch < 256; ++ch) {
+            be16(ch >= 'a' && ch <= 'z' ? 6 : ch >= 'A' && ch <= 'Z' ? 7 : 5);
+            be16(8);
+            aaf.append(QByteArray(4, '\0'));
+        }
+        aaf.append(QByteArray(100, '\0'));
+        const PipboyText::Font font = PipboyText::Font::fromAaf(aaf);
+        QVERIFY(font.isValid());
+        QCOMPARE(font.width("ab"), 14);
+        QCOMPARE(font.width(" "), 5);
+        QVERIFY(!PipboyText::Font::fromAaf("nope").isValid());
+
+        PipboyText::Measure m;
+        m.font = &font;
+        m.encoding = "cp1252";
+        m.maxWidth = 70;
+        QVERIFY(m.exact());
+        QCOMPARE(m.width("aaaa"), 28);
+
+        // greedy wrap: "aaaa bbbb" = 61 px fits, adding " cccc" (94) does not
+        QCOMPARE(PipboyText::layout("aaaa bbbb cccc dddd", m),
+                 (QStringList{"aaaa bbbb", "cccc dddd", "**END-DISK**"}));
+        // blank line = paragraph (END-PAR); single line break = hard break
+        QCOMPARE(PipboyText::layout("aaaa\n\nbbbb", m), (QStringList{"aaaa", "**END-PAR**", "bbbb", "**END-DISK**"}));
+        QCOMPARE(PipboyText::layout("aaaa\r\nbbbb", m), (QStringList{"aaaa", "bbbb", "**END-DISK**"}));
+        QCOMPARE(PipboyText::layout("  \n\n", m), (QStringList{"**END-DISK**"}));
+        // a word wider than the screen is cut
+        const QStringList cut = PipboyText::layout("aaaaaaaaaaaaaaaaaaaa", m);   // 20 x 7 = 140 px
+        QVERIFY(cut.size() >= 3);
+        QVERIFY(PipboyText::tooWide(cut, m).isEmpty());
+
+        // reflow undoes layout
+        const QStringList entries{"aaaa bbbb", "cccc dddd", "**END-PAR**", "eeee", "**END-DISK**"};
+        const QString text = PipboyText::reflow(entries, m);
+        QCOMPARE(text, QString("aaaa bbbb cccc dddd\n\neeee"));
+        QCOMPARE(PipboyText::layout(text, m), entries);
+        // a short line that was not cut by the layout stays a separate line (poems, lists...)
+        QCOMPARE(PipboyText::reflow({"Short", "line two", "**END-DISK**"}, m), QString("Short\nline two"));
+        // blank entries separate paragraphs like END-PAR
+        QCOMPARE(PipboyText::reflow({"one", " ", "two"}, m), QString("one\n\ntwo"));
+
+        // wider than the screen
+        QCOMPARE(PipboyText::tooWide({"aaaaaaaaaaaaaaaa", "**END-PAR**", "bbb"}, m), (QVector<int>{0}));
+
+        // 35 entries per page
+        QCOMPARE(PipboyText::pageCount(35), 1);
+        QCOMPARE(PipboyText::pageCount(36), 2);
+        QCOMPARE(PipboyText::pageCount(0), 0);
+
+        // fallback: characters per line
+        PipboyText::Measure f;
+        f.encoding = "cp1252";
+        f.maxWidth = 374;
+        f.fallbackChars = 53;
+        QVERIFY(!f.exact());
+        const QString fifty3(53, 'a'), fifty4(54, 'a');
+        QVERIFY(f.width(fifty3) <= 374);
+        QVERIFY(f.width(fifty4) > 374);
+        const QStringList lines = PipboyText::layout((fifty3.left(26) + ' ' + fifty3.left(26) + ' ' + fifty3.left(10)), f);
+        QCOMPARE(lines.first().size(), 53);
+    }
+
+    void pipboyFindsHolodisks()
+    {
+        QMap<int, QString> texts{{100, "Back"}, {101, "More"}, {300, "x"}, {301, "y"}, {302, "**END-DISK**"},
+                                 {303, "z"}, {304, "**END-DISK**"}, {400, "label"}, {401, "**END-PAR**"}};
+        const auto blocks = PipboyText::findHolodisks(texts);
+        QCOMPARE(blocks.size(), 2);
+        QCOMPARE(blocks.at(0).firstId, 300);
+        QCOMPARE(blocks.at(0).lastId, 302);
+        QCOMPARE(blocks.at(0).entryCount(), 3);
+        QCOMPARE(blocks.at(1).firstId, 303);   // a disk may start right after the previous one
+        QVERIFY(blocks.at(1).contains(304));
+        QVERIFY(!blocks.at(1).contains(305));
+    }
+
+    void pipboyRealGameFiles()
+    {
+        // BABYLON_SAMPLE_INSTALL: the real font1.aaf and pipboy.msg must round-trip (lines -> text -> lines).
+        const QString folder = qEnvironmentVariable("BABYLON_SAMPLE_INSTALL");
+        if (folder.isEmpty())
+            QSKIP("BABYLON_SAMPLE_INSTALL not set");
+        ProjectConfig c;
+        c.id = "pb";
+        c.name = "pb";
+        c.sources = VirtualFileSystem::discoverSources(folder);
+        c.outputDir = QDir::tempPath() + "/babylon_pb_out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.reload();
+        const QByteArray fontData = p.readInterfaceFont(1);
+        QVERIFY2(!fontData.isEmpty(), "font1.aaf not found in the sources");
+        const PipboyText::Font font = PipboyText::Font::fromAaf(fontData);
+        QVERIFY(font.isValid());
+
+        const TranslationDoc doc = p.loadDocument("game/pipboy.msg");
+        QMap<int, QString> texts;
+        for (const TranslationRow &r : doc.rows)
+            texts.insert(r.id, r.source);
+        const auto blocks = PipboyText::findHolodisks(texts);
+        QVERIFY(blocks.size() > 5);
+
+        PipboyText::Measure m;
+        m.font = &font;
+        m.encoding = "cp1252";
+        int identical = 0, total = 0, overWide = 0;
+        for (const auto &b : blocks) {
+            QStringList entries;
+            for (int id = b.firstId; id <= b.lastId; ++id)
+                entries << texts.value(id);
+            const QStringList again = PipboyText::layout(PipboyText::reflow(entries, m), m);
+            ++total;
+            // The game files pad lines with trailing/double spaces and use "" or END-PAR for a blank line: same screen.
+            auto normalize = [](const QStringList &list) {
+                QStringList out;
+                for (const QString &e : list) {
+                    const QString s = e.simplified();
+                    out << (s.isEmpty() ? PipboyText::endPar() : s);
+                }
+                return out;
+            };
+            const bool same = normalize(again) == normalize(entries);
+            identical += same ? 1 : 0;
+            if (!same && total < 40) {
+                int i = 0;
+                while (i < entries.size() && i < again.size() && entries.at(i) == again.at(i))
+                    ++i;
+                qInfo() << "block" << b.firstId << "differs at entry" << i << "of" << entries.size() << "/" << again.size()
+                        << "orig:" << entries.value(i) << "(" << m.width(entries.value(i)) << "px)"
+                        << "new:" << again.value(i) << "(" << m.width(again.value(i)) << "px)"
+                        << "next orig:" << entries.value(i + 1).left(30);
+            }
+            overWide += PipboyText::tooWide(again, m).isEmpty() ? 0 : 1;
+        }
+        qInfo() << "holodisks" << total << "round trip identical" << identical << "with a too wide line after layout" << overWide;
+        QCOMPARE(overWide, 0);              // layout never exceeds the screen
+        QVERIFY(identical * 10 >= total * 8);   // and rebuilds nearly every original body (poems/ASCII art may differ)
     }
 
     void stemmerAndMatcher()

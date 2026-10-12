@@ -186,6 +186,28 @@ SegmentStatus Project::statusOf(const TranslationRow &row)
     return SegmentStatus::Translated;
 }
 
+QByteArray Project::readDialogScript(const QString &relPath, QString *error) const
+{
+    QReadLocker locker(&m_lock);
+    const QString path = QStringLiteral("scripts/%1.int").arg(stemOf(relPath));
+    if (!m_vfs.exists(path)) {
+        if (error)
+            *error = QStringLiteral("scripts/%1.int not found in the sources").arg(stemOf(relPath));
+        return {};
+    }
+    return m_vfs.read(path, error);
+}
+
+QByteArray Project::readInterfaceFont(int index) const
+{
+    QReadLocker locker(&m_lock);
+    const QString name = QStringLiteral("font%1.aaf").arg(index);
+    for (const QString &path : {prefixFor(m_config.targetLanguage) + name, prefixFor(m_config.sourceLanguage) + name, name})
+        if (m_vfs.exists(path))
+            return m_vfs.read(path);
+    return {};
+}
+
 TranslationDoc Project::loadDocument(const QString &rel, QString *error) const
 {
     QReadLocker locker(&m_lock);

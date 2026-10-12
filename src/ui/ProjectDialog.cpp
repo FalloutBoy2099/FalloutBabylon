@@ -108,6 +108,9 @@ ProjectDialog::ProjectDialog(const ProjectConfig &config, bool isNew, QWidget *p
     form->addRow(tr("Target language"), m_targetLanguage);
     form->addRow(tr("Target encoding"), m_targetEncoding);
     form->addRow(tr("Output folder"), outputRow);
+    m_outputHint = new QLabel;
+    m_outputHint->setWordWrap(true);
+    form->addRow(QString(), m_outputHint);
 
     auto *box = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     auto *layout = new QVBoxLayout(this);
@@ -170,14 +173,19 @@ ProjectDialog::ProjectDialog(const ProjectConfig &config, bool isNew, QWidget *p
         }
     });
     connect(m_output, &QLineEdit::textEdited, this, [this] { m_outputEdited = true; });
+    connect(m_output, &QLineEdit::textChanged, this, [this] { updateOutputHint(); });
     connect(m_name, &QLineEdit::textChanged, this, [this] { updateOutputDefault(); });
-    connect(m_targetLanguage, &QComboBox::currentTextChanged, this, [this] { updateTargetEncoding(); });
+    connect(m_targetLanguage, &QComboBox::currentTextChanged, this, [this] {
+        updateTargetEncoding();
+        updateOutputHint();
+    });
     connect(m_sourceLanguage, &QComboBox::currentTextChanged, this, [this](const QString &lang) {
         selectData(m_sourceEncoding, TextCodec::defaultFor(lang));
     });
 
     m_outputEdited = !isNew;
     detectLanguages();
+    updateOutputHint();
 }
 
 void ProjectDialog::addSource(const QString &path)
@@ -245,19 +253,39 @@ void ProjectDialog::updateOutputDefault()
 {
     if (m_outputEdited)
         return;
-    // Write next to the sources when they are a plain folder; otherwise in Documents.
-    QString dir;
-    for (int i = m_sources->count() - 1; i >= 0 && dir.isEmpty(); --i) {
-        const QFileInfo fi(m_sources->item(i)->text());
-        if (fi.isDir())
-            dir = VirtualFileSystem::resolveFolderRoot(fi.absoluteFilePath());
+    QStringList sources;
+    for (int i = 0; i < m_sources->count(); ++i)
+        sources << m_sources->item(i)->text();
+    m_output->setText(QDir::toNativeSeparators(defaultOutputFor(sources, m_name->text())));
+}
+
+QString ProjectDialog::defaultOutputFor(const QStringList &sources, const QString &projectName)
+{
+    // 1. the game's data folder (master_patches): the folder loose files are read from, with the highest priority;
+    // 2. otherwise the folder of a mod that is not an archive folder (not named *.dat);
+    // 3. otherwise a folder of its own in Documents. An extracted master.dat/critter.dat/mod.dat folder is never used:
+    //    it stands for an archive and must stay untouched.
+    for (int i = int(sources.size()) - 1; i >= 0; --i) {
+        const QFileInfo fi(sources.at(i));
+        if (fi.isDir() && fi.fileName().compare(QLatin1String("data"), Qt::CaseInsensitive) == 0)
+            return fi.absoluteFilePath();
     }
-    if (dir.isEmpty()) {
-        const QString docs = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
-        const QString name = m_name->text().trimmed().isEmpty() ? QStringLiteral("translation") : m_name->text().trimmed();
-        dir = QDir(docs).filePath(QStringLiteral("FalloutBabylon/%1/data").arg(name));
+    for (const QString &s : sources) {
+        const QFileInfo fi(s);
+        if (fi.isDir() && !fi.fileName().endsWith(QLatin1String(".dat"), Qt::CaseInsensitive))
+            return VirtualFileSystem::resolveFolderRoot(fi.absoluteFilePath());
     }
-    m_output->setText(QDir::toNativeSeparators(dir));
+    const QString docs = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    const QString name = projectName.trimmed().isEmpty() ? QStringLiteral("translation") : projectName.trimmed();
+    return QDir(docs).filePath(QStringLiteral("FalloutBabylon/%1/data").arg(name));
+}
+
+void ProjectDialog::updateOutputHint()
+{
+    const QString language = m_targetLanguage->currentText().trimmed().toLower();
+    m_outputHint->setText(tr("Translated files are written to %1 (this folder overrides the sources).")
+                              .arg(QDir::toNativeSeparators(QDir(m_output->text().trimmed())
+                                                                 .filePath(QStringLiteral("text/%1/").arg(language.isEmpty() ? QStringLiteral("<language>") : language)))));
 }
 
 ProjectConfig ProjectDialog::config() const

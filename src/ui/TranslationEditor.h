@@ -1,5 +1,7 @@
 #pragma once
 
+#include "DialogTreePanel.h"
+#include "core/GrammarClient.h"
 #include "core/Project.h"
 
 #include <QTimer>
@@ -14,6 +16,7 @@ class QTableView;
 class MsgFilterProxy;
 class MsgTableModel;
 class SciEdit;
+class TranslationService;
 
 // Linear view of one message file: the list of records, the read-only source and the editable translation.
 class TranslationEditor : public QWidget
@@ -24,6 +27,7 @@ public:
     TranslationEditor(std::shared_ptr<Project> project, TranslationDoc doc, QWidget *parent = nullptr);
 
     Project *project() const { return m_project.get(); }
+    std::shared_ptr<Project> sharedProject() const { return m_project; }
     const QString &relPath() const { return m_doc.relPath; }
     bool isDirty() const;
     FileStats stats() const;
@@ -44,7 +48,19 @@ public:
     void insertText(const QString &text);
     void focusSearch();
 
+    void setService(TranslationService *service);
+    MsgTableModel *model() const { return m_model; }
+    int currentId() const;   // id of the line shown in the editors, -1 if none
+    int grammarIssueCount() const { return int(m_grammarIssues.size()); }
+    // Puts the model's text of the current line back into the editors (after a bulk change).
+    void refreshCurrent();
+    // Context sent to DeepL with a line: the dialogue name and the neighbouring source lines.
+    static QString contextFor(const TranslationDoc &doc, int row);
+    void translateCurrent();      // DeepL on the current line
+    void massTranslate();         // DeepL on many lines, with preview
+
     QVector<TodoItem> reviewItems() const;
+    QHash<int, DialogLine> dialogLines() const;
     SciEdit *sourceEditor() const { return m_source; }
     SciEdit *targetEditor() const { return m_target; }
 
@@ -62,6 +78,10 @@ private:
     void showTermTooltip(SciEdit *edit, bool inSource, int charIndex, const QPoint &globalPos);
     void applyFilters();
     QString termHtml(const GlossaryTerm &term) const;
+    void runCheck();              // grammar / spelling check of the translation (asynchronous)
+    void applyIssueSpans();
+    const GrammarIssue *issueAt(int charIndex) const;
+    void showMessage(const QString &html);
 
     std::shared_ptr<Project> m_project;
     TranslationDoc m_doc;
@@ -75,6 +95,11 @@ private:
     QLabel *m_issues = nullptr;
     QLabel *m_info = nullptr;
     QTimer m_highlightTimer;
+    QTimer m_checkTimer;
+    TranslationService *m_service = nullptr;
+    QVector<GrammarIssue> m_grammarIssues;   // for the text currently in the target editor
+    int m_checkSerial = 0;
+    bool m_translating = false;
     int m_currentRow = -1;      // source-model row shown in the editors
     bool m_loading = false;
     bool m_lastDirty = false;

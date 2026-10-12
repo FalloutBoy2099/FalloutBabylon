@@ -24,6 +24,7 @@ if ($Deploy -and -not $NoApp) {
     $dist = Join-Path $PSScriptRoot "dist\FalloutBabylon"
     New-Item -ItemType Directory -Force $dist | Out-Null
     Copy-Item (Join-Path $build "FalloutBabylon.exe") $dist -Force
+    Copy-Item (Join-Path $PSScriptRoot "tools\int2ssl.exe") $dist -Force
     & "$Qt\bin\windeployqt.exe" --release --no-translations --no-system-d3d-compiler --no-opengl-sw (Join-Path $dist "FalloutBabylon.exe")
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     Write-Host "Deployed to $dist"
