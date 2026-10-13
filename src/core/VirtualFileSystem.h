@@ -39,6 +39,10 @@ public:
 
     QString describe(const QString &path) const;
 
+    // Cheap identity of a file's content source (archive + entry, or loose file size/date): equal signatures
+    // mean the content did not change. Empty when the file does not exist.
+    QString signature(const QString &path) const;
+
     // Sources recognised in an installation folder: *.dat files in a sensible priority order, then data/.
     static QStringList discoverSources(const QString &folder);
     static QString resolveFolderRoot(const QString &folder);
@@ -47,6 +51,7 @@ private:
     struct Layer {
         QString source;
         std::shared_ptr<DatArchive> dat;  // null for a folder
+        QString stamp;                    // archive file size + date, computed once
     };
     std::vector<Layer> m_layers;
     QMap<QString, File> m_files;

@@ -283,4 +283,169 @@ VALUES = [
     'La traduzione richiede %1 voci ma sono liberi solo %2 id prima del record %3. Accorciala.',  # 279
     'scritto nel file',  # 280
     'I file tradotti vengono scritti in %1 (questa cartella ha la precedenza sulle sorgenti).',  # 281
+    'Non tradurre: questo termine deve restare invariato.',  # 282
+    'Aggiungi...',  # 283
+    'Modifica...',  # 284
+    'Elimina',  # 285
+    'Importa...',  # 286
+    'Esporta...',  # 287
+    'Aggiungi un termine personale (un nome da mantenere, una parola con traduzione fissa...)',  # 288
+    'Importa termini da un file CSV / TSV (termine; traduzione; mantieni)',  # 289
+    'Esporta i tuoi termini in un file CSV',  # 290
+    'Nuovo termine del glossario',  # 291
+    'Modifica il termine del glossario',  # 292
+    "Non tradurre (mantieni il termine così com'è)",  # 293
+    'Termine (lingua di origine):',  # 294
+    'Traduzione:',  # 295
+    'Servono sia il termine sia la sua traduzione.',  # 296
+    'Seleziona prima un termine.',  # 297
+    'Si possono eliminare solo i termini che hai aggiunto (in grassetto).',  # 298
+    'Importa termini del glossario',  # 299
+    'Glossari (*.csv *.tsv *.txt);;Tutti i file (*)',  # 300
+    'Impossibile leggere %1.',  # 301
+    'Nessun termine trovato in questo file.',  # 302
+    '%1 termine/i importato/i, %2 riga/righe ignorata/e.',  # 303
+    "Non c'è ancora nessun termine personale da esportare.",  # 304
+    'Esporta termini del glossario',  # 305
+    'File CSV (*.csv)',  # 306
+    'Impossibile scrivere %1.',  # 307
+    'Modifica questo termine...',  # 308
+    'Sostituisci con la mia traduzione...',  # 309
+    "Mantieni questo termine così com'è (non tradurre)",  # 310
+    'Elimina questo termine',  # 311
+    'Importa una traduzione esistente',  # 312
+    "Riutilizza la traduzione di un'altra versione del mod (per esempio una vecchia installazione tradotta in %1). Vengono riempite solo le righe non tradotte, a meno che tu non chieda di sostituire.",  # 313
+    'Cartella del gioco o del mod con la traduzione',  # 314
+    'Riutilizza anche le traduzioni di testi identici trovati con un altro id',  # 315
+    'Se il testo di origine è cambiato, importa la vecchia traduzione contrassegnata «da rivedere»',  # 316
+    'Sostituisci le traduzioni che il progetto ha già',  # 317
+    'Importa',  # 318
+    'Cartella',  # 319
+    'Lingua dei suoi testi di origine',  # 320
+    'Lingua della sua traduzione',  # 321
+    'Cartella con la traduzione',  # 322
+    'Nessuna cartella text/<lingua>/ trovata qui.',  # 323
+    '%1 sorgente/i trovata/e; lingue: %2.',  # 324
+    'Sostituire le traduzioni che il progetto ha già? Verranno riscritti i file della cartella di output.',  # 325
+    'Annulla',  # 326
+    'Importazione...',  # 327
+    '%1 file esaminato/i, %2 scritto/i.\n%3 riga/righe con lo stesso testo, %4 con testo di origine modificato (da rivedere), %5 trovata/e con un altro id; %6 già tradotta/e e mantenuta/e.',  # 328
+    'Annullamento...',  # 329
+    'Trova e sostituisci',  # 330
+    'Rapporto qualità',  # 331
+    '&Convalida (o rimuovi la convalida)',  # 332
+    "Annulla l'ultima operazione",  # 333
+    "Ripeti l'operazione",  # 334
+    'Trova e sostituisci nel &progetto...',  # 335
+    '&Rapporto qualità...',  # 336
+    '&Importa una traduzione esistente...',  # 337
+    'I file aperti di questo progetto verranno prima chiusi. Continuare?',  # 338
+    'Sostituisci',  # 339
+    'Sostituire «%1» con «%2» nella traduzione di %3 riga/righe di %4 file?\n\nI file non aperti vengono salvati subito.',  # 340
+    '%1 sostituzione/i in %2 file.',  # 341
+    "Annulla l'operazione: %1",  # 342
+    "Ripeti l'operazione: %1",  # 343
+    'Modificato dopo la convalida',  # 344
+    'Convalidato',  # 345
+    'Commento: %1',  # 346
+    'Traduzione precedente: %1',  # 347
+    'Seleziona una riga di missione per vedere come la spezza il Pip-Boy.',  # 348
+    'Missione %1: il Pip-Boy spezza il testo (dopo il numero) a %2 px.',  # 349
+    'Misurato con il carattere del gioco (font1.aaf).',  # 350
+    'Carattere del gioco non disponibile (o codifica multibyte): misura approssimativa.',  # 351
+    "%1 riga/righe nella traduzione, %2 nell'origine",  # 352
+    'Personalizzato',  # 353
+    'Segnaposto',  # 354
+    'Spazi',  # 355
+    'Codifica',  # 356
+    'Lunghezza',  # 357
+    'Duplicato incoerente',  # 358
+    'manca: %1',  # 359
+    'inatteso: %1',  # 360
+    'la traduzione contiene solo spazi',  # 361
+    "spazi all'inizio o alla fine",  # 362
+    "l'origine ha spazi all'inizio o alla fine",  # 363
+    'spazi doppi',  # 364
+    'non può essere scritto in %1: %2',  # 365
+    '%1 caratteri (limite %2)',  # 366
+    "etichetta breve dell'interfaccia: %1 caratteri per %2 nell'origine",  # 367
+    "%1 caratteri per %2 nell'origine",  # 368
+    'altrove (%1 volte): %2',  # 369
+    'Segnaposto persi (@Nome@, %d, {campo})',  # 370
+    'Caratteri che la codifica non può contenere',  # 371
+    'Troppo lungo',  # 372
+    'Duplicati incoerenti',  # 373
+    'nessun limite',  # 374
+    "Numero massimo di caratteri di una traduzione (0: segnala solo le traduzioni molto più lunghe dell'origine)",  # 375
+    'Lunghezza massima:',  # 376
+    'Esegui i controlli',  # 377
+    'I controlli riguardano i file salvati: salva prima le tue modifiche.',  # 378
+    'Esporta (CSV)...',  # 379
+    'Tutti i problemi',  # 380
+    'Controllo',  # 381
+    'Problema',  # 382
+    'Premi «Esegui i controlli».',  # 383
+    'Seleziona almeno un controllo.',  # 384
+    'Controllo in corso...',  # 385
+    'Controllo in corso... %1 / %2 file',  # 386
+    'Nessun problema trovato.',  # 387
+    '%1 problema/i',  # 388
+    ' — %1 mostrato/i',  # 389
+    "sono elencati solo i primi %1 (usa l'esportazione per averli tutti)",  # 390
+    'Esporta il rapporto',  # 391
+    'Cerca in tutto il progetto...',  # 392
+    'Sostituisci con (nella traduzione)...',  # 393
+    'Nella traduzione',  # 394
+    "Nell'origine",  # 395
+    'In entrambi',  # 396
+    'Espressione regolare',  # 397
+    'Maiuscole/minuscole',  # 398
+    'Parole intere',  # 399
+    'Cerca',  # 400
+    'Sostituisci le righe selezionate',  # 401
+    'Sostituisci tutto',  # 402
+    'Testo',  # 403
+    'Dopo la sostituzione',  # 404
+    'Scrivi un testo e premi Invio.',  # 405
+    'Scrivi un testo da cercare.',  # 406
+    'Espressione regolare non valida: %1',  # 407
+    'Ricerca in corso...',  # 408
+    ' (origine)',  # 409
+    'Nessun risultato.',  # 410
+    '%1 riga/righe, %2 occorrenza/e',  # 411
+    'sono mostrati solo i primi risultati',  # 412
+    'Non convalidate',  # 413
+    'Modificate dopo la convalida',  # 414
+    'Con un commento',  # 415
+    'Commento su questa riga (conservato nel progetto, non nei file del gioco)...',  # 416
+    'Ripristina',  # 417
+    'Rimetti la traduzione precedente',  # 418
+    'Traduzione precedente ripristinata',  # 419
+    'Traduzione DeepL',  # 420
+    'Traduzione di massa',  # 421
+    'Segno «da rivedere»',  # 422
+    'Convalida',  # 423
+    "Copia dell'origine",  # 424
+    "Accetta così com'è",  # 425
+    "&Aggiorna ora l'archivio DAT di output",  # 426
+    "Aggiornamento dell'archivio DAT...",  # 427
+    'Archivio DAT aggiornato: %1 file tradotto/i, %2 originale/i.',  # 428
+    'Archivio DAT NON aggiornato: %1',  # 429
+    'Archivio DAT',  # 430
+    "Impossibile scrivere l'archivio DAT:\n%1",  # 431
+    "L'archivio di output non può essere una delle sorgenti del progetto.",  # 432
+    "L'archivio di output deve essere un file .dat.",  # 433
+    'Cartella di file sciolti',  # 434
+    'es. french.dat',  # 435
+    'Fallout 2 (zlib)',  # 436
+    'Fallout 1',  # 437
+    'Salva anche i testi originali (file di riferimento)',  # 438
+    "Aggiunge copie text/<lingua di origine>/ dei file tradotti, così il riferimento di ogni traduzione è nell'archivio. Disattivalo se un mod caricato dopo deve continuare a fornire i testi originali.",  # 439
+    'Formato:',  # 440
+    'Output',  # 441
+    'Archivio di output',  # 442
+    'Archivi DAT (*.dat)',  # 443
+    'La traduzione viene consegnata in %1, ricostruito dopo ogni salvataggio. Contiene text/%2/ con i file tradotti',  # 444
+    ', e i testi originali in text/%1/.',  # 445
+    "Scegli l'archivio di output.",  # 446
 ]

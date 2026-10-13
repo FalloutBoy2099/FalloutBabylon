@@ -103,11 +103,66 @@ dans `game/pipboy.msg` :
 Vérifié sur les vrais `pipboy.msg` : les 21 holodisques de Fallout 2 (RPU) et les 18 de l'installation Fallout 1 se
 reconstituent à l'identique (aux espaces près) avec cette largeur et cette police.
 
+Le même panneau prévisualise **`game/quests.msg`** : le moteur coupe chaque description de quête (précédée de « N. »)
+à **350 px** avec `font1.aaf` ; sélectionner une ligne montre la coupure de la source et de la traduction. Aucune
+écriture n'est nécessaire (le moteur découpe lui-même).
+
+### Outils de travail
+
+* **Réutiliser une ancienne traduction** (Fichier > Importer une traduction existante) : on désigne un dossier de jeu ou de
+  mod (par exemple l'ancienne installation `F2_RPU_2.4.34_old`, y compris ses archives extraites en dossier `*.dat`),
+  les langues source/cible, puis chaque ligne est rapprochée par identifiant (même texte source → reprise telle quelle ;
+  source modifié → ancienne traduction reprise mais marquée « à revoir », avec l'ancienne source en commentaire et l'ancienne
+  traduction conservée pour comparaison) et, à défaut, par le texte lui-même sous un autre identifiant. Seules les lignes non
+  traduites sont remplies, sauf demande de remplacement. Sur le RPU 2.4.34 avec le français de l'ancienne version :
+  77 328 → 12 862 lignes non traduites en environ 6 s.
+* **Rechercher / remplacer dans tout le projet** (`Ctrl+Maj+F`) : dans la traduction, la source ou les deux, expression
+  régulière (`\1`…), casse, mots entiers ; tableau des résultats avec aperçu « après remplacement », cases à cocher,
+  double-clic pour ouvrir la ligne, remplacement des lignes cochées ou de toutes (confirmation ; les fichiers ouverts sont
+  modifiés dans l'éditeur, les autres enregistrés).
+* **Rapport qualité** (Outils > Rapport qualité) sur les fichiers enregistrés : jetons perdus ou inventés (`@Nom@`, `%d`,
+  `{champ}`), espaces (début/fin, doublés, texte vide), caractères impossibles dans l'encodage cible (qui deviendraient
+  `?`), traductions trop longues (limite réglable ; libellés courts de `game/` dont la traduction dépasse nettement la
+  source), doublons incohérents (même source traduite différemment dans le projet) et non-respect du glossaire. Filtre par
+  type, double-clic pour ouvrir la ligne, export CSV.
+* **Glossaire manuel** : en plus des noms lus dans `/game`, termes personnels (Ajouter…, ou clic droit > « Remplacer par ma
+  propre traduction… » sur un terme existant), option « ne pas traduire », import / export CSV ou TSV
+  (`terme;traduction;conserver`). Ils sont enregistrés avec le projet, apparaissent en gras, l'emportent sur les traductions
+  trouvées dans les fichiers du jeu et alimentent les alertes de cohérence et le glossaire DeepL.
+* **Sans glossaire DeepL** (plan gratuit déjà occupé, langue non gérée…), les termes sûrs du glossaire sont substitués
+  localement : forme exacte, un seul équivalent, noms propres ou expressions de plusieurs mots (jamais un mot courant en
+  début de phrase) ; DeepL les laisse intacts et ils sont remplacés par la traduction du projet.
+* **Annuler / rétablir au niveau du fichier** (`Ctrl+Alt+Z` / `Ctrl+Alt+Y`) pour les opérations groupées : traduction en masse,
+  remplacement, traduction DeepL d'une ligne, marques « à revoir », validation, copie de la source, « accepter tel quel »,
+  restauration de la traduction précédente (30 niveaux). La frappe garde l'annulation habituelle de l'éditeur de texte.
+* **Revue** : commentaire par ligne (champ sous la traduction, conservé dans le projet), **validation** (`Ctrl+Alt+V`) d'une
+  traduction relue — si le texte change ensuite la ligne apparaît « modifiée depuis la validation » —, colonne ✎ du tableau
+  (✓ validée, ≠ modifiée depuis, ✎ commentaire), filtres Validées / Non validées / Modifiées depuis la validation / Avec
+  un commentaire, et affichage de la **traduction précédente** (après un import ou un changement de source) avec un bouton
+  Restaurer.
+* **Réouverture rapide** : les statistiques des fichiers inchangés sont mises en cache
+  (`%APPDATA%/FalloutBabylon/projects/<id>.stats.json`, clé : taille et date des fichiers) ; seuls les fichiers modifiés
+  sont relus.
+
+* **Sortie dans une archive `.dat`** (Paramètres du projet > Sortie > « Archive DAT ») : au lieu d'un dossier de fichiers
+  libres, la traduction est livrée dans un `.dat` (Fallout 2 zlib ou Fallout 1, proposé d'après les sources). Les fichiers
+  enregistrés restent dans un dossier de travail de l'application (`%APPDATA%/FalloutBabylon/projects/<id>.output`) et
+  l'archive est **reconstruite automatiquement environ 1 s après chaque enregistrement** (aussi après un remplacement
+  global ou un import, et à la fermeture du projet) ; Fichier > « Mettre à jour l'archive DAT de sortie maintenant » force
+  la reconstruction. L'écriture est atomique : l'ancienne archive reste intacte si le jeu la verrouille (message dans la
+  barre d'état, nouvel essai à l'enregistrement suivant). Elle ne contient que `text/<langue cible>/…` des fichiers
+  traduits, plus, par défaut, leurs **textes originaux** sous `text/<langue source>/…` (fichiers de référence ; à
+  décocher si un mod chargé plus tard doit continuer à fournir l'anglais). Si l'archive existe déjà (autre ordinateur,
+  passage d'un dossier à une archive), ses fichiers traduits sont recopiés dans le dossier de travail à l'ouverture du
+  projet. L'archive ne peut pas être l'une des sources du projet. Le placement dans le jeu (`mods\` avec `mods_order.txt`
+  de sfall, ou `patchNNN.dat`) reste à votre charge.
+
 ### Raccourcis
 
 `Ctrl+S` enregistrer · `Ctrl+Maj+S` tout enregistrer · `Ctrl+↓/↑` ligne suivante/précédente ·
 `Ctrl+Maj+↓/↑` prochaine/précédente ligne non traduite · `Ctrl+Maj+C` copier la source ·
-`Ctrl+Entrée` valider tel quel · `Ctrl+R` marquer « à revoir » · `Ctrl+F` rechercher · `F5` actualiser les statistiques.
+`Ctrl+Entrée` valider tel quel · `Ctrl+R` marquer « à revoir » · `Ctrl+Alt+V` valider · `Ctrl+F` rechercher dans le fichier ·
+`Ctrl+Maj+F` rechercher dans le projet · `Ctrl+Alt+Z/Y` annuler/rétablir l'opération · `F5` actualiser les statistiques.
 
 ### Comment un segment est jugé « traduit »
 
@@ -158,7 +213,7 @@ third_party/scintilla   Scintilla (licence HPND)
 
 ### i18n
 
-Les chaînes sources sont en anglais ; les 9 autres langues sont complètes (278 chaînes). Pour mettre à jour :
+Les chaînes sources sont en anglais ; les 9 autres langues sont complètes (426 chaînes). Pour mettre à jour :
 `lupdate src -ts i18n/*.ts -no-obsolete`, ajouter les nouvelles chaînes à `tools/translations/fr.py` (dictionnaire) puis,
 après `python tools/make_keys.py`, aux listes `VALUES` des autres langues (alignées sur `_keys.py` ; ajouter à la fin) et
 lancer `python tools/fill_ts.py`, qui vérifie aussi que les jetons (`%1`, balises HTML, retours à la ligne) sont conservés.

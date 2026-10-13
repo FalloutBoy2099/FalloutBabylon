@@ -13,6 +13,8 @@ struct GlossaryTerm {
     QStringList targets;     // distinct translations, most frequent first (empty = not translated yet)
     QString category;        // "Item", "Skill", "Location"...
     QStringList origins;     // "pro_item.msg#100"
+    bool custom = false;     // entered by hand (it overrides what the game files say)
+    bool keep = false;       // custom term that must stay unchanged in the translation
     bool conflict() const { return targets.size() > 1; }
 };
 
@@ -34,6 +36,8 @@ public:
 
     void clear();
     void add(const QString &source, const QString &target, const QString &category, const QString &origin);
+    // A term entered by hand: its translation wins over the ones found in the game files.
+    void addCustom(const QString &source, const QString &target, bool keep, const QString &category);
     // Groups duplicates and builds the matchers.
     void finalize(const QString &sourceLanguage, const QString &targetLanguage);
 
@@ -49,6 +53,7 @@ public:
 private:
     struct Raw {
         QString source, target, category, origin;
+        bool custom = false, keep = false;
     };
     QVector<Raw> m_raw;
     QVector<GlossaryTerm> m_terms;

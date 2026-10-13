@@ -34,7 +34,12 @@ add_library(babylon_core STATIC
     src/core/DeepLClient.cpp
     src/core/GrammarClient.cpp
     src/core/AppSettings.cpp
-    src/core/PipboyText.cpp)
+    src/core/PipboyText.cpp
+    src/core/TranslationMemory.cpp
+    src/core/ProjectSearch.cpp
+    src/core/QualityCheck.cpp
+    src/core/CustomGlossary.cpp
+    src/core/OutputArchive.cpp)
 target_include_directories(babylon_core PUBLIC src)
 target_link_libraries(babylon_core PUBLIC Qt6::Core Qt6::Network)
 
@@ -71,6 +76,9 @@ set(UI_SOURCES
     src/ui/TodoPanel.cpp
     src/ui/DialogTreePanel.cpp
     src/ui/PipboyPanel.cpp
+    src/ui/ImportTranslationDialog.cpp
+    src/ui/SearchPanel.cpp
+    src/ui/QualityPanel.cpp
     src/ui/TranslationService.cpp
     src/ui/SettingsDialog.cpp
     src/ui/MassTranslateDialog.cpp

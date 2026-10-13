@@ -283,4 +283,169 @@ VALUES = [
     'Die Übersetzung braucht %1 Einträge, aber vor Eintrag %3 sind nur %2 IDs frei. Kürzen Sie sie.',  # 279
     'in die Datei geschrieben',  # 280
     'Übersetzte Dateien werden nach %1 geschrieben (dieser Ordner hat Vorrang vor den Quellen).',  # 281
+    'Nicht übersetzen: Dieser Begriff muss unverändert bleiben.',  # 282
+    'Hinzufügen...',  # 283
+    'Bearbeiten...',  # 284
+    'Löschen',  # 285
+    'Importieren...',  # 286
+    'Exportieren...',  # 287
+    'Eigenen Begriff hinzufügen (ein Name, der bleibt, ein Wort mit fester Übersetzung...)',  # 288
+    'Begriffe aus einer CSV-/TSV-Datei importieren (Begriff; Übersetzung; beibehalten)',  # 289
+    'Eigene Begriffe in eine CSV-Datei exportieren',  # 290
+    'Neuer Glossarbegriff',  # 291
+    'Glossarbegriff bearbeiten',  # 292
+    'Nicht übersetzen (Begriff unverändert lassen)',  # 293
+    'Begriff (Ausgangssprache):',  # 294
+    'Übersetzung:',  # 295
+    'Begriff und Übersetzung sind beide erforderlich.',  # 296
+    'Wählen Sie zuerst einen Begriff aus.',  # 297
+    'Nur selbst hinzugefügte Begriffe (fett) können gelöscht werden.',  # 298
+    'Glossarbegriffe importieren',  # 299
+    'Glossare (*.csv *.tsv *.txt);;Alle Dateien (*)',  # 300
+    '%1 kann nicht gelesen werden.',  # 301
+    'In dieser Datei wurde kein Begriff gefunden.',  # 302
+    '%1 Begriff(e) importiert, %2 Zeile(n) ignoriert.',  # 303
+    'Es gibt noch keinen eigenen Begriff zum Exportieren.',  # 304
+    'Glossarbegriffe exportieren',  # 305
+    'CSV-Dateien (*.csv)',  # 306
+    '%1 kann nicht geschrieben werden.',  # 307
+    'Diesen Begriff bearbeiten...',  # 308
+    'Durch eigene Übersetzung ersetzen...',  # 309
+    'Diesen Begriff unverändert lassen (nicht übersetzen)',  # 310
+    'Diesen Begriff löschen',  # 311
+    'Vorhandene Übersetzung importieren',  # 312
+    'Verwendet die Übersetzung einer anderen Version der Mod wieder (z. B. eine ältere Installation, die in %1 übersetzt ist). Nur unübersetzte Zeilen werden gefüllt, außer Sie verlangen das Ersetzen.',  # 313
+    'Spiel- oder Mod-Ordner mit der Übersetzung',  # 314
+    'Auch Übersetzungen identischer Texte unter einer anderen ID wiederverwenden',  # 315
+    'Bei geänderter Quelle die alte Übersetzung als „zu prüfen“ markiert importieren',  # 316
+    'Übersetzungen ersetzen, die das Projekt bereits hat',  # 317
+    'Importieren',  # 318
+    'Ordner',  # 319
+    'Sprache der Quelltexte',  # 320
+    'Sprache der Übersetzung',  # 321
+    'Ordner mit der Übersetzung',  # 322
+    'Hier wurde kein Ordner text/<Sprache>/ gefunden.',  # 323
+    '%1 Quelle(n) gefunden; Sprachen: %2.',  # 324
+    'Die Übersetzungen ersetzen, die das Projekt bereits hat? Dadurch werden die Dateien im Ausgabeordner neu geschrieben.',  # 325
+    'Abbrechen',  # 326
+    'Import läuft...',  # 327
+    '%1 Datei(en) untersucht, %2 geschrieben.\n%3 Zeile(n) mit gleichem Text, %4 mit geänderter Quelle (zu prüfen), %5 unter anderer ID gefunden; %6 bereits übersetzt und beibehalten.',  # 328
+    'Abbruch...',  # 329
+    'Suchen und Ersetzen',  # 330
+    'Qualitätsbericht',  # 331
+    '&Validieren (oder Validierung entfernen)',  # 332
+    'Letzte Operation rückgängig machen',  # 333
+    'Operation wiederholen',  # 334
+    'Im &Projekt suchen und ersetzen...',  # 335
+    '&Qualitätsbericht...',  # 336
+    'Vorhandene Übersetzung &importieren...',  # 337
+    'Die geöffneten Dateien dieses Projekts werden zuerst geschlossen. Fortfahren?',  # 338
+    'Ersetzen',  # 339
+    '„%1“ durch „%2“ in der Übersetzung von %3 Zeile(n) in %4 Datei(en) ersetzen?\n\nDateien, die nicht geöffnet sind, werden sofort gespeichert.',  # 340
+    '%1 Ersetzung(en) in %2 Datei(en).',  # 341
+    'Operation rückgängig machen: %1',  # 342
+    'Operation wiederholen: %1',  # 343
+    'Seit der Validierung geändert',  # 344
+    'Validiert',  # 345
+    'Kommentar: %1',  # 346
+    'Vorherige Übersetzung: %1',  # 347
+    'Wählen Sie eine Questzeile, um zu sehen, wie der Pip-Boy sie umbricht.',  # 348
+    'Quest %1: Der Pip-Boy bricht den Text (nach der Nummer) bei %2 px um.',  # 349
+    'Mit der Spielschrift gemessen (font1.aaf).',  # 350
+    'Spielschrift nicht verfügbar (oder Mehrbyte-Kodierung): ungefähre Messung.',  # 351
+    '%1 Zeile(n) in der Übersetzung, %2 in der Quelle',  # 352
+    'Benutzerdefiniert',  # 353
+    'Platzhalter',  # 354
+    'Leerzeichen',  # 355
+    'Kodierung',  # 356
+    'Länge',  # 357
+    'Inkonsistentes Duplikat',  # 358
+    'fehlt: %1',  # 359
+    'unerwartet: %1',  # 360
+    'die Übersetzung enthält nur Leerzeichen',  # 361
+    'Leerzeichen am Anfang oder Ende',  # 362
+    'die Quelle hat Leerzeichen am Anfang oder Ende',  # 363
+    'doppelte Leerzeichen',  # 364
+    'kann nicht als %1 geschrieben werden: %2',  # 365
+    '%1 Zeichen (Grenze %2)',  # 366
+    'kurzes Oberflächenlabel: %1 Zeichen für %2 in der Quelle',  # 367
+    '%1 Zeichen für %2 in der Quelle',  # 368
+    'anderswo (%1-mal): %2',  # 369
+    'Verlorene Platzhalter (@Name@, %d, {Feld})',  # 370
+    'Zeichen, die die Kodierung nicht darstellen kann',  # 371
+    'Zu lang',  # 372
+    'Inkonsistente Duplikate',  # 373
+    'keine Grenze',  # 374
+    'Höchstzahl der Zeichen einer Übersetzung (0: nur Übersetzungen melden, die viel länger als die Quelle sind)',  # 375
+    'Maximale Länge:',  # 376
+    'Prüfungen starten',  # 377
+    'Die Prüfungen betreffen die gespeicherten Dateien: Speichern Sie zuerst Ihre Änderungen.',  # 378
+    'Exportieren (CSV)...',  # 379
+    'Alle Probleme',  # 380
+    'Prüfung',  # 381
+    'Problem',  # 382
+    'Klicken Sie auf „Prüfungen starten“.',  # 383
+    'Wählen Sie mindestens eine Prüfung aus.',  # 384
+    'Prüfung läuft...',  # 385
+    'Prüfung läuft... %1 / %2 Dateien',  # 386
+    'Kein Problem gefunden.',  # 387
+    '%1 Problem(e)',  # 388
+    ' — %1 angezeigt',  # 389
+    'nur die ersten %1 werden aufgelistet (für alle den Export verwenden)',  # 390
+    'Bericht exportieren',  # 391
+    'Im ganzen Projekt suchen...',  # 392
+    'Ersetzen durch (in der Übersetzung)...',  # 393
+    'In der Übersetzung',  # 394
+    'In der Quelle',  # 395
+    'In beiden',  # 396
+    'Regulärer Ausdruck',  # 397
+    'Groß-/Kleinschreibung beachten',  # 398
+    'Ganze Wörter',  # 399
+    'Suchen',  # 400
+    'Markierte Zeilen ersetzen',  # 401
+    'Alle ersetzen',  # 402
+    'Text',  # 403
+    'Nach dem Ersetzen',  # 404
+    'Text eingeben und Eingabetaste drücken.',  # 405
+    'Geben Sie einen Suchtext ein.',  # 406
+    'Ungültiger regulärer Ausdruck: %1',  # 407
+    'Suche läuft...',  # 408
+    ' (Quelle)',  # 409
+    'Kein Ergebnis.',  # 410
+    '%1 Zeile(n), %2 Treffer',  # 411
+    'nur die ersten Ergebnisse werden angezeigt',  # 412
+    'Nicht validiert',  # 413
+    'Seit der Validierung geändert',  # 414
+    'Mit Kommentar',  # 415
+    'Kommentar zu dieser Zeile (wird im Projekt gespeichert, nicht in den Spieldateien)...',  # 416
+    'Wiederherstellen',  # 417
+    'Die vorherige Übersetzung zurückholen',  # 418
+    'Vorherige Übersetzung wiederhergestellt',  # 419
+    'DeepL-Übersetzung',  # 420
+    'Massenübersetzung',  # 421
+    'Markierung „zu prüfen“',  # 422
+    'Validierung',  # 423
+    'Quelle kopieren',  # 424
+    'Unverändert übernehmen',  # 425
+    'DAT-Ausgabearchiv &jetzt aktualisieren',  # 426
+    'DAT-Archiv wird aktualisiert...',  # 427
+    'DAT-Archiv aktualisiert: %1 übersetzte Datei(en), %2 Original(e).',  # 428
+    'DAT-Archiv NICHT aktualisiert: %1',  # 429
+    'DAT-Archiv',  # 430
+    'Das DAT-Archiv konnte nicht geschrieben werden:\n%1',  # 431
+    'Das Ausgabearchiv darf keine der Quellen des Projekts sein.',  # 432
+    'Das Ausgabearchiv muss eine .dat-Datei sein.',  # 433
+    'Ordner mit losen Dateien',  # 434
+    'z. B. french.dat',  # 435
+    'Fallout 2 (zlib)',  # 436
+    'Fallout 1',  # 437
+    'Auch die Originaltexte speichern (Referenzdateien)',  # 438
+    'Fügt Kopien text/<Quellsprache>/ der übersetzten Dateien hinzu, damit die Referenz jeder Übersetzung im Archiv liegt. Deaktivieren, wenn eine später geladene Mod die Originaltexte weiter liefern soll.',  # 439
+    'Format:',  # 440
+    'Ausgabe',  # 441
+    'Ausgabearchiv',  # 442
+    'DAT-Archive (*.dat)',  # 443
+    'Die Übersetzung wird in %1 geliefert und nach jedem Speichern neu aufgebaut. Es enthält text/%2/ mit den übersetzten Dateien',  # 444
+    ' und die Originaltexte unter text/%1/.',  # 445
+    'Wählen Sie das Ausgabearchiv.',  # 446
 ]

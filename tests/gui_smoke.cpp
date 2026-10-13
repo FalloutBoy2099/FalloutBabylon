@@ -7,7 +7,14 @@
 #include "core/Int2Ssl.h"
 #include "core/ProjectStore.h"
 #include "ui/DialogTreePanel.h"
+#include "core/DatArchive.h"
+#include "core/ProjectSearch.h"
+#include "core/QualityCheck.h"
+#include "ui/GlossaryPanel.h"
+#include "ui/ImportTranslationDialog.h"
 #include "ui/MassTranslateDialog.h"
+#include "ui/QualityPanel.h"
+#include "ui/SearchPanel.h"
 #include "ui/MsgTableModel.h"
 #include "ui/PipboyPanel.h"
 #include "ui/ProjectDialog.h"
@@ -21,6 +28,7 @@
 
 #include <QDir>
 #include <QDockWidget>
+#include <QLineEdit>
 #include <QSettings>
 #include <QFile>
 #include <QStandardPaths>
@@ -183,6 +191,204 @@ private slots:
         QVERIFY(saved.contains("{300}{}{Court. Fin.}"));
         QVERIFY(saved.contains("{301}{}{**END-DISK**}"));
         QVERIFY(saved.contains("{310}{}{Unrelated label}"));
+    }
+
+    void reviewToolsWorkflow()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString mod = dir.path() + "/mod";
+        const QString old = dir.path() + "/old";
+        write(mod + "/text/english/game/pro_item.msg", "{100}{}{Stimpak}\r\n{200}{}{Leather Armor}\r\n");
+        write(mod + "/text/french/game/pro_item.msg", "{100}{}{Stimpak}\r\n{200}{}{Armure en cuir}\r\n");
+        write(mod + "/text/english/game/quests.msg",
+              "{100}{}{Find the water chip in the vault and bring it back to the elder before the water runs out for good.}\r\n");
+        write(mod + "/text/french/game/quests.msg",
+              "{100}{}{Trouvez la puce \xE0 eau dans l'abri et rapportez-la \xE0 l'ancien avant que l'eau ne soit " "\xE9puis\xE9" "e.}\r\n");
+        write(mod + "/text/english/dialog/abel.msg",
+              "{100}{}{Hello @Name@, need some Stimpaks?}\r\n"
+              "{101}{}{I can sell you Leather Armor.}\r\n"
+              "{102}{}{Goodbye.}\r\n");
+        write(mod + "/text/french/dialog/abel.msg",
+              "{100}{}{Bonjour, besoin de Stimpaks ?}\r\n"
+              "{101}{}{Je peux te vendre une cuirasse.}\r\n");
+        write(old + "/text/english/dialog/abel.msg", "{102}{}{Goodbye.}\r\n");
+        write(old + "/text/french/dialog/abel.msg", "{102}{}{Au revoir.}\r\n");
+
+        ProjectConfig cfg;
+        cfg.id = "tools1";
+        cfg.name = "Tools";
+        cfg.sources = {mod};
+        cfg.outputDir = dir.path() + "/out";
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);
+        window.openFile(cfg.id, "dialog/abel.msg");
+        auto *editor = window.findChild<TranslationEditor *>();
+        QVERIFY(editor);
+        auto *model = editor->model();
+        auto *table = editor->findChild<QTableView *>();
+        QVERIFY(table);
+
+        // --- file-level undo / redo
+        table->selectRow(0);
+        editor->toggleReview();
+        QVERIFY(model->row(0).review);
+        QVERIFY(model->canUndo());
+        QVERIFY(editor->undoOperation());
+        QVERIFY(!model->row(0).review);
+        QVERIFY(model->canRedo());
+        QVERIFY(editor->redoOperation());
+        QVERIFY(model->row(0).review);
+        QVERIFY(editor->undoOperation());
+
+        // --- replace in an open file is one undoable step
+        ProjectSearch::Options replace;
+        replace.text = "Stimpaks";
+        QCOMPARE(editor->replaceInTarget(replace, "Seringues", {}), 1);
+        QVERIFY(model->row(0).target.contains("Seringues"));
+        QVERIFY(editor->undoOperation());
+        QVERIFY(model->row(0).target.contains("Stimpaks"));
+
+        // --- validation, comment and the filters that use them
+        table->selectRow(1);
+        editor->toggleValidated();
+        QVERIFY(model->row(1).validated != 0);
+        QVERIFY(!model->row(1).changedSinceValidation());
+        model->setComment(1, "check the tone");
+        MsgFilterProxy proxy;
+        proxy.setSourceModel(model);
+        proxy.setStatusFilter(MsgFilterProxy::Validated);
+        QCOMPARE(proxy.rowCount(), 1);
+        proxy.setStatusFilter(MsgFilterProxy::WithComment);
+        QCOMPARE(proxy.rowCount(), 1);
+        model->setTarget(1, "Je peux te vendre une armure en cuir.");
+        editor->refreshCurrent();     // the text editor shows the model's text again
+        QVERIFY(model->row(1).changedSinceValidation());
+        proxy.setStatusFilter(MsgFilterProxy::ChangedSinceValidation);
+        QCOMPARE(proxy.rowCount(), 1);
+        proxy.setStatusFilter(MsgFilterProxy::Validated);
+        QCOMPARE(proxy.rowCount(), 0);
+        QVERIFY(editor->save());
+        {
+            Project reopened(cfg);
+            reopened.setStateFile(ProjectStore::stateFile(cfg.id));
+            reopened.reload();
+            const TranslationDoc doc = reopened.loadDocument("dialog/abel.msg");
+            QCOMPARE(doc.rows[1].comment, QString("check the tone"));
+            QVERIFY(doc.rows[1].changedSinceValidation());
+        }
+
+        // --- search panel
+        auto *search = window.findChild<SearchPanel *>();
+        QVERIFY(search);
+        const auto edits = search->findChildren<QLineEdit *>();
+        QVERIFY(!edits.isEmpty());
+        edits.first()->setText("stimpak");
+        search->searchNow();
+        QTRY_VERIFY_WITH_TIMEOUT(search->resultCount() > 0, 5000);
+        QVERIFY(search->hits().first().inTarget);
+
+        // --- quality report: the lost @Name@ is found
+        auto *quality = window.findChild<QualityPanel *>();
+        QVERIFY(quality);
+        quality->runNow();
+        QTRY_VERIFY_WITH_TIMEOUT(!quality->running() && quality->totalCount() > 0, 8000);
+        bool tokenIssue = false;
+        for (const auto &issue : quality->issues())
+            tokenIssue = tokenIssue || (issue.kind == QualityCheck::Tokens && issue.id == 100);
+        QVERIFY(tokenIssue);
+
+        // --- manual glossary term: stored with the project and added to the rebuilt glossary
+        auto *glossary = window.findChild<GlossaryPanel *>();
+        QVERIFY(glossary);
+        glossary->addOrReplaceTerm({"Abel", "Abel", true});
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 10000);
+        QCOMPARE(editor->sharedProject()->customTerms().size(), 1);
+        bool found = false;
+        for (const GlossaryTerm &t : editor->sharedProject()->glossary().terms())
+            found = found || (t.custom && t.keep && t.source == "Abel");
+        QVERIFY(found);
+        glossary->removeTerm("abel");
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 10000);
+        QVERIFY(editor->sharedProject()->customTerms().isEmpty());
+
+        // --- quests.msg: preview of the wrapping done by the engine
+        window.openFile(cfg.id, "game/quests.msg");
+        auto *pipboy = window.findChild<PipboyPanel *>();
+        QVERIFY(pipboy);
+        QTRY_VERIFY_WITH_TIMEOUT(pipboy->questMode() && !pipboy->previewText().isEmpty(), 3000);
+        QVERIFY(pipboy->previewText().contains("Trouvez"));
+        QVERIFY(pipboy->previewText().count('\n') >= 1);      // wrapped on several lines
+
+        // --- reuse of an old translation, through the dialog
+        auto project = editor->sharedProject();
+        ImportTranslationDialog importDialog(project);
+        importDialog.show();
+        importDialog.setFolder(old);
+        importDialog.startNow();
+        QTRY_VERIFY_WITH_TIMEOUT(importDialog.imported(), 8000);
+        QCOMPARE(importDialog.report().exact, 1);
+    }
+
+    void archiveOutputWorkflow()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString mod = dir.path() + "/mod";
+        write(mod + "/text/english/dialog/abel.msg", "{100}{}{Hello there.}\r\n{101}{}{Goodbye.}\r\n");
+
+        ProjectConfig cfg;
+        cfg.id = "archive1";
+        cfg.name = "Archive";
+        cfg.sources = {mod};
+        cfg.outputArchive = dir.path() + "/out/french.dat";
+        cfg.outputDir = ProjectStore::stagingDir(cfg.id);
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+        QDir(cfg.outputDir).removeRecursively();
+
+        // the settings dialog keeps the archive mode and uses the application's working folder
+        {
+            ProjectDialog dialog(cfg, false);
+            const ProjectConfig back = dialog.config();
+            QCOMPARE(QDir::cleanPath(back.outputArchive), QDir::cleanPath(cfg.outputArchive));
+            QCOMPARE(back.outputArchiveFormat, QString("dat2"));
+            QVERIFY(back.archiveWithSource);
+            QCOMPARE(QDir::cleanPath(back.outputDir), QDir::cleanPath(cfg.outputDir));
+        }
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QSignalSpy built(&window, &MainWindow::archiveBuilt);
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);
+        window.openFile(cfg.id, "dialog/abel.msg");
+        auto *editor = window.findChild<TranslationEditor *>();
+        QVERIFY(editor);
+        editor->model()->setTarget(0, "Bonjour.");
+        editor->refreshCurrent();
+        QVERIFY(editor->save());
+
+        QTRY_VERIFY_WITH_TIMEOUT(built.count() >= 1, 8000);
+        QVERIFY(built.last().at(1).toBool());
+        const auto dat = DatArchive::open(cfg.outputArchive);
+        QVERIFY(dat);
+        const int fr = dat->indexOf("text/french/dialog/abel.msg");
+        QVERIFY(fr >= 0);
+        QVERIFY(dat->read(fr).contains("{100}{}{Bonjour.}"));
+        QVERIFY(dat->indexOf("text/english/dialog/abel.msg") >= 0);   // the reference copy
+        QVERIFY(!QFileInfo::exists(dir.path() + "/out/text"));         // no loose files next to the archive
     }
 
     void servicesWorkflow()

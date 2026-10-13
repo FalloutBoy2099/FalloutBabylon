@@ -283,4 +283,169 @@ VALUES = [
     'Překlad potřebuje %1 položek, ale před záznamem %3 je volných jen %2 ID. Zkraťte ho.',  # 279
     'zapsáno do souboru',  # 280
     'Přeložené soubory se zapisují do %1 (tato složka má přednost před zdroji).',  # 281
+    'Nepřekládat: tento pojem musí zůstat beze změny.',  # 282
+    'Přidat...',  # 283
+    'Upravit...',  # 284
+    'Smazat',  # 285
+    'Importovat...',  # 286
+    'Exportovat...',  # 287
+    'Přidat vlastní pojem (jméno k zachování, slovo s pevným překladem...)',  # 288
+    'Importovat pojmy ze souboru CSV / TSV (pojem; překlad; zachovat)',  # 289
+    'Exportovat vlastní pojmy do souboru CSV',  # 290
+    'Nový pojem slovníku',  # 291
+    'Upravit pojem slovníku',  # 292
+    'Nepřekládat (ponechat pojem beze změny)',  # 293
+    'Pojem (zdrojový jazyk):',  # 294
+    'Překlad:',  # 295
+    'Je třeba zadat pojem i jeho překlad.',  # 296
+    'Nejprve vyberte pojem.',  # 297
+    'Smazat lze jen pojmy, které jste přidali (tučně).',  # 298
+    'Importovat pojmy slovníku',  # 299
+    'Slovníky (*.csv *.tsv *.txt);;Všechny soubory (*)',  # 300
+    'Nelze přečíst %1.',  # 301
+    'V tomto souboru nebyl nalezen žádný pojem.',  # 302
+    'Importováno pojmů: %1, přeskočeno řádků: %2.',  # 303
+    'Zatím není co exportovat: nemáte žádný vlastní pojem.',  # 304
+    'Exportovat pojmy slovníku',  # 305
+    'Soubory CSV (*.csv)',  # 306
+    'Nelze zapsat %1.',  # 307
+    'Upravit tento pojem...',  # 308
+    'Nahradit vlastním překladem...',  # 309
+    'Ponechat tento pojem beze změny (nepřekládat)',  # 310
+    'Smazat tento pojem',  # 311
+    'Importovat existující překlad',  # 312
+    'Znovu použije překlad jiné verze modu (například starší instalace přeložené do jazyka %1). Doplní se jen nepřeložené řádky, pokud nepožádáte o nahrazení.',  # 313
+    'Složka hry nebo modu s překladem',  # 314
+    'Použít také překlady shodných textů nalezených pod jiným ID',  # 315
+    'Pokud se zdrojový text změnil, importovat starý překlad označený „ke kontrole“',  # 316
+    'Nahradit překlady, které projekt už má',  # 317
+    'Importovat',  # 318
+    'Složka',  # 319
+    'Jazyk jejích zdrojových textů',  # 320
+    'Jazyk jejího překladu',  # 321
+    'Složka s překladem',  # 322
+    'Zde nebyla nalezena žádná složka text/<jazyk>/.',  # 323
+    'Nalezeno zdrojů: %1; jazyky: %2.',  # 324
+    'Nahradit překlady, které projekt už má? Soubory ve výstupní složce se přepíší.',  # 325
+    'Zrušit',  # 326
+    'Importuje se...',  # 327
+    'Prozkoumáno souborů: %1, zapsáno: %2.\nŘádků se stejným textem: %3, se změněným zdrojem (ke kontrole): %4, nalezených pod jiným ID: %5; již přeložených a zachovaných: %6.',  # 328
+    'Ruší se...',  # 329
+    'Najít a nahradit',  # 330
+    'Zpráva o kvalitě',  # 331
+    '&Schválit (nebo zrušit schválení)',  # 332
+    'Vrátit poslední operaci',  # 333
+    'Opakovat operaci',  # 334
+    'Najít a nahradit v &projektu...',  # 335
+    '&Zpráva o kvalitě...',  # 336
+    '&Importovat existující překlad...',  # 337
+    'Otevřené soubory tohoto projektu budou nejprve zavřeny. Pokračovat?',  # 338
+    'Nahradit',  # 339
+    'Nahradit „%1“ za „%2“ v překladu %3 řádků v %4 souborech?\n\nSoubory, které nejsou otevřené, se uloží okamžitě.',  # 340
+    'Nahrazení: %1 v souborech: %2.',  # 341
+    'Vrátit operaci: %1',  # 342
+    'Opakovat operaci: %1',  # 343
+    'Změněno od schválení',  # 344
+    'Schváleno',  # 345
+    'Komentář: %1',  # 346
+    'Předchozí překlad: %1',  # 347
+    'Vyberte řádek úkolu, abyste viděli, jak ho Pip-Boy zalamuje.',  # 348
+    'Úkol %1: Pip-Boy zalamuje text (za číslem) při %2 px.',  # 349
+    'Změřeno písmem hry (font1.aaf).',  # 350
+    'Písmo hry není k dispozici (nebo vícebajtové kódování): přibližné měření.',  # 351
+    'Řádků v překladu: %1, ve zdroji: %2',  # 352
+    'Vlastní',  # 353
+    'Zástupné značky',  # 354
+    'Mezery',  # 355
+    'Kódování',  # 356
+    'Délka',  # 357
+    'Nekonzistentní duplicita',  # 358
+    'chybí: %1',  # 359
+    'neočekávané: %1',  # 360
+    'překlad obsahuje jen mezery',  # 361
+    'mezery na začátku nebo na konci',  # 362
+    'zdroj má mezery na začátku nebo na konci',  # 363
+    'dvojité mezery',  # 364
+    'nelze zapsat v kódování %1: %2',  # 365
+    'znaků: %1 (limit %2)',  # 366
+    'krátký popisek rozhraní: znaků %1 oproti %2 ve zdroji',  # 367
+    'znaků: %1 oproti %2 ve zdroji',  # 368
+    'jinde (%1×): %2',  # 369
+    'Ztracené zástupné značky (@Jméno@, %d, {pole})',  # 370
+    'Znaky, které kódování neumí uložit',  # 371
+    'Příliš dlouhé',  # 372
+    'Nekonzistentní duplicity',  # 373
+    'bez omezení',  # 374
+    'Nejvyšší počet znaků překladu (0: hlásit jen překlady mnohem delší než zdroj)',  # 375
+    'Maximální délka:',  # 376
+    'Spustit kontroly',  # 377
+    'Kontroly se týkají uložených souborů: nejprve uložte změny.',  # 378
+    'Exportovat (CSV)...',  # 379
+    'Všechny problémy',  # 380
+    'Kontrola',  # 381
+    'Problém',  # 382
+    'Stiskněte „Spustit kontroly“.',  # 383
+    'Vyberte alespoň jednu kontrolu.',  # 384
+    'Kontroluje se...',  # 385
+    'Kontroluje se... souborů: %1 / %2',  # 386
+    'Nenalezen žádný problém.',  # 387
+    'Problémů: %1',  # 388
+    ' — zobrazeno: %1',  # 389
+    'uvedeno je jen prvních %1 (pro všechny použijte export)',  # 390
+    'Exportovat zprávu',  # 391
+    'Hledat v celém projektu...',  # 392
+    'Nahradit za (v překladu)...',  # 393
+    'V překladu',  # 394
+    'Ve zdroji',  # 395
+    'V obou',  # 396
+    'Regulární výraz',  # 397
+    'Rozlišovat velikost písmen',  # 398
+    'Celá slova',  # 399
+    'Hledat',  # 400
+    'Nahradit zaškrtnuté řádky',  # 401
+    'Nahradit vše',  # 402
+    'Text',  # 403
+    'Po nahrazení',  # 404
+    'Zadejte text a stiskněte Enter.',  # 405
+    'Zadejte hledaný text.',  # 406
+    'Neplatný regulární výraz: %1',  # 407
+    'Hledá se...',  # 408
+    ' (zdroj)',  # 409
+    'Žádný výsledek.',  # 410
+    'Řádků: %1, výskytů: %2',  # 411
+    'zobrazeny jsou jen první výsledky',  # 412
+    'Neschváleno',  # 413
+    'Změněno od schválení',  # 414
+    'S komentářem',  # 415
+    'Komentář k tomuto řádku (uložen v projektu, ne v souborech hry)...',  # 416
+    'Obnovit',  # 417
+    'Vrátit předchozí překlad',  # 418
+    'Předchozí překlad obnoven',  # 419
+    'Překlad DeepL',  # 420
+    'Hromadný překlad',  # 421
+    'Označení „ke kontrole“',  # 422
+    'Schválení',  # 423
+    'Kopie zdroje',  # 424
+    'Přijmout beze změny',  # 425
+    '&Aktualizovat výstupní archiv DAT nyní',  # 426
+    'Aktualizuje se archiv DAT...',  # 427
+    'Archiv DAT aktualizován: přeložených souborů: %1, originálů: %2.',  # 428
+    'Archiv DAT NEBYL aktualizován: %1',  # 429
+    'Archiv DAT',  # 430
+    'Archiv DAT se nepodařilo zapsat:\n%1',  # 431
+    'Výstupní archiv nemůže být jedním ze zdrojů projektu.',  # 432
+    'Výstupní archiv musí být soubor .dat.',  # 433
+    'Složka volných souborů',  # 434
+    'např. french.dat',  # 435
+    'Fallout 2 (zlib)',  # 436
+    'Fallout 1',  # 437
+    'Uložit také původní texty (referenční soubory)',  # 438
+    'Přidá kopie text/<zdrojový jazyk>/ přeložených souborů, aby byla reference každého překladu v archivu. Vypněte, pokud má později načtený mod dál poskytovat původní texty.',  # 439
+    'Formát:',  # 440
+    'Výstup',  # 441
+    'Výstupní archiv',  # 442
+    'Archivy DAT (*.dat)',  # 443
+    'Překlad je dodáván v %1, přestavěném po každém uložení. Obsahuje text/%2/ s přeloženými soubory',  # 444
+    ' a původní texty v text/%1/.',  # 445
+    'Vyberte výstupní archiv.',  # 446
 ]

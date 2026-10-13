@@ -1,11 +1,13 @@
 #pragma once
 
+#include "CustomGlossary.h"
 #include "Glossary.h"
 #include "MsgFile.h"
 #include "Statistics.h"
 #include "VirtualFileSystem.h"
 
 #include <QHash>
+#include <QMutex>
 #include <QReadWriteLock>
 #include <QSet>
 #include <QString>
@@ -22,6 +24,11 @@ struct ProjectConfig {
     QString name;
     QStringList sources;          // .dat files and/or folders, lowest priority first
     QString outputDir;            // where translated files are written (loose files)
+    // Optional: a .dat archive the translation is delivered in. `outputDir` is then a working folder of the
+    // application and the archive is rebuilt from it after each save (see OutputArchive).
+    QString outputArchive;
+    QString outputArchiveFormat = QStringLiteral("dat2");   // "dat2" (Fallout 2, zlib) or "dat1" (Fallout 1)
+    bool archiveWithSource = true;                          // also store the original texts, as reference files
     QString sourceLanguage = QStringLiteral("english");
     QString targetLanguage = QStringLiteral("french");
     QString sourceEncoding = QStringLiteral("cp1252");
@@ -38,6 +45,11 @@ struct TranslationRow {
     bool inSource = true;     // false: record only present in the target file
     bool confirmed = false;   // translation accepted even though it equals the source text
     bool review = false;      // marked "to review"
+    QString comment;          // translator's note on this line
+    quint32 validated = 0;    // hash of the translation when it was last validated (0 = never)
+    QString previous;         // translation before the last import / change of the source (for comparison)
+
+    bool changedSinceValidation() const;
 };
 
 struct TranslationDoc {
@@ -90,17 +102,30 @@ public:
     // Interface font (font1.aaf is the Pip-Boy's): text/<target language>/, text/<source language>/, then the root.
     QByteArray readInterfaceFont(int index) const;
 
+    // Raw bytes of a message file of the source language (for the reference copies stored in an output archive).
+    QByteArray readSourceText(const QString &rel, QString *error = nullptr) const;
+
     TranslationDoc loadDocument(const QString &rel, QString *error = nullptr) const;
     // Returns false on error. `unencodable` receives characters the target encoding cannot hold.
-    bool saveDocument(const TranslationDoc &doc, QString *error = nullptr, QString *unencodable = nullptr);
+    // `persistState` = false lets a bulk operation write the flags file once at the end (call saveState()).
+    bool saveDocument(const TranslationDoc &doc, QString *error = nullptr, QString *unencodable = nullptr,
+                      bool persistState = true);
 
     static SegmentStatus statusOf(const TranslationRow &row);
+    // Stable 32-bit hash of a text (not randomised between runs, unlike qHash).
+    static quint32 textHash(const QString &text);
 
     // --- glossary (built from the /game files)
     // The glossary is built on a worker thread (buildGlossary is thread safe) and installed on the owner's thread.
-    const Glossary &glossary() const { return m_glossary; }
+    const Glossary &glossary() const { return *m_glossary; }
+    // Snapshot for a worker thread: stays valid even if the glossary is replaced meanwhile.
+    std::shared_ptr<const Glossary> glossarySnapshot() const { return m_glossary; }
     Glossary buildGlossary(const std::atomic_bool *cancel = nullptr) const;
-    void setGlossary(Glossary glossary) { m_glossary = std::move(glossary); }
+    void setGlossary(Glossary glossary) { m_glossary = std::make_shared<const Glossary>(std::move(glossary)); }
+
+    // --- terms entered by hand (saved in the state file, added to the glossary by buildGlossary)
+    QVector<CustomTerm> customTerms() const;
+    void setCustomTerms(const QVector<CustomTerm> &terms);   // also writes the state file
 
     // --- statistics
     using ProgressFn = std::function<void(int done, int total, const FileStats &stats)>;
@@ -109,6 +134,10 @@ public:
 
     // Segments marked "to review" in the saved state, skipping the files in `skip` (e.g. those open in an editor).
     QVector<TodoItem> reviewItems(const QSet<QString> &skip = {}) const;
+
+    // --- cache of the statistics of untouched files (so reopening a big project is quick)
+    void setStatsCacheFile(const QString &file) { m_statsCacheFile = file; }
+    int statsCacheHits() const { return m_cacheHits; }
 
     // --- persisted per-segment flags
     void setStateFile(const QString &file) { m_stateFile = file; }
@@ -122,13 +151,31 @@ private:
     struct FileFlags {
         QSet<int> review;
         QSet<int> confirmed;
+        QHash<int, QString> comments;
+        QHash<int, QString> previous;
+        QHash<int, quint32> validated;
+        bool isEmpty() const
+        {
+            return review.isEmpty() && confirmed.isEmpty() && comments.isEmpty() && previous.isEmpty() && validated.isEmpty();
+        }
     };
 
     ProjectConfig m_config;
     VirtualFileSystem m_vfs;
-    Glossary m_glossary;
+    std::shared_ptr<const Glossary> m_glossary = std::make_shared<const Glossary>();
     QHash<QString, FileFlags> m_flags;
+    QVector<CustomTerm> m_customTerms;
     QString m_stateFile;
     // Readers: loadDocument/messageFiles/statistics (any thread). Writer: saveDocument/reload (owner thread).
     mutable QReadWriteLock m_lock;
+
+    QString statsSignature(const QString &rel) const;   // caller holds the read lock
+    void loadStatsCache() const;
+    void saveStatsCache() const;
+    QString m_statsCacheFile;
+    mutable QMutex m_cacheMutex;
+    mutable QHash<QString, QPair<QString, FileStats>> m_statsCache;
+    mutable bool m_cacheLoaded = false;
+    mutable bool m_cacheDirty = false;
+    mutable int m_cacheHits = 0;
 };

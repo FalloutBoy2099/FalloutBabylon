@@ -92,6 +92,122 @@ void MsgTableModel::confirm(int row)
     touchRow(row);
 }
 
+// ----------------------------------------------------------------------------- undo / redo
+
+bool MsgTableModel::sameRow(const TranslationRow &a, const TranslationRow &b)
+{
+    return a.id == b.id && a.target == b.target && a.review == b.review && a.confirmed == b.confirmed
+        && a.comment == b.comment && a.validated == b.validated && a.previous == b.previous;
+}
+
+void MsgTableModel::beginOperation(const QString &label)
+{
+    if (m_opDepth++ == 0) {
+        m_opLabel = label;
+        m_opSnapshot = m_doc.rows;     // implicitly shared strings: cheap
+    }
+}
+
+void MsgTableModel::endOperation()
+{
+    if (m_opDepth == 0 || --m_opDepth > 0)
+        return;
+    Step step;
+    step.label = m_opLabel;
+    if (m_opSnapshot.size() != m_doc.rows.size()) {
+        step.full = true;
+        step.beforeRows = m_opSnapshot;
+        step.afterRows = m_doc.rows;
+    } else {
+        for (int i = 0; i < m_doc.rows.size(); ++i)
+            if (!sameRow(m_opSnapshot.at(i), m_doc.rows.at(i))) {
+                step.index.push_back(i);
+                step.before.push_back(m_opSnapshot.at(i));
+                step.after.push_back(m_doc.rows.at(i));
+            }
+        if (step.index.isEmpty()) {
+            m_opSnapshot.clear();
+            return;
+        }
+    }
+    m_opSnapshot.clear();
+    m_undo.push_back(step);
+    while (m_undo.size() > 30)
+        m_undo.removeFirst();
+    m_redo.clear();
+    emit historyChanged();
+}
+
+void MsgTableModel::apply(const Step &step, bool undo)
+{
+    if (step.full) {
+        beginResetModel();
+        m_doc.rows = undo ? step.beforeRows : step.afterRows;
+        m_issues.fill(0, m_doc.rows.size());
+        for (int i = 0; i < m_doc.rows.size(); ++i)
+            updateIssues(i);
+        endResetModel();
+    } else {
+        const QVector<TranslationRow> &rows = undo ? step.before : step.after;
+        for (const TranslationRow &saved : rows) {
+            const int row = rowForId(saved.id);
+            if (row < 0)
+                continue;
+            TranslationRow &r = m_doc.rows[row];
+            r.target = saved.target;
+            r.review = saved.review;
+            r.confirmed = saved.confirmed;
+            r.comment = saved.comment;
+            r.validated = saved.validated;
+            r.previous = saved.previous;
+            updateIssues(row);
+            emit dataChanged(index(row, 0), index(row, ColumnCount - 1));
+        }
+    }
+    m_dirty = true;
+    emit changed();
+}
+
+bool MsgTableModel::undo()
+{
+    if (m_undo.isEmpty())
+        return false;
+    const Step step = m_undo.takeLast();
+    apply(step, true);
+    m_redo.push_back(step);
+    emit historyChanged();
+    return true;
+}
+
+bool MsgTableModel::redo()
+{
+    if (m_redo.isEmpty())
+        return false;
+    const Step step = m_redo.takeLast();
+    apply(step, false);
+    m_undo.push_back(step);
+    emit historyChanged();
+    return true;
+}
+
+void MsgTableModel::setComment(int row, const QString &comment)
+{
+    if (m_doc.rows.at(row).comment == comment)
+        return;
+    m_doc.rows[row].comment = comment;
+    touchRow(row);
+}
+
+void MsgTableModel::setValidated(int row, bool validated)
+{
+    TranslationRow &r = m_doc.rows[row];
+    const quint32 value = validated && !r.target.isEmpty() ? Project::textHash(r.target) : 0;
+    if (r.validated == value)
+        return;
+    r.validated = value;
+    touchRow(row);
+}
+
 int MsgTableModel::rowForId(int id) const
 {
     for (int i = 0; i < m_doc.rows.size(); ++i)
@@ -163,10 +279,28 @@ QVariant MsgTableModel::data(const QModelIndex &index, int role) const
             return st == SegmentStatus::Translated ? QStringLiteral("✔")
                 : st == SegmentStatus::ToReview ? QStringLiteral("⚑") : QStringLiteral("•");
         case ColIssues: return m_issues.value(index.row()) ? QStringLiteral("⚠") : QString();
+        case ColNote: {
+            QString note;
+            if (r.validated)
+                note += r.changedSinceValidation() ? QStringLiteral("≠") : QStringLiteral("✓");
+            if (!r.comment.isEmpty())
+                note += QStringLiteral("✎");
+            return note;
+        }
         }
         break;
     case Qt::ToolTipRole:
         switch (index.column()) {
+        case ColNote: {
+            QStringList lines;
+            if (r.validated)
+                lines << (r.changedSinceValidation() ? tr("Changed since it was validated") : tr("Validated"));
+            if (!r.comment.isEmpty())
+                lines << tr("Comment: %1").arg(r.comment);
+            if (!r.previous.isEmpty())
+                lines << tr("Previous translation: %1").arg(r.previous);
+            return lines.join(QLatin1Char('\n'));
+        }
         case ColSource: return r.source.toHtmlEscaped().replace(QLatin1Char('\n'), QStringLiteral("<br>"));
         case ColTarget: return r.target.toHtmlEscaped().replace(QLatin1Char('\n'), QStringLiteral("<br>"));
         case ColStatus: return Theme::statusText(st);
@@ -180,7 +314,7 @@ QVariant MsgTableModel::data(const QModelIndex &index, int role) const
     case Qt::TextAlignmentRole:
         if (index.column() == ColId)
             return int(Qt::AlignRight | Qt::AlignVCenter);
-        if (index.column() == ColStatus || index.column() == ColIssues)
+        if (index.column() == ColStatus || index.column() == ColIssues || index.column() == ColNote)
             return int(Qt::AlignCenter);
         break;
     case Qt::ForegroundRole:
@@ -205,6 +339,7 @@ QVariant MsgTableModel::headerData(int section, Qt::Orientation orientation, int
     case ColTarget: return tr("Translation (%1)").arg(m_project->config().targetLanguage);
     case ColStatus: return tr("St.");
     case ColIssues: return QStringLiteral("⚠");
+    case ColNote: return QStringLiteral("✎");
     }
     return {};
 }
@@ -228,6 +363,18 @@ bool MsgFilterProxy::filterAcceptsRow(int sourceRow, const QModelIndex &parent) 
     const auto *model = static_cast<const MsgTableModel *>(sourceModel());
     if (m_status == WithIssues) {
         if (!model->issueCount(sourceRow))
+            return false;
+    } else if (m_status == Validated) {
+        if (!model->row(sourceRow).validated || model->row(sourceRow).changedSinceValidation())
+            return false;
+    } else if (m_status == NotValidated) {
+        if (model->row(sourceRow).validated && !model->row(sourceRow).changedSinceValidation())
+            return false;
+    } else if (m_status == ChangedSinceValidation) {
+        if (!model->row(sourceRow).changedSinceValidation())
+            return false;
+    } else if (m_status == WithComment) {
+        if (model->row(sourceRow).comment.isEmpty())
             return false;
     } else if (m_status != AllRows && int(model->status(sourceRow)) != m_status) {
         return false;

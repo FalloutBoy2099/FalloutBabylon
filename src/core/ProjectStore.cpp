@@ -36,6 +36,16 @@ QString stateFile(const QString &id)
     return QDir(projectsDir()).filePath(id + QStringLiteral(".state.json"));
 }
 
+QString stagingDir(const QString &id)
+{
+    return QDir(projectsDir()).filePath(id + QStringLiteral(".output"));
+}
+
+QString statsCacheFile(const QString &id)
+{
+    return QDir(projectsDir()).filePath(id + QStringLiteral(".stats.json"));
+}
+
 QVector<ProjectConfig> loadAll()
 {
     QVector<ProjectConfig> list;
@@ -53,6 +63,9 @@ QVector<ProjectConfig> loadAll()
         for (const QJsonValue &v : o.value(QStringLiteral("sources")).toArray())
             c.sources << v.toString();
         c.outputDir = o.value(QStringLiteral("outputDir")).toString();
+        c.outputArchive = o.value(QStringLiteral("outputArchive")).toString();
+        c.outputArchiveFormat = o.value(QStringLiteral("outputArchiveFormat")).toString(c.outputArchiveFormat);
+        c.archiveWithSource = o.value(QStringLiteral("archiveWithSource")).toBool(true);
         c.sourceLanguage = o.value(QStringLiteral("sourceLanguage")).toString(c.sourceLanguage);
         c.targetLanguage = o.value(QStringLiteral("targetLanguage")).toString(c.targetLanguage);
         c.sourceEncoding = o.value(QStringLiteral("sourceEncoding")).toString(c.sourceEncoding);
@@ -70,6 +83,9 @@ bool save(const ProjectConfig &c)
     o.insert(QStringLiteral("name"), c.name);
     o.insert(QStringLiteral("sources"), QJsonArray::fromStringList(c.sources));
     o.insert(QStringLiteral("outputDir"), c.outputDir);
+    o.insert(QStringLiteral("outputArchive"), c.outputArchive);
+    o.insert(QStringLiteral("outputArchiveFormat"), c.outputArchiveFormat);
+    o.insert(QStringLiteral("archiveWithSource"), c.archiveWithSource);
     o.insert(QStringLiteral("sourceLanguage"), c.sourceLanguage);
     o.insert(QStringLiteral("targetLanguage"), c.targetLanguage);
     o.insert(QStringLiteral("sourceEncoding"), c.sourceEncoding);
@@ -85,6 +101,7 @@ void remove(const QString &id)
 {
     QFile::remove(QDir(projectsDir()).filePath(id + QStringLiteral(".fbproj")));
     QFile::remove(stateFile(id));
+    QFile::remove(statsCacheFile(id));
 }
 
 QStringList openProjectIds()

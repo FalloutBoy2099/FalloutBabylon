@@ -132,6 +132,7 @@ void VirtualFileSystem::setSources(const QStringList &sources, QStringList *erro
                 continue;
             }
             layer.dat = std::move(archive);
+            layer.stamp = QStringLiteral("%1|%2").arg(info.size()).arg(info.lastModified().toMSecsSinceEpoch());
             const auto &entries = layer.dat->entries();
             for (int i = 0; i < entries.size(); ++i) {
                 if (!isIndexed(entries.at(i).path))
@@ -234,6 +235,20 @@ void VirtualFileSystem::addLooseFile(const QString &path, const QString &absolut
     f.layer = int(m_layers.size()); // above every scanned source
     f.absolutePath = absolutePath;
     m_files.insert(f.path, f);
+}
+
+QString VirtualFileSystem::signature(const QString &path) const
+{
+    const File *f = find(path);
+    if (!f)
+        return {};
+    if (f->datIndex >= 0 && f->layer >= 0 && f->layer < int(m_layers.size())) {
+        const Layer &layer = m_layers[f->layer];
+        const DatEntry &e = layer.dat->entries().at(f->datIndex);
+        return QStringLiteral("d|%1|%2|%3|%4|%5").arg(layer.source, layer.stamp).arg(e.offset).arg(e.packedSize).arg(e.unpackedSize);
+    }
+    const QFileInfo info(f->absolutePath);
+    return QStringLiteral("f|%1|%2|%3").arg(f->absolutePath).arg(info.size()).arg(info.lastModified().toMSecsSinceEpoch());
 }
 
 QString VirtualFileSystem::describe(const QString &path) const

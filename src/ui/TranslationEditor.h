@@ -3,6 +3,7 @@
 #include "DialogTreePanel.h"
 #include "core/GrammarClient.h"
 #include "core/Project.h"
+#include "core/ProjectSearch.h"
 
 #include <QTimer>
 #include <QWidget>
@@ -11,6 +12,7 @@
 class QComboBox;
 class QLabel;
 class QLineEdit;
+class QPushButton;
 class QModelIndex;
 class QTableView;
 class MsgFilterProxy;
@@ -41,6 +43,7 @@ public:
 
     // Editing commands (menu / shortcuts)
     void toggleReview();
+    void toggleValidated();
     void copySourceToTarget();
     void confirmCurrent();
     void goToRow(int delta);
@@ -56,6 +59,11 @@ public:
     void refreshCurrent();
     // Context sent to DeepL with a line: the dialogue name and the neighbouring source lines.
     static QString contextFor(const TranslationDoc &doc, int row);
+    // File-level undo / redo of coarse operations (see MsgTableModel); typing keeps the editor's own undo.
+    bool undoOperation();
+    bool redoOperation();
+    // Search and replace in the translation of the listed records; returns the number of replacements.
+    int replaceInTarget(const ProjectSearch::Options &options, const QString &replacement, const QSet<int> &ids);
     void translateCurrent();      // DeepL on the current line
     void massTranslate();         // DeepL on many lines, with preview
 
@@ -68,6 +76,7 @@ signals:
     void dirtyChanged(bool dirty);
     void statsChanged(const FileStats &stats);
     void currentIdChanged(int id);
+    void historyChanged();       // the undo / redo stacks of the file changed
 
 private:
     int currentSourceRow() const;
@@ -93,6 +102,10 @@ private:
     SciEdit *m_source = nullptr;
     SciEdit *m_target = nullptr;
     QLabel *m_issues = nullptr;
+    QLineEdit *m_comment = nullptr;
+    QLabel *m_previous = nullptr;
+    QWidget *m_previousRow = nullptr;
+    QPushButton *m_restorePrevious = nullptr;
     QLabel *m_info = nullptr;
     QTimer m_highlightTimer;
     QTimer m_checkTimer;

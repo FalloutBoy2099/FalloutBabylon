@@ -2,10 +2,14 @@
 
 #include "DialogTreePanel.h"
 #include "GlossaryPanel.h"
+#include "ImportTranslationDialog.h"
 #include "PipboyPanel.h"
 #include "SlowGuard.h"
+#include "MsgTableModel.h"
 #include "ProjectDialog.h"
 #include "ProjectTree.h"
+#include "QualityPanel.h"
+#include "SearchPanel.h"
 #include "SettingsDialog.h"
 #include "StatsPanel.h"
 #include "TranslationService.h"
@@ -114,6 +118,19 @@ MainWindow::MainWindow()
                 startAnalysis(id, true, false);
     });
 
+    m_archiveTimer.setSingleShot(true);
+    m_archiveTimer.setInterval(1000);
+    connect(&m_archiveTimer, &QTimer::timeout, this, [this] {
+        const QSet<QString> ids = m_archivePending;
+        for (const QString &id : ids)
+            if (!m_archiveRunning.contains(id)) {
+                m_archivePending.remove(id);
+                buildArchive(id);
+            }
+        if (!m_archivePending.isEmpty())
+            m_archiveTimer.start();     // a build is still running
+    });
+
     connect(m_tabs, &QTabWidget::tabCloseRequested, this, [this](int i) { closeTab(i); });
     connect(m_tabs, &QTabWidget::currentChanged, this, [this](int) {
         if (TranslationEditor *e = currentEditor()) {
@@ -191,6 +208,32 @@ void MainWindow::createDocks()
             e->selectId(id);
     });
 
+    m_searchPanel = new SearchPanel;
+    m_searchDock = new QDockWidget(tr("Search and replace"), this);
+    m_searchDock->setObjectName(QStringLiteral("dockSearch"));
+    m_searchDock->setWidget(m_searchPanel);
+    addDockWidget(Qt::BottomDockWidgetArea, m_searchDock);
+    m_searchDock->hide();
+    connect(m_searchPanel, &SearchPanel::openRequested, this, [this](const QString &rel, int id) {
+        openFile(m_activeProject, rel);
+        if (TranslationEditor *e = currentEditor())
+            e->selectId(id);
+    });
+    connect(m_searchPanel, &SearchPanel::replaceRequested, this, &MainWindow::replaceInProject);
+
+    m_qualityPanel = new QualityPanel;
+    m_qualityDock = new QDockWidget(tr("Quality report"), this);
+    m_qualityDock->setObjectName(QStringLiteral("dockQuality"));
+    m_qualityDock->setWidget(m_qualityPanel);
+    addDockWidget(Qt::BottomDockWidgetArea, m_qualityDock);
+    tabifyDockWidget(m_searchDock, m_qualityDock);
+    m_qualityDock->hide();
+    connect(m_qualityPanel, &QualityPanel::openRequested, this, [this](const QString &rel, int id) {
+        openFile(m_activeProject, rel);
+        if (TranslationEditor *e = currentEditor())
+            e->selectId(id);
+    });
+
     resizeDocks({projectDock, glossaryDock}, {430, 380}, Qt::Horizontal);
 
     connect(m_tree, &ProjectTree::fileActivated, this, &MainWindow::openFile);
@@ -208,9 +251,17 @@ void MainWindow::createDocks()
         if (TranslationEditor *e = currentEditor())
             e->insertText(text);
     });
+    connect(m_glossaryPanel, &GlossaryPanel::customTermsChanged, this, [this](const QVector<CustomTerm> &terms) {
+        const auto it = m_sessions.constFind(m_activeProject);
+        if (it == m_sessions.constEnd())
+            return;
+        it->project->setCustomTerms(terms);
+        startAnalysis(m_activeProject, true, false);   // the terms are added to the glossary
+    });
 
     m_dockToggles << projectDock->toggleViewAction() << glossaryDock->toggleViewAction() << statsDock->toggleViewAction()
-                  << todoDock->toggleViewAction() << dialogDock->toggleViewAction() << pipboyDock->toggleViewAction();
+                  << todoDock->toggleViewAction() << dialogDock->toggleViewAction() << pipboyDock->toggleViewAction()
+                  << m_searchDock->toggleViewAction() << m_qualityDock->toggleViewAction();
 }
 
 void MainWindow::createActions()
@@ -242,6 +293,8 @@ void MainWindow::createActions()
     };
     m_actReview = editorAction(tr("Mark as &to review"), QKeySequence(Qt::CTRL | Qt::Key_R),
                                [](TranslationEditor *e) { e->toggleReview(); });
+    m_actValidate = editorAction(tr("&Validate (or remove the validation)"), QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_V),
+                                 [](TranslationEditor *e) { e->toggleValidated(); });
     m_actCopySource = editorAction(tr("Copy the &source"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_C),
                                    [](TranslationEditor *e) { e->copySourceToTarget(); });
     m_actConfirm = editorAction(tr("&Accept as is"), QKeySequence(Qt::CTRL | Qt::Key_Return),
@@ -253,6 +306,10 @@ void MainWindow::createActions()
     m_actPrevUntranslated = editorAction(tr("Previous untranslated line"), QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_Up),
                                          [](TranslationEditor *e) { e->goToNextUntranslated(false); });
     m_actFind = editorAction(tr("&Find in this file"), QKeySequence::Find, [](TranslationEditor *e) { e->focusSearch(); });
+    m_actUndoOp = editorAction(tr("Undo the last operation"), QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_Z),
+                               [](TranslationEditor *e) { e->undoOperation(); });
+    m_actRedoOp = editorAction(tr("Redo the operation"), QKeySequence(Qt::CTRL | Qt::ALT | Qt::Key_Y),
+                               [](TranslationEditor *e) { e->redoOperation(); });
 
     m_actTranslateLine = editorAction(tr("&Translate this line with DeepL"), QKeySequence(Qt::CTRL | Qt::Key_T),
                                       [](TranslationEditor *e) { e->translateCurrent(); });
@@ -266,10 +323,32 @@ void MainWindow::createActions()
                 e->setService(m_service);   // re-check the current line with the new servers
     });
 
+    m_actSearchProject = new QAction(tr("Search and replace in the &project..."), this);
+    m_actSearchProject->setShortcut(QKeySequence(Qt::CTRL | Qt::SHIFT | Qt::Key_F));
+    connect(m_actSearchProject, &QAction::triggered, this, [this] {
+        m_searchDock->show();
+        m_searchDock->raise();
+        m_searchPanel->focusQuery();
+    });
+    m_actQuality = new QAction(tr("&Quality report..."), this);
+    connect(m_actQuality, &QAction::triggered, this, [this] {
+        m_qualityDock->show();
+        m_qualityDock->raise();
+    });
+    m_actImport = new QAction(tr("&Import an existing translation..."), this);
+    connect(m_actImport, &QAction::triggered, this, [this] { importTranslation(m_activeProject); });
+
     m_actSettings = new QAction(tr("Project &settings..."), this);
     connect(m_actSettings, &QAction::triggered, this, [this] { editProjectSettings(m_activeProject); });
     m_actExport = new QAction(tr("&Export to a DAT archive..."), this);
     connect(m_actExport, &QAction::triggered, this, [this] { exportToDat(m_activeProject); });
+    m_actBuildArchive = new QAction(tr("&Update the output DAT archive now"), this);
+    connect(m_actBuildArchive, &QAction::triggered, this, [this] {
+        if (!saveAll())
+            return;
+        m_archivePending.remove(m_activeProject);
+        buildArchive(m_activeProject);
+    });
     m_actRefresh = new QAction(tr("Refresh &statistics"), this);
     m_actRefresh->setShortcut(QKeySequence(Qt::Key_F5));
     connect(m_actRefresh, &QAction::triggered, this, [this] { startAnalysis(m_activeProject, false, true); });
@@ -314,11 +393,16 @@ void MainWindow::createMenus()
     file->addSeparator();
     file->addAction(m_actSettings);
     file->addAction(m_actExport);
+    file->addAction(m_actBuildArchive);
+    file->addAction(m_actImport);
     file->addAction(m_actCloseProject);
     file->addSeparator();
     file->addAction(tr("&Quit"), QKeySequence::Quit, this, &QWidget::close);
 
     QMenu *edit = menuBar()->addMenu(tr("&Edit"));
+    edit->addAction(m_actUndoOp);
+    edit->addAction(m_actRedoOp);
+    edit->addSeparator();
     edit->addAction(m_actNext);
     edit->addAction(m_actPrev);
     edit->addAction(m_actNextUntranslated);
@@ -327,13 +411,16 @@ void MainWindow::createMenus()
     edit->addAction(m_actCopySource);
     edit->addAction(m_actConfirm);
     edit->addAction(m_actReview);
+    edit->addAction(m_actValidate);
     edit->addSeparator();
     edit->addAction(m_actFind);
+    edit->addAction(m_actSearchProject);
 
     QMenu *tools = menuBar()->addMenu(tr("&Tools"));
     tools->addAction(m_actTranslateLine);
     tools->addAction(m_actMassTranslate);
     tools->addSeparator();
+    tools->addAction(m_actQuality);
     tools->addAction(m_actRefresh);
     tools->addAction(m_actRebuild);
     tools->addSeparator();
@@ -434,9 +521,15 @@ bool MainWindow::openProject(const ProjectConfig &config)
     }
     auto project = std::make_shared<Project>(config);
     project->setStateFile(ProjectStore::stateFile(config.id));
+    project->setStatsCacheFile(ProjectStore::statsCacheFile(config.id));
 
     QApplication::setOverrideCursor(Qt::WaitCursor);
     QStringList errors;
+    // An existing output archive restores the working folder on a new computer / after switching to an archive.
+    QString seedError;
+    OutputArchive::seedWorkingFolder(config, &seedError);
+    if (!seedError.isEmpty())
+        errors << seedError;
     project->reload(&errors);
     QApplication::restoreOverrideCursor();
     if (!errors.isEmpty())
@@ -492,6 +585,7 @@ bool MainWindow::closeProject(const QString &id)
         e->deleteLater();
     }
     m_sessions[id].cancelAll();
+    flushArchive(id);
     m_sessions.remove(id);
     m_order.removeAll(id);
     m_tree->removeProject(id);
@@ -522,6 +616,10 @@ void MainWindow::setActiveProject(const QString &id)
 {
     m_activeProject = id;
     const auto it = m_sessions.constFind(id);
+    m_searchPanel->setProject(it == m_sessions.constEnd() ? nullptr : it->project);
+    m_qualityPanel->setProject(it == m_sessions.constEnd() ? nullptr : it->project);
+    m_glossaryPanel->setEditable(it != m_sessions.constEnd());
+    m_glossaryPanel->setCustomTerms(it == m_sessions.constEnd() ? QVector<CustomTerm>() : it->project->customTerms());
     if (it == m_sessions.constEnd()) {
         m_statsPanel->clear();
         m_glossaryPanel->setGlossary({});
@@ -790,8 +888,14 @@ void MainWindow::openFile(const QString &id, const QString &relPath)
         m_tree->setFileDirty(projectIdOf(editor), editor->relPath(), dirty);
         if (!dirty && Project::kindOf(editor->relPath()) == FileKind::Game)
             scheduleGlossaryRebuild(projectIdOf(editor)); // names may have been translated
+        if (!dirty)
+            scheduleArchive(projectIdOf(editor));          // saved: the output archive follows
     });
     connect(editor, &TranslationEditor::statsChanged, this, [this, editor](const FileStats &s) { onEditorStats(editor, s); });
+    connect(editor, &TranslationEditor::historyChanged, this, [this, editor] {
+        if (editor == currentEditor())
+            updateUi();
+    });
     connect(editor, &TranslationEditor::currentIdChanged, this, [this, editor](int id) {
         if (editor == currentEditor()) {
             m_dialogPanel->selectId(id);
@@ -893,12 +997,113 @@ bool MainWindow::saveAll()
 
 // ----------------------------------------------------------------------------- export
 
+void MainWindow::importTranslation(const QString &id)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd())
+        return;
+    // The files are rewritten on disk: close the open ones first (after offering to save them).
+    const QList<TranslationEditor *> open = editorsOf(id);
+    if (!open.isEmpty()) {
+        if (QMessageBox::question(this, tr("Import an existing translation"),
+                                  tr("The files of this project that are open will be closed first. Continue?"))
+            != QMessageBox::Yes)
+            return;
+        if (!confirmClose(open))
+            return;
+        for (TranslationEditor *e : open) {
+            m_tabs->removeTab(m_tabs->indexOf(e));
+            m_tree->setFileDirty(id, e->relPath(), false);
+            e->deleteLater();
+        }
+    }
+    const std::shared_ptr<Project> project = it->project;
+    ImportTranslationDialog dialog(project, this);
+    dialog.exec();
+    if (dialog.imported()) {
+        project->reload();                  // pick up the files written in the output folder
+        scheduleArchive(id);
+        startAnalysis(id, true, true);
+        m_todoTimer.start();
+        updateUi();
+    }
+}
+
+void MainWindow::replaceInProject(const ProjectSearch::Options &options, const QString &replacement,
+                                  const QVector<ProjectSearch::Hit> &hits)
+{
+    const auto it = m_sessions.constFind(m_activeProject);
+    if (it == m_sessions.constEnd() || hits.isEmpty())
+        return;
+    QHash<QString, QSet<int>> byFile;
+    for (const ProjectSearch::Hit &h : hits)
+        if (h.inTarget)
+            byFile[h.relPath].insert(h.id);
+    if (byFile.isEmpty())
+        return;
+    if (QMessageBox::question(this, tr("Replace"),
+                              tr("Replace \"%1\" by \"%2\" in the translation of %3 line(s) of %4 file(s)?\n\n"
+                                 "Files that are not open are saved immediately.")
+                                  .arg(options.text, replacement)
+                                  .arg(hits.size())
+                                  .arg(byFile.size()))
+        != QMessageBox::Yes)
+        return;
+
+    const std::shared_ptr<Project> project = it->project;
+    int total = 0, files = 0;
+    QStringList problems;
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    for (auto f = byFile.cbegin(); f != byFile.cend(); ++f) {
+        TranslationEditor *open = nullptr;
+        for (TranslationEditor *e : editorsOf(m_activeProject))
+            if (e->relPath() == f.key())
+                open = e;
+        if (open) {
+            const int n = open->replaceInTarget(options, replacement, f.value());
+            total += n;
+            files += n > 0 ? 1 : 0;
+            continue;
+        }
+        QString error;
+        TranslationDoc doc = project->loadDocument(f.key(), &error);
+        if (!error.isEmpty()) {
+            problems << f.key() + QStringLiteral(": ") + error;
+            continue;
+        }
+        const int n = ProjectSearch::replaceInDocument(doc, options, replacement, f.value());
+        if (n == 0)
+            continue;
+        QString unencodable;
+        if (!project->saveDocument(doc, &error, &unencodable)) {
+            problems << f.key() + QStringLiteral(": ") + error;
+            continue;
+        }
+        total += n;
+        ++files;
+        FileStats stats = Project::statisticsOf(doc);
+        m_sessions[m_activeProject].stats.insert(stats.relPath, stats);
+        m_tree->updateStats(m_activeProject, stats);
+        m_statsPanel->updateFile(stats);
+    }
+    QApplication::restoreOverrideCursor();
+    m_todoTimer.start();
+    scheduleGlossaryRebuild(m_activeProject);
+    scheduleArchive(m_activeProject);
+    QString text = tr("%1 replacement(s) in %2 file(s).").arg(total).arg(files);
+    if (!problems.isEmpty())
+        text += QStringLiteral("\n\n") + problems.join(QLatin1Char('\n'));
+    QMessageBox::information(this, tr("Replace"), text);
+    m_searchPanel->searchNow();
+}
+
 void MainWindow::openOutputFolder(const QString &id)
 {
     const auto it = m_sessions.constFind(id);
     if (it == m_sessions.constEnd())
         return;
-    const QString dir = it->project->config().outputDir;
+    const ProjectConfig &config = it->project->config();
+    const QString dir = OutputArchive::enabled(config) ? QFileInfo(config.outputArchive).absolutePath() : config.outputDir;
     QDir().mkpath(dir);
     QDesktopServices::openUrl(QUrl::fromLocalFile(dir));
 }
@@ -964,12 +1169,23 @@ void MainWindow::updateUi()
     const bool anyEditor = currentEditor() != nullptr;
     const bool anyProject = !m_sessions.isEmpty();
     m_stack->setCurrentIndex(anyEditor ? 1 : (m_tabs->count() > 0 ? 1 : 0));
-    for (QAction *a : {m_actSave, m_actCloseTab, m_actReview, m_actCopySource, m_actConfirm, m_actNext, m_actPrev,
+    for (QAction *a : {m_actSave, m_actCloseTab, m_actReview, m_actValidate, m_actCopySource, m_actConfirm, m_actNext, m_actPrev,
                        m_actNextUntranslated, m_actPrevUntranslated, m_actFind, m_actTranslateLine, m_actMassTranslate})
         a->setEnabled(anyEditor);
     m_actSaveAll->setEnabled(anyEditor);
-    for (QAction *a : {m_actSettings, m_actExport, m_actRefresh, m_actRebuild, m_actCloseProject})
+    {
+        MsgTableModel *model = anyEditor ? currentEditor()->model() : nullptr;
+        m_actUndoOp->setEnabled(model && model->canUndo());
+        m_actRedoOp->setEnabled(model && model->canRedo());
+        m_actUndoOp->setText(model && model->canUndo() ? tr("Undo the operation: %1").arg(model->undoLabel())
+                                                       : tr("Undo the last operation"));
+        m_actRedoOp->setText(model && model->canRedo() ? tr("Redo the operation: %1").arg(model->redoLabel())
+                                                       : tr("Redo the operation"));
+    }
+    for (QAction *a : {m_actSettings, m_actExport, m_actImport, m_actRefresh, m_actRebuild, m_actCloseProject})
         a->setEnabled(anyProject && m_sessions.contains(m_activeProject));
+    m_actBuildArchive->setEnabled(anyProject && m_sessions.contains(m_activeProject)
+                                  && OutputArchive::enabled(m_sessions.value(m_activeProject).project->config()));
 
     QString title = QStringLiteral("Fallout Babylon");
     if (!m_activeProject.isEmpty() && anyProject)
@@ -1007,5 +1223,70 @@ void MainWindow::closeEvent(QCloseEvent *event)
     settings.setValue(QStringLiteral("window/state"), saveState());
     persistOpenProjects();
     QThreadPool::globalInstance()->waitForDone();
+    for (const QString &id : m_sessions.keys())
+        flushArchive(id);
     event->accept();
+}
+
+// ----------------------------------------------------------------------------- output archive
+
+void MainWindow::scheduleArchive(const QString &id)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd() || !OutputArchive::enabled(it->project->config()))
+        return;
+    m_archivePending.insert(id);
+    m_archiveTimer.start();
+}
+
+void MainWindow::buildArchive(const QString &id)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd() || !OutputArchive::enabled(it->project->config()))
+        return;
+    if (m_archiveRunning.contains(id)) {
+        m_archivePending.insert(id);      // changed while being written: once more afterwards
+        return;
+    }
+    m_archiveRunning.insert(id);
+    const std::shared_ptr<Project> project = it->project;
+    statusBar()->showMessage(tr("Updating the DAT archive..."));
+    QThreadPool::globalInstance()->start([this, id, project] {
+        const OutputArchive::Result result = OutputArchive::build(*project);
+        QMetaObject::invokeMethod(this, [this, id, result] { onArchiveBuilt(id, result); }, Qt::QueuedConnection);
+    });
+}
+
+void MainWindow::onArchiveBuilt(const QString &id, const OutputArchive::Result &result)
+{
+    m_archiveRunning.remove(id);
+    if (result.ok) {
+        statusBar()->showMessage(tr("DAT archive updated: %1 translated file(s), %2 original(s).")
+                                     .arg(result.translated).arg(result.originals), 8000);
+    } else {
+        m_archiveFailed.insert(id);
+        statusBar()->showMessage(tr("DAT archive NOT updated: %1").arg(result.error));
+    }
+    if (result.ok)
+        m_archiveFailed.remove(id);
+    if (m_archivePending.contains(id) && result.ok)
+        m_archiveTimer.start();
+    emit archiveBuilt(id, result.ok);
+}
+
+void MainWindow::flushArchive(const QString &id)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd() || !OutputArchive::enabled(it->project->config()))
+        return;
+    if (!m_archivePending.contains(id) && !m_archiveFailed.contains(id))
+        return;
+    m_archivePending.remove(id);
+    // let a build in progress finish, then write the final state
+    QThreadPool::globalInstance()->waitForDone();
+    const OutputArchive::Result result = OutputArchive::build(*it->project);
+    if (!result.ok)
+        QMessageBox::warning(this, tr("DAT archive"), tr("The DAT archive could not be written:\n%1").arg(result.error));
+    else
+        m_archiveFailed.remove(id);
 }

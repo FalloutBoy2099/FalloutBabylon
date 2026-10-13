@@ -1,11 +1,14 @@
 #pragma once
 
+#include "Glossary.h"
+
 #include <QJsonObject>
 #include <QNetworkAccessManager>
 #include <QObject>
 #include <QPair>
 #include <QVector>
 #include <functional>
+#include <memory>
 
 // Minimal asynchronous client of the DeepL REST API: translation (with context, glossary and protected
 // placeholders), glossaries (v3 endpoints) and usage. Callbacks run on the thread that owns the client.
@@ -19,6 +22,8 @@ public:
         QString sourceLanguage;   // game language folder names ("english"); converted to DeepL codes
         QString targetLanguage;
         QString glossaryId;       // optional
+        // Used when there is no DeepL glossary: the terms of this glossary are replaced locally (see Placeholders).
+        std::shared_ptr<const Glossary> localGlossary;
         QString formality;        // "", "prefer_more" or "prefer_less"
     };
 

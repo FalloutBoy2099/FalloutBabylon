@@ -4,6 +4,7 @@
 #include <QTemporaryDir>
 #include <QtTest>
 
+#include "core/CustomGlossary.h"
 #include "core/DatArchive.h"
 #include "core/DatWriter.h"
 #include "core/DialogGraph.h"
@@ -11,10 +12,15 @@
 #include "core/Int2Ssl.h"
 #include "core/Lzss.h"
 #include "core/MsgFile.h"
+#include "core/Placeholders.h"
+#include "core/OutputArchive.h"
 #include "core/PipboyText.h"
 #include "core/Project.h"
+#include "core/ProjectSearch.h"
+#include "core/QualityCheck.h"
 #include "core/TermMatcher.h"
 #include "core/TextCodec.h"
+#include "core/TranslationMemory.h"
 #include "core/VirtualFileSystem.h"
 
 namespace {
@@ -301,6 +307,550 @@ private slots:
         qInfo() << "stats files" << count << "lines" << total.lines << "untranslated" << total.untranslated
                 << "words left" << total.wordsRemaining << "ms" << timer.elapsed();
         QVERIFY(total.lines > 1000);
+    }
+
+    void translationMemoryRealIfAvailable()
+    {
+        // BABYLON_TM_NEW / BABYLON_TM_OLD: two installs of the mod; the French of the old one is imported into the new
+        // one (written to a temporary output folder; the installs are only read).
+        const QString newInstall = qEnvironmentVariable("BABYLON_TM_NEW");
+        const QString oldInstall = qEnvironmentVariable("BABYLON_TM_OLD");
+        if (newInstall.isEmpty() || oldInstall.isEmpty())
+            QSKIP("BABYLON_TM_NEW / BABYLON_TM_OLD not set");
+        QTemporaryDir out;
+        ProjectConfig c;
+        c.id = "tmreal";
+        c.name = "tmreal";
+        c.sources = VirtualFileSystem::discoverSources(newInstall);
+        c.outputDir = out.path();
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(out.path() + "/state.json");
+        p.reload();
+
+        FileStats before;
+        for (const FileStats &s : p.computeStatistics())
+            before.add(s);
+        TranslationMemory::Memory memory;
+        memory.sources = VirtualFileSystem::discoverSources(oldInstall);
+        QElapsedTimer timer;
+        timer.start();
+        const auto report = TranslationMemory::import(p, memory, {});
+        qInfo() << "memory import ms" << timer.elapsed() << "files" << report.files << "examined" << report.examined
+                << "exact" << report.exact << "changed" << report.changed << "byText" << report.byText
+                << "kept" << report.kept << "saved" << report.saved << "errors" << report.errors.mid(0, 3);
+        Project q(c);
+        q.setStateFile(out.path() + "/state.json");
+        q.reload();
+        FileStats after;
+        for (const FileStats &s : q.computeStatistics())
+            after.add(s);
+        qInfo() << "untranslated before" << before.untranslated << "after" << after.untranslated << "of" << after.lines
+                << "to review" << after.review;
+        QVERIFY(after.untranslated < before.untranslated);
+        QVERIFY(report.exact > 1000);
+    }
+
+    void translationMemoryImport()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        // the new version of the mod (English only)
+        writeFile(root + "/new/text/english/dialog/a.msg",
+                  "{1}{}{Hello there}\r\n{2}{}{Bye now}\r\n{5}{}{Thanks}\r\n{6}{}{Brand new line}\r\n{7}{}{Already done}\r\n");
+        writeFile(root + "/new/text/french/dialog/a.msg", "{7}{}{D\xE9j\xE0 fait}\r\n");
+        // the old version, translated
+        writeFile(root + "/old/text/english/dialog/a.msg",
+                  "{1}{}{Hello there}\r\n{2}{}{Bye}\r\n{9}{}{Thanks}\r\n{7}{}{Already done}\r\n");
+        writeFile(root + "/old/text/french/dialog/a.msg",
+                  "{1}{}{Bonjour}\r\n{2}{}{Salut}\r\n{9}{}{Merci}\r\n{7}{}{Ancienne version}\r\n");
+
+        ProjectConfig c;
+        c.id = "tm";
+        c.name = "tm";
+        c.sources = {root + "/new"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+
+        TranslationMemory::Memory memory;
+        memory.sources = {root + "/old"};
+        const TranslationMemory::Report report = TranslationMemory::import(p, memory, {});
+        QVERIFY2(report.errors.isEmpty(), qPrintable(report.errors.join("; ")));
+        QCOMPARE(report.exact, 1);     // id 1
+        QCOMPARE(report.changed, 1);   // id 2: source changed
+        QCOMPARE(report.byText, 1);    // id 5 found under id 9
+        QCOMPARE(report.kept, 1);      // id 7 already translated
+        QCOMPARE(report.saved, 1);
+
+        Project q(c);
+        q.setStateFile(root + "/state.json");
+        q.reload();
+        const TranslationDoc doc = q.loadDocument("dialog/a.msg");
+        auto row = [&](int id) -> const TranslationRow & {
+            for (const TranslationRow &r : doc.rows)
+                if (r.id == id)
+                    return r;
+            static TranslationRow none;
+            return none;
+        };
+        QCOMPARE(row(1).target, QString("Bonjour"));
+        QVERIFY(!row(1).review);
+        QCOMPARE(row(2).target, QString("Salut"));
+        QVERIFY(row(2).review);
+        QCOMPARE(row(2).previous, QString("Salut"));
+        QVERIFY(row(2).comment.contains("Bye"));       // the previous source is in the comment
+        QCOMPARE(row(5).target, QString("Merci"));
+        QCOMPARE(Project::statusOf(row(6)), SegmentStatus::Untranslated);   // nothing known: still to do
+        QCOMPARE(row(7).target, QString::fromLatin1("D\xE9j\xE0 fait"));   // kept
+
+        // overwrite mode replaces it
+        TranslationMemory::Options overwrite;
+        overwrite.overwrite = true;
+        const auto again = TranslationMemory::import(p, memory, overwrite);
+        QCOMPARE(again.kept, 0);
+        QCOMPARE(q.loadDocument("dialog/a.msg").rows.size(), 5);
+        Project r(c);
+        r.setStateFile(root + "/state.json");
+        r.reload();
+        for (const TranslationRow &x : r.loadDocument("dialog/a.msg").rows)
+            if (x.id == 7)
+                QCOMPARE(x.target, QString("Ancienne version"));
+    }
+
+    void rowCommentsAndValidation()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg", "{1}{}{One}\r\n{2}{}{Two}\r\n");
+        ProjectConfig c;
+        c.id = "cv";
+        c.name = "cv";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+        TranslationDoc doc = p.loadDocument("dialog/a.msg");
+        doc.rows[0].target = "Un";
+        doc.rows[0].comment = "check the tone";
+        doc.rows[0].validated = Project::textHash("Un");
+        doc.rows[1].target = "Deux";
+        doc.rows[1].validated = Project::textHash("Deux");
+        QVERIFY(!doc.rows[0].changedSinceValidation());
+        QVERIFY(p.saveDocument(doc));
+
+        Project q(c);
+        q.setStateFile(root + "/state.json");
+        q.reload();
+        TranslationDoc again = q.loadDocument("dialog/a.msg");
+        QCOMPARE(again.rows[0].comment, QString("check the tone"));
+        QVERIFY(!again.rows[0].changedSinceValidation());
+        again.rows[1].target = "Deux, modifié";
+        QVERIFY(again.rows[1].changedSinceValidation());
+        QVERIFY(Project::textHash("a") != Project::textHash("b"));
+        QCOMPARE(Project::textHash("same"), Project::textHash("same"));
+    }
+
+    void projectSearchAndReplace()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg",
+                  "{1}{}{The Vault Dweller}\r\n{2}{}{Vault 13}\r\n{3}{}{Nothing}\r\n");
+        writeFile(root + "/m/text/french/dialog/a.msg",
+                  "{1}{}{L'Habitant de l'Abri}\r\n{2}{}{Abri 13 et abri 8}\r\n{3}{}{Rien du tout}\r\n");
+        writeFile(root + "/m/text/english/dialog/b.msg", "{1}{}{Cat}\r\n");
+        writeFile(root + "/m/text/french/dialog/b.msg", "{1}{}{Concatener le chat}\r\n");
+        ProjectConfig c;
+        c.id = "search";
+        c.name = "search";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+
+        ProjectSearch::Options o;
+        o.text = "abri";
+        // case-insensitive by default: three hits in two lines of a.msg
+        auto hits = ProjectSearch::search(p, o, "Refuge");
+        QCOMPARE(hits.size(), 2);
+        int occurrences = 0;
+        for (const auto &h : hits) {
+            QVERIFY(h.inTarget);
+            QVERIFY(!h.after.contains("bri", Qt::CaseInsensitive));
+            occurrences += h.occurrences;
+        }
+        QCOMPARE(occurrences, 3);
+
+        o.caseSensitive = true;
+        QCOMPARE(ProjectSearch::search(p, o).size(), 1);          // only the lowercase one
+
+        // whole words
+        ProjectSearch::Options w;
+        w.text = "chat";
+        QCOMPARE(ProjectSearch::search(p, w).size(), 1);
+        w.wholeWord = true;
+        QCOMPARE(ProjectSearch::search(p, w).size(), 1);
+        w.text = "cat";
+        w.wholeWord = false;
+        w.inSource = true;
+        w.inTarget = true;
+        QCOMPARE(ProjectSearch::search(p, w).size(), 2);          // "Cat" (source) and "Concatener" (target)
+        w.wholeWord = true;
+        const auto words = ProjectSearch::search(p, w);
+        QCOMPARE(words.size(), 1);
+        QVERIFY(!words.first().inTarget);
+
+        // regex with a back-reference, and a plain replacement that contains a backslash and a dollar
+        ProjectSearch::Options r;
+        r.text = "(\\w+) (\\d+)";
+        r.regex = true;
+        QString text = "Abri 13";
+        QCOMPARE(ProjectSearch::replaceIn(text, r, "\\2 \\1"), 1);
+        QCOMPARE(text, QString("13 Abri"));
+        ProjectSearch::Options plain;
+        plain.text = "13";
+        text = "Abri 13";
+        ProjectSearch::replaceIn(text, plain, "\\1$1");
+        QCOMPARE(text, QString("Abri \\1$1"));
+        ProjectSearch::Options bad;
+        bad.text = "(";
+        bad.regex = true;
+        QVERIFY(ProjectSearch::search(p, bad).isEmpty());
+
+        // replacing in a document changes only the requested records
+        TranslationDoc doc = p.loadDocument("dialog/a.msg");
+        ProjectSearch::Options again;
+        again.text = "abri";
+        QCOMPARE(ProjectSearch::replaceInDocument(doc, again, "Refuge", {2}), 2);
+        for (const TranslationRow &row : doc.rows) {
+            if (row.id == 1)
+                QCOMPARE(row.target, QString("L'Habitant de l'Abri"));
+            if (row.id == 2)
+                QCOMPARE(row.target, QString("Refuge 13 et Refuge 8"));
+        }
+        QVERIFY(p.saveDocument(doc));
+        Project q(c);
+        q.setStateFile(root + "/state.json");
+        q.reload();
+        QVERIFY(ProjectSearch::search(q, again, {}).size() == 1);
+
+        // truncation
+        bool truncated = false;
+        ProjectSearch::Options any;
+        any.text = "e";
+        any.inSource = true;
+        QCOMPARE(ProjectSearch::search(q, any, {}, {}, nullptr, 2, &truncated).size(), 2);
+        QVERIFY(truncated);
+    }
+
+    void outputArchiveBuild()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg", "{1}{}{Hello}\r\n{2}{}{Bye}\r\n");
+        writeFile(root + "/m/text/english/dialog/b.msg", "{1}{}{Other}\r\n");
+        ProjectConfig c;
+        c.id = "oa";
+        c.name = "oa";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/work";
+        c.outputArchive = root + "/out/french.dat";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+
+        // nothing saved yet: an empty archive is still valid
+        QVERIFY(OutputArchive::problemWith(c).isEmpty());
+        TranslationDoc doc = p.loadDocument("dialog/a.msg");
+        doc.rows[0].target = "Bonjour";
+        doc.rows[1].target = "Au revoir";
+        QVERIFY(p.saveDocument(doc));
+
+        // with the original texts (default): translated file + its reference, but not the untouched b.msg
+        OutputArchive::Result r = OutputArchive::build(p);
+        QVERIFY2(r.ok, qPrintable(r.error));
+        QCOMPARE(r.translated, 1);
+        QCOMPARE(r.originals, 1);
+        {
+            const auto dat = DatArchive::open(c.outputArchive);
+            QVERIFY(dat);
+            QCOMPARE(int(dat->format()), int(DatArchive::Format::Fallout2));
+            QCOMPARE(dat->entries().size(), 2);
+            const int fr = dat->indexOf("text/french/dialog/a.msg");
+            const int en = dat->indexOf("text/english/dialog/a.msg");
+            QVERIFY(fr >= 0 && en >= 0);
+            QVERIFY(dat->read(fr).contains("{1}{}{Bonjour}"));
+            QVERIFY(dat->read(en).contains("{1}{}{Hello}"));
+            QCOMPARE(dat->indexOf("text/english/dialog/b.msg"), -1);
+        }
+
+        // without the originals, in the Fallout 1 format
+        ProjectConfig c1 = c;
+        c1.archiveWithSource = false;
+        c1.outputArchiveFormat = "dat1";
+        c1.outputArchive = root + "/out/french1.dat";
+        Project p1(c1);
+        p1.setStateFile(root + "/state1.json");
+        p1.reload();
+        r = OutputArchive::build(p1);
+        QVERIFY2(r.ok, qPrintable(r.error));
+        QCOMPARE(r.originals, 0);
+        {
+            const auto dat = DatArchive::open(c1.outputArchive);
+            QVERIFY(dat);
+            QCOMPARE(int(dat->format()), int(DatArchive::Format::Fallout1));
+            QCOMPARE(dat->entries().size(), 1);
+            QVERIFY(dat->read(dat->indexOf("text/french/dialog/a.msg")).contains("{2}{}{Au revoir}"));
+        }
+        QCOMPARE(int(OutputArchive::detectFormat({c1.outputArchive})), int(DatArchive::Format::Fallout1));
+        QCOMPARE(int(OutputArchive::detectFormat({root + "/m"})), int(DatArchive::Format::Fallout2));
+
+        // a new computer: the working folder is restored from the archive (translations only, never overwritten)
+        ProjectConfig again = c;
+        again.outputDir = root + "/work2";
+        QCOMPARE(OutputArchive::seedWorkingFolder(again), 1);
+        QVERIFY(QFileInfo::exists(root + "/work2/text/french/dialog/a.msg"));
+        QVERIFY(!QFileInfo::exists(root + "/work2/text/english"));
+        QCOMPARE(OutputArchive::seedWorkingFolder(again), 0);
+
+        // the archive can never be one of the sources
+        ProjectConfig bad = c;
+        bad.sources = {c.outputArchive};
+        QVERIFY(!OutputArchive::problemWith(bad).isEmpty());
+        bad = c;
+        bad.outputArchive = root + "/out/french.txt";
+        QVERIFY(!OutputArchive::problemWith(bad).isEmpty());
+    }
+
+    void customGlossary()
+    {
+        // CSV round trip, with quotes, semicolons and a do-not-translate term
+        QVector<CustomTerm> terms;
+        terms.push_back({"Vault Dweller", "Habitant de l'Abri", false});
+        terms.push_back({"Brotherhood; of Steel", "Confr\xC3\xA9rie \"Acier\"", false});
+        terms.push_back({"Pip-Boy", "Pip-Boy", true});
+        const QString csv = CustomGlossary::toCsv(terms);
+        int skipped = -1;
+        const QVector<CustomTerm> back = CustomGlossary::fromCsv(csv, &skipped);
+        QCOMPARE(back.size(), 3);
+        QCOMPARE(skipped, 0);
+        QCOMPARE(back[1].source, QString("Brotherhood; of Steel"));
+        QCOMPARE(back[1].target, QString::fromUtf8("Confr\xC3\xA9rie \"Acier\""));
+        QVERIFY(back[2].keep);
+
+        // other separators, no header, a lone term, a blank line
+        const auto tabs = CustomGlossary::fromCsv("Nuka-Cola\tNuka-Cola\nStimpak\tStimpak\n\nCaps\tcapsules\nRad-X", &skipped);
+        QCOMPARE(tabs.size(), 4);
+        QVERIFY(tabs[0].keep);
+        QVERIFY(!tabs[2].keep);
+        QVERIFY(tabs[3].keep);
+        const auto commas = CustomGlossary::fromCsv("term,translation\nCaps,capsules\n", nullptr);
+        QCOMPARE(commas.size(), 1);
+
+        // merging replaces by term, ignoring case and spaces
+        const auto merged = CustomGlossary::merge(terms, {{"vault  dweller", "Habitant du Vault", false}, {"Ghoul", "Goule", false}});
+        QCOMPARE(merged.size(), 4);
+        QCOMPARE(merged[0].target, QString("Habitant du Vault"));
+
+        // the terms are saved with the project and beat the translations of the game files
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/game/pro_item.msg", "{100}{}{Stimpak}\r\n{101}{}{Super Stimpak}\r\n");
+        writeFile(root + "/m/text/french/game/pro_item.msg", "{100}{}{Stimpak}\r\n{101}{}{Super Stimpak}\r\n");
+        ProjectConfig c;
+        c.id = "cg";
+        c.name = "cg";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+        p.setCustomTerms({{"Stimpak", "Seringue", false}, {"Radscorpion", "Radscorpion", true}});
+
+        Project q(c);
+        q.setStateFile(root + "/state.json");
+        q.reload();
+        QCOMPARE(q.customTerms().size(), 2);
+        const Glossary g = q.buildGlossary();
+        const GlossaryTerm *stimpak = nullptr, *scorpion = nullptr;
+        for (const GlossaryTerm &t : g.terms()) {
+            if (t.source == "Stimpak")
+                stimpak = &t;
+            if (t.source == "Radscorpion")
+                scorpion = &t;
+        }
+        QVERIFY(stimpak && scorpion);
+        QVERIFY(stimpak->custom);
+        QCOMPARE(stimpak->targets, QStringList{"Seringue"});
+        QVERIFY(!stimpak->conflict());
+        QVERIFY(scorpion->keep);
+        // the consistency check uses the custom translation
+        QCOMPARE(g.checkConsistency("Use a Stimpak", "Utilisez un Stimpak").size(), 1);
+        QCOMPARE(g.checkConsistency("Use a Stimpak", "Utilisez une seringue").size(), 0);
+        QCOMPARE(g.checkConsistency("A Radscorpion", "Un scorpion").size(), 1);
+    }
+
+    void localGlossarySubstitution()
+    {
+        Glossary g;
+        g.add("Vault Dweller", "Habitant de l'Abri", "Misc", "a#1");
+        g.add("Stimpak", "Stimpak", "Item", "b#1");
+        g.add("Water", "Eau", "Item", "b#2");
+        g.add("Chip", "Puce", "Item", "b#3");
+        g.add("Chip", "Jeton", "Item", "b#4");       // two translations: never forced
+        g.addCustom("caps", "capsules", false, "Custom");
+        g.finalize("english", "french");
+
+        // multi-word names, capitalised names (not at the start of a sentence) and custom terms are protected
+        const auto p = Placeholders::protect("The Vault Dweller found a Stimpak and 5 caps for @Name@. Water is rare.", &g);
+        QVERIFY(p.tokens.contains("Habitant de l'Abri"));
+        QVERIFY(p.tokens.contains("Stimpak"));
+        QVERIFY(p.tokens.contains("capsules"));
+        QVERIFY(p.tokens.contains("@Name@"));
+        QVERIFY(!p.tokens.contains("Eau"));            // common word at the start of a sentence
+        QVERIFY(!p.tokens.contains("Puce") && !p.tokens.contains("Jeton"));
+        QVERIFY(p.xml.contains("Water is rare"));
+
+        // what the service sends back is restored with the translations of the project
+        QString restored;
+        QString answer = p.xml;
+        QVERIFY(Placeholders::restore(answer, p.tokens, &restored));
+        QVERIFY(restored.contains("Habitant de l'Abri"));
+        QVERIFY(restored.contains("5 capsules"));
+        QVERIFY(restored.contains("@Name@"));
+
+        // without a glossary only the real tokens are protected
+        QCOMPARE(Placeholders::protect("The Vault Dweller has %d caps", nullptr).tokens, QStringList{"%d"});
+
+        // exact form only: a plural is left to the service
+        const auto plural = Placeholders::protect("Two Stimpaks here", &g);
+        QVERIFY(plural.tokens.isEmpty());
+    }
+
+    void qualityChecks()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg",
+                  "{1}{}{Hello @Name@, you have %d caps}\r\n"
+                  "{2}{}{Plain sentence here}\r\n"
+                  "{3}{}{Short}\r\n"
+                  "{4}{}{This quest is really difficult to finish}\r\n"
+                  "{5}{}{This quest is really difficult to finish}\r\n"
+                  "{6}{}{Untouched line}\r\n");
+        writeFile(root + "/m/text/french/dialog/a.msg",
+                  "{1}{}{Bonjour, vous avez %d capsules}\r\n"
+                  "{2}{}{Phrase  simple ici }\r\n"
+                  "{3}{}{Court}\r\n"
+                  "{4}{}{Cette qu\xEAte est vraiment difficile \xE0 terminer}\r\n"
+                  "{5}{}{Cette mission est vraiment difficile \xE0 terminer}\r\n");
+        ProjectConfig c;
+        c.id = "qa";
+        c.name = "qa";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+
+        QualityCheck::Options o;
+        const auto issues = QualityCheck::run(p, nullptr, o);
+        auto has = [&](int id, QualityCheck::Kind kind) {
+            for (const auto &i : issues)
+                if (i.id == id && i.kind == kind)
+                    return true;
+            return false;
+        };
+        QVERIFY(has(1, QualityCheck::Tokens));        // @Name@ lost
+        QVERIFY(!has(2, QualityCheck::Tokens));
+        QVERIFY(has(2, QualityCheck::Spacing));       // double and trailing space
+        QVERIFY(!has(3, QualityCheck::Encoding));
+        QVERIFY(has(4, QualityCheck::Duplicates) != has(5, QualityCheck::Duplicates));   // one of the two is the odd one
+
+        // a character typed in the editor that cp1252 cannot hold
+        TranslationDoc doc = p.loadDocument("dialog/a.msg");
+        for (TranslationRow &row : doc.rows)
+            if (row.id == 3)
+                row.target = QString::fromUtf8("Court \xE2\x89\xA0");   // not equal sign
+        bool found = false;
+        for (const auto &i : QualityCheck::checkDocument(doc, p.config(), nullptr, o))
+            found = found || (i.id == 3 && i.kind == QualityCheck::Encoding);
+        QVERIFY(found);
+        for (const auto &i : issues)
+            QVERIFY(i.id != 6);                        // untranslated lines are not reported here
+
+        // a restricted selection
+        QualityCheck::Options only;
+        only.kinds = QualityCheck::Tokens;
+        for (const auto &i : QualityCheck::run(p, nullptr, only))
+            QCOMPARE(int(i.kind), int(QualityCheck::Tokens));
+    }
+
+    void statisticsCache()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/mod/text/english/dialog/a.msg", "{1}{}{Hello there}\r\n{2}{}{Bye}\r\n");
+        writeFile(root + "/mod/text/english/dialog/b.msg", "{1}{}{Another one}\r\n");
+        writeFile(root + "/mod/text/french/dialog/a.msg", "{1}{}{Bonjour}\r\n{2}{}{Salut}\r\n");
+        ProjectConfig c;
+        c.id = "cache";
+        c.name = "cache";
+        c.sources = {root + "/mod"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+
+        {
+            Project p(c);
+            p.setStatsCacheFile(root + "/stats.json");
+            p.reload();
+            const auto first = p.computeStatistics();
+            QCOMPARE(first.size(), 2);
+            QCOMPARE(p.statsCacheHits(), 0);
+        }
+        {
+            Project p(c);
+            p.setStatsCacheFile(root + "/stats.json");
+            p.reload();
+            const auto second = p.computeStatistics();
+            QCOMPARE(p.statsCacheHits(), 2);   // nothing changed: both files come from the cache
+            QCOMPARE(second.first().lines + second.last().lines, 3);
+        }
+        // a file changes: only that one is recomputed
+        QTest::qWait(30);
+        writeFile(root + "/mod/text/french/dialog/a.msg", "{1}{}{Bonjour}\r\n{2}{}{Salut toi, c'est long}\r\n");
+        {
+            Project p(c);
+            p.setStatsCacheFile(root + "/stats.json");
+            p.reload();
+            p.computeStatistics();
+            QCOMPARE(p.statsCacheHits(), 1);
+        }
+        // another encoding invalidates everything
+        c.targetEncoding = "cp1250";
+        {
+            Project p(c);
+            p.setStatsCacheFile(root + "/stats.json");
+            p.reload();
+            p.computeStatistics();
+            QCOMPARE(p.statsCacheHits(), 0);
+        }
     }
 
     void installWithExtractedArchives()

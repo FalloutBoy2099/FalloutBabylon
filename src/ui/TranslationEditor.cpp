@@ -9,6 +9,7 @@
 #include "core/Statistics.h"
 
 #include <QPointer>
+#include <QPushButton>
 
 #include <QComboBox>
 #include <QHBoxLayout>
@@ -43,6 +44,10 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
     m_filter->addItem(tr("Translated"), int(MsgFilterProxy::Translated));
     m_filter->addItem(tr("To review"), int(MsgFilterProxy::ToReview));
     m_filter->addItem(tr("Glossary alerts"), int(MsgFilterProxy::WithIssues));
+    m_filter->addItem(tr("Validated"), int(MsgFilterProxy::Validated));
+    m_filter->addItem(tr("Not validated"), int(MsgFilterProxy::NotValidated));
+    m_filter->addItem(tr("Changed since validation"), int(MsgFilterProxy::ChangedSinceValidation));
+    m_filter->addItem(tr("With a comment"), int(MsgFilterProxy::WithComment));
     m_info = new QLabel;
 
     auto *bar = new QHBoxLayout;
@@ -66,6 +71,7 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
     header->setSectionResizeMode(MsgTableModel::ColTarget, QHeaderView::Stretch);
     header->setSectionResizeMode(MsgTableModel::ColStatus, QHeaderView::ResizeToContents);
     header->setSectionResizeMode(MsgTableModel::ColIssues, QHeaderView::ResizeToContents);
+    header->setSectionResizeMode(MsgTableModel::ColNote, QHeaderView::ResizeToContents);
 
     auto *listPane = new QWidget;
     auto *listLayout = new QVBoxLayout(listPane);
@@ -80,6 +86,27 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
     m_issues->setWordWrap(true);
     m_issues->setTextFormat(Qt::RichText);
     m_issues->hide();
+    m_comment = new QLineEdit;
+    m_comment->setPlaceholderText(tr("Comment on this line (kept in the project, not in the game files)..."));
+    m_comment->setClearButtonEnabled(true);
+    m_previous = new QLabel;
+    m_previous->setWordWrap(true);
+    m_previous->setTextFormat(Qt::PlainText);
+    m_restorePrevious = new QPushButton(tr("Restore"));
+    m_restorePrevious->setToolTip(tr("Put the previous translation back"));
+    m_previousRow = new QWidget;
+    auto *previousLayout = new QHBoxLayout(m_previousRow);
+    previousLayout->setContentsMargins(0, 0, 0, 0);
+    previousLayout->addWidget(m_previous, 1);
+    previousLayout->addWidget(m_restorePrevious);
+    m_previousRow->hide();
+    auto *extras = new QWidget;
+    auto *extrasLayout = new QVBoxLayout(extras);
+    extrasLayout->setContentsMargins(0, 0, 0, 0);
+    extrasLayout->setSpacing(2);
+    extrasLayout->addWidget(m_issues);
+    extrasLayout->addWidget(m_previousRow);
+    extrasLayout->addWidget(m_comment);
 
     auto makePane = [](const QString &title, QWidget *editor, QWidget *extra = nullptr) {
         auto *pane = new QWidget;
@@ -95,7 +122,7 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
     };
     auto *editors = new QSplitter(Qt::Horizontal);
     editors->addWidget(makePane(tr("Source (%1)").arg(m_project->config().sourceLanguage), m_source));
-    editors->addWidget(makePane(tr("Translation (%1)").arg(m_project->config().targetLanguage), m_target, m_issues));
+    editors->addWidget(makePane(tr("Translation (%1)").arg(m_project->config().targetLanguage), m_target, extras));
     editors->setChildrenCollapsible(false);
 
     auto *splitter = new QSplitter(Qt::Vertical);
@@ -125,7 +152,21 @@ TranslationEditor::TranslationEditor(std::shared_ptr<Project> project, Translati
     connect(m_search, &QLineEdit::textChanged, this, [this] { applyFilters(); });
     connect(m_filter, &QComboBox::currentIndexChanged, this, [this] { applyFilters(); });
     connect(m_target, &SciEdit::userEdited, this, &TranslationEditor::onTargetEdited);
+    connect(m_comment, &QLineEdit::textEdited, this, [this](const QString &text) {
+        if (!m_loading && m_currentRow >= 0)
+            m_model->setComment(m_currentRow, text);
+    });
+    connect(m_restorePrevious, &QPushButton::clicked, this, [this] {
+        if (m_currentRow < 0 || m_model->row(m_currentRow).previous.isEmpty())
+            return;
+        {
+            MsgTableModel::Operation op(m_model, tr("Previous translation restored"));
+            m_model->setTarget(m_currentRow, m_model->row(m_currentRow).previous);
+        }
+        refreshCurrent();
+    });
 
+    connect(m_model, &MsgTableModel::historyChanged, this, &TranslationEditor::historyChanged);
     connect(m_model, &MsgTableModel::changed, this, [this] {
         const bool dirty = m_model->isDirty();
         if (dirty != m_lastDirty) {
@@ -381,6 +422,26 @@ void TranslationEditor::refreshCurrent()
     m_checkTimer.start(150);
 }
 
+int TranslationEditor::replaceInTarget(const ProjectSearch::Options &options, const QString &replacement, const QSet<int> &ids)
+{
+    int total = 0;
+    MsgTableModel::Operation op(m_model, tr("Replace"));
+    for (int row = 0; row < m_model->rowCount(); ++row) {
+        const TranslationRow &r = m_model->row(row);
+        if (!ids.isEmpty() && !ids.contains(r.id))
+            continue;
+        QString text = r.target;
+        const int n = ProjectSearch::replaceIn(text, options, replacement);
+        if (n > 0 && text != r.target) {
+            m_model->setTarget(row, text);
+            total += n;
+        }
+    }
+    if (total)
+        refreshCurrent();
+    return total;
+}
+
 QString TranslationEditor::contextFor(const TranslationDoc &doc, int row)
 {
     QStringList parts;
@@ -427,9 +488,12 @@ void TranslationEditor::translateCurrent()
                                       .arg(Theme::colors().spelling.name(), error.toHtmlEscaped()));
                 return;
             }
-            self->m_model->setTarget(row, text);
-            if (AppSettings::deeplMarkReview())
-                self->m_model->setReview(row, true);
+            {
+                MsgTableModel::Operation op(self->m_model, tr("DeepL translation"));
+                self->m_model->setTarget(row, text);
+                if (AppSettings::deeplMarkReview())
+                    self->m_model->setReview(row, true);
+            }
             if (row == self->m_currentRow)
                 self->refreshCurrent();
             const QString note = !error.isEmpty() ? error : warning;
@@ -448,12 +512,44 @@ void TranslationEditor::massTranslate()
     for (const QModelIndex &idx : m_table->selectionModel()->selectedRows())
         selected << m_proxy->mapToSource(idx).row();
     MassTranslateDialog dialog(m_service, m_project, m_model, selected, this);
-    dialog.exec();
+    {
+        MsgTableModel::Operation op(m_model, tr("Mass translation"));
+        dialog.exec();
+    }
     refreshCurrent();
+}
+
+bool TranslationEditor::undoOperation()
+{
+    if (!m_model->undo())
+        return false;
+    if (m_currentRow >= 0 && m_currentRow < m_model->rowCount())
+        refreshCurrent();
+    return true;
+}
+
+bool TranslationEditor::redoOperation()
+{
+    if (!m_model->redo())
+        return false;
+    if (m_currentRow >= 0 && m_currentRow < m_model->rowCount())
+        refreshCurrent();
+    return true;
 }
 
 void TranslationEditor::updateIssueLabel()
 {
+    // comment and previous translation of the current line
+    {
+        const bool valid = m_currentRow >= 0 && m_currentRow < m_model->rowCount();
+        const QString comment = valid ? m_model->row(m_currentRow).comment : QString();
+        const QString previous = valid ? m_model->row(m_currentRow).previous : QString();
+        if (m_comment->text() != comment)
+            m_comment->setText(comment);
+        m_comment->setEnabled(valid);
+        m_previousRow->setVisible(!previous.isEmpty() && previous != m_model->row(m_currentRow).target);
+        m_previous->setText(tr("Previous translation: %1").arg(previous));
+    }
     if (m_currentRow < 0) {
         m_issues->hide();
         return;
@@ -565,6 +661,7 @@ void TranslationEditor::toggleReview()
     if (rows.isEmpty())
         return;
     // If every selected row is already flagged, clear the flag; otherwise flag them all.
+    MsgTableModel::Operation op(m_model, tr("Review mark"));
     bool allFlagged = true;
     for (const QModelIndex &idx : rows)
         allFlagged = allFlagged && m_model->row(m_proxy->mapToSource(idx).row()).review;
@@ -572,10 +669,27 @@ void TranslationEditor::toggleReview()
         m_model->setReview(m_proxy->mapToSource(idx).row(), !allFlagged);
 }
 
+void TranslationEditor::toggleValidated()
+{
+    const QModelIndexList rows = m_table->selectionModel()->selectedRows();
+    if (rows.isEmpty())
+        return;
+    MsgTableModel::Operation op(m_model, tr("Validation"));
+    // If every selected line is already validated (and unchanged), remove the mark; otherwise validate them all.
+    bool allValid = true;
+    for (const QModelIndex &idx : rows) {
+        const TranslationRow &r = m_model->row(m_proxy->mapToSource(idx).row());
+        allValid = allValid && r.validated && !r.changedSinceValidation();
+    }
+    for (const QModelIndex &idx : rows)
+        m_model->setValidated(m_proxy->mapToSource(idx).row(), !allValid);
+}
+
 void TranslationEditor::copySourceToTarget()
 {
     if (m_currentRow < 0)
         return;
+    MsgTableModel::Operation op(m_model, tr("Copy the source"));
     const QString source = m_model->row(m_currentRow).source;
     m_loading = true;
     m_target->setPlainText(source);
@@ -589,6 +703,7 @@ void TranslationEditor::confirmCurrent()
 {
     if (m_currentRow < 0)
         return;
+    MsgTableModel::Operation op(m_model, tr("Accept as is"));
     m_model->confirm(m_currentRow);
     if (m_target->plainText().isEmpty()) {
         m_loading = true;

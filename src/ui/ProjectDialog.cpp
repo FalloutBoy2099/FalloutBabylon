@@ -1,9 +1,11 @@
 #include "ProjectDialog.h"
 
+#include "core/OutputArchive.h"
 #include "core/ProjectStore.h"
 #include "core/TextCodec.h"
 
 #include <QApplication>
+#include <QCheckBox>
 #include <QComboBox>
 #include <QDialogButtonBox>
 #include <QDir>
@@ -91,11 +93,43 @@ ProjectDialog::ProjectDialog(const ProjectConfig &config, bool isNew, QWidget *p
     selectData(m_sourceEncoding, config.sourceEncoding);
     selectData(m_targetEncoding, config.targetEncoding);
 
-    m_output = new QLineEdit(config.outputDir);
+    const bool archiveMode = OutputArchive::enabled(config);
+    m_outputMode = new QComboBox;
+    m_outputMode->addItem(tr("Folder of loose files"), 0);
+    m_outputMode->addItem(tr("DAT archive"), 1);
+    m_outputMode->setCurrentIndex(archiveMode ? 1 : 0);
+    m_output = new QLineEdit(archiveMode ? QString() : config.outputDir);
     auto *browseOutput = new QPushButton(tr("Browse..."));
-    auto *outputRow = new QHBoxLayout;
+    m_folderRow = new QWidget;
+    auto *outputRow = new QHBoxLayout(m_folderRow);
+    outputRow->setContentsMargins(0, 0, 0, 0);
     outputRow->addWidget(m_output, 1);
     outputRow->addWidget(browseOutput);
+
+    m_archive = new QLineEdit(config.outputArchive);
+    m_archive->setPlaceholderText(tr("e.g. french.dat"));
+    auto *browseArchive = new QPushButton(tr("Browse..."));
+    m_archiveFormat = new QComboBox;
+    m_archiveFormat->addItem(tr("Fallout 2 (zlib)"), QStringLiteral("dat2"));
+    m_archiveFormat->addItem(tr("Fallout 1"), QStringLiteral("dat1"));
+    selectData(m_archiveFormat, config.outputArchiveFormat);
+    m_archiveSource = new QCheckBox(tr("Also store the original texts (reference files)"));
+    m_archiveSource->setChecked(config.archiveWithSource);
+    m_archiveSource->setToolTip(tr("Adds text/<source language>/ copies of the translated files, so that the reference of each "
+                                   "translation is in the archive. Turn it off if a later mod must keep providing the original texts."));
+    m_archiveRow = new QWidget;
+    auto *archiveLayout = new QVBoxLayout(m_archiveRow);
+    archiveLayout->setContentsMargins(0, 0, 0, 0);
+    auto *archiveTop = new QHBoxLayout;
+    archiveTop->addWidget(m_archive, 1);
+    archiveTop->addWidget(browseArchive);
+    auto *archiveOptions = new QHBoxLayout;
+    archiveOptions->addWidget(new QLabel(tr("Format:")));
+    archiveOptions->addWidget(m_archiveFormat);
+    archiveOptions->addStretch();
+    archiveLayout->addLayout(archiveTop);
+    archiveLayout->addLayout(archiveOptions);
+    archiveLayout->addWidget(m_archiveSource);
 
     m_hint = new QLabel;
     m_hint->setWordWrap(true);
@@ -107,7 +141,10 @@ ProjectDialog::ProjectDialog(const ProjectConfig &config, bool isNew, QWidget *p
     form->addRow(tr("Source encoding"), m_sourceEncoding);
     form->addRow(tr("Target language"), m_targetLanguage);
     form->addRow(tr("Target encoding"), m_targetEncoding);
-    form->addRow(tr("Output folder"), outputRow);
+    form->addRow(tr("Output"), m_outputMode);
+    form->addRow(tr("Output folder"), m_folderRow);
+    form->addRow(tr("Output archive"), m_archiveRow);
+    m_outputForm = form;
     m_outputHint = new QLabel;
     m_outputHint->setWordWrap(true);
     form->addRow(QString(), m_outputHint);
@@ -172,6 +209,16 @@ ProjectDialog::ProjectDialog(const ProjectConfig &config, bool isNew, QWidget *p
             m_outputEdited = true;
         }
     });
+    connect(browseArchive, &QPushButton::clicked, this, [this] {
+        const QString start = m_archive->text().isEmpty() ? defaultArchiveFor() : m_archive->text();
+        const QString file = QFileDialog::getSaveFileName(this, tr("Output archive"), start, tr("DAT archives (*.dat)"),
+                                                         nullptr, QFileDialog::DontConfirmOverwrite);
+        if (!file.isEmpty())
+            m_archive->setText(QDir::toNativeSeparators(file.endsWith(QLatin1String(".dat"), Qt::CaseInsensitive) ? file : file + QStringLiteral(".dat")));
+    });
+    connect(m_outputMode, &QComboBox::currentIndexChanged, this, [this] { updateOutputMode(); });
+    connect(m_archive, &QLineEdit::textChanged, this, [this] { updateOutputHint(); });
+    connect(m_archiveSource, &QCheckBox::toggled, this, [this] { updateOutputHint(); });
     connect(m_output, &QLineEdit::textEdited, this, [this] { m_outputEdited = true; });
     connect(m_output, &QLineEdit::textChanged, this, [this] { updateOutputHint(); });
     connect(m_name, &QLineEdit::textChanged, this, [this] { updateOutputDefault(); });
@@ -183,8 +230,40 @@ ProjectDialog::ProjectDialog(const ProjectConfig &config, bool isNew, QWidget *p
         selectData(m_sourceEncoding, TextCodec::defaultFor(lang));
     });
 
-    m_outputEdited = !isNew;
+    m_outputEdited = !isNew && !archiveMode;
     detectLanguages();
+    if (archiveMode)
+        updateOutputDefault();
+    updateOutputMode();
+}
+
+QString ProjectDialog::defaultArchiveFor() const
+{
+    QStringList sources;
+    for (int i = 0; i < m_sources->count(); ++i)
+        sources << m_sources->item(i)->text();
+    // Next to the game's data folder (the game folder) or the mod folder.
+    const QString folder = defaultOutputFor(sources, m_name->text());
+    const QFileInfo fi(folder);
+    const QString base = fi.fileName().compare(QLatin1String("data"), Qt::CaseInsensitive) == 0 ? fi.absolutePath() : folder;
+    const QString language = m_targetLanguage->currentText().trimmed().toLower();
+    return QDir(base).filePath((language.isEmpty() ? QStringLiteral("translation") : language) + QStringLiteral(".dat"));
+}
+
+void ProjectDialog::updateOutputMode()
+{
+    const bool archive = m_outputMode->currentData().toInt() == 1;
+    m_outputForm->setRowVisible(m_folderRow, !archive);
+    m_outputForm->setRowVisible(m_archiveRow, archive);
+    if (archive) {
+        QStringList sources;
+        for (int i = 0; i < m_sources->count(); ++i)
+            sources << m_sources->item(i)->text();
+        if (m_archive->text().trimmed().isEmpty()) {
+            m_archive->setText(QDir::toNativeSeparators(defaultArchiveFor()));
+            selectData(m_archiveFormat, OutputArchive::formatId(OutputArchive::detectFormat(sources)));
+        }
+    }
     updateOutputHint();
 }
 
@@ -283,6 +362,14 @@ QString ProjectDialog::defaultOutputFor(const QStringList &sources, const QStrin
 void ProjectDialog::updateOutputHint()
 {
     const QString language = m_targetLanguage->currentText().trimmed().toLower();
+    if (m_outputMode->currentData().toInt() == 1) {
+        QString text = tr("The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files")
+                           .arg(QDir::toNativeSeparators(m_archive->text().trimmed()), language.isEmpty() ? QStringLiteral("<language>") : language);
+        text += m_archiveSource->isChecked() ? tr(", and the original texts under text/%1/.").arg(m_sourceLanguage->currentText().trimmed().toLower())
+                                             : QStringLiteral(".");
+        m_outputHint->setText(text);
+        return;
+    }
     m_outputHint->setText(tr("Translated files are written to %1 (this folder overrides the sources).")
                               .arg(QDir::toNativeSeparators(QDir(m_output->text().trimmed())
                                                                  .filePath(QStringLiteral("text/%1/").arg(language.isEmpty() ? QStringLiteral("<language>") : language)))));
@@ -295,13 +382,22 @@ ProjectConfig ProjectDialog::config() const
     c.sources.clear();
     for (int i = 0; i < m_sources->count(); ++i)
         c.sources << m_sources->item(i)->text();
-    c.outputDir = QDir::fromNativeSeparators(m_output->text().trimmed());
+    if (c.id.isEmpty())
+        c.id = ProjectStore::newId();
+    if (m_outputMode->currentData().toInt() == 1) {
+        // The files are kept in a working folder of the application; the archive is built from it.
+        c.outputArchive = QDir::fromNativeSeparators(m_archive->text().trimmed());
+        c.outputArchiveFormat = m_archiveFormat->currentData().toString();
+        c.archiveWithSource = m_archiveSource->isChecked();
+        c.outputDir = ProjectStore::stagingDir(c.id);
+    } else {
+        c.outputArchive.clear();
+        c.outputDir = QDir::fromNativeSeparators(m_output->text().trimmed());
+    }
     c.sourceLanguage = m_sourceLanguage->currentText().trimmed().toLower();
     c.targetLanguage = m_targetLanguage->currentText().trimmed().toLower();
     c.sourceEncoding = m_sourceEncoding->currentData().toString();
     c.targetEncoding = m_targetEncoding->currentData().toString();
-    if (c.id.isEmpty())
-        c.id = ProjectStore::newId();
     return c;
 }
 
@@ -317,8 +413,12 @@ void ProjectDialog::accept()
         problem = tr("Choose the source and the target language.");
     else if (c.sourceLanguage == c.targetLanguage)
         problem = tr("The source and target languages must differ.");
-    else if (c.outputDir.isEmpty())
+    else if (m_outputMode->currentData().toInt() == 0 && c.outputDir.isEmpty())
         problem = tr("Choose an output folder.");
+    else if (m_outputMode->currentData().toInt() == 1 && c.outputArchive.isEmpty())
+        problem = tr("Choose the output archive.");
+    else if (!OutputArchive::problemWith(c).isEmpty())
+        problem = OutputArchive::problemWith(c);
     if (!problem.isEmpty()) {
         QMessageBox::warning(this, windowTitle(), problem);
         return;

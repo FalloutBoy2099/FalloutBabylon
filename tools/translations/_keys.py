@@ -283,4 +283,169 @@ KEYS = [
     'The translation needs %1 entries but only %2 ids are free before record %3. Shorten it.',  # 279
     'written to the file',  # 280
     'Translated files are written to %1 (this folder overrides the sources).',  # 281
+    'Do not translate: this term must stay unchanged.',  # 282
+    'Add...',  # 283
+    'Edit...',  # 284
+    'Delete',  # 285
+    'Import...',  # 286
+    'Export...',  # 287
+    'Add a term of your own (a name to keep, a word with a fixed translation...)',  # 288
+    'Import terms from a CSV / TSV file (term; translation; keep)',  # 289
+    'Export your own terms to a CSV file',  # 290
+    'New glossary term',  # 291
+    'Edit the glossary term',  # 292
+    'Do not translate (keep the term as is)',  # 293
+    'Term (source language):',  # 294
+    'Translation:',  # 295
+    'Both the term and its translation are required.',  # 296
+    'Select a term first.',  # 297
+    'Only the terms you added (in bold) can be deleted.',  # 298
+    'Import glossary terms',  # 299
+    'Glossaries (*.csv *.tsv *.txt);;All files (*)',  # 300
+    'Cannot read %1.',  # 301
+    'No term found in this file.',  # 302
+    '%1 term(s) imported, %2 line(s) ignored.',  # 303
+    'There is no term of your own to export yet.',  # 304
+    'Export glossary terms',  # 305
+    'CSV files (*.csv)',  # 306
+    'Cannot write %1.',  # 307
+    'Edit this term...',  # 308
+    'Override with my own translation...',  # 309
+    'Keep this term as is (do not translate)',  # 310
+    'Delete this term',  # 311
+    'Import an existing translation',  # 312
+    'Reuse the translation of another version of the mod (for instance an older installation translated into %1). Only untranslated lines are filled in unless you ask to replace.',  # 313
+    'Game or mod folder holding the translation',  # 314
+    'Also reuse translations of identical texts found under another id',  # 315
+    'When the source text changed, import the old translation marked "to review"',  # 316
+    'Replace translations the project already has',  # 317
+    'Import',  # 318
+    'Folder',  # 319
+    'Language of its source texts',  # 320
+    'Language of its translation',  # 321
+    'Folder holding the translation',  # 322
+    'No text/<language>/ folder found here.',  # 323
+    '%1 source(s) found; languages: %2.',  # 324
+    'Replace the translations the project already has? This rewrites the files of the output folder.',  # 325
+    'Cancel',  # 326
+    'Importing...',  # 327
+    '%1 file(s) examined, %2 written.\n%3 line(s) with the same text, %4 with a changed source (to review), %5 found under another id; %6 already translated and kept.',  # 328
+    'Cancelling...',  # 329
+    'Search and replace',  # 330
+    'Quality report',  # 331
+    '&Validate (or remove the validation)',  # 332
+    'Undo the last operation',  # 333
+    'Redo the operation',  # 334
+    'Search and replace in the &project...',  # 335
+    '&Quality report...',  # 336
+    '&Import an existing translation...',  # 337
+    'The files of this project that are open will be closed first. Continue?',  # 338
+    'Replace',  # 339
+    'Replace "%1" by "%2" in the translation of %3 line(s) of %4 file(s)?\n\nFiles that are not open are saved immediately.',  # 340
+    '%1 replacement(s) in %2 file(s).',  # 341
+    'Undo the operation: %1',  # 342
+    'Redo the operation: %1',  # 343
+    'Changed since it was validated',  # 344
+    'Validated',  # 345
+    'Comment: %1',  # 346
+    'Previous translation: %1',  # 347
+    'Select a quest line to see how the Pip-Boy wraps it.',  # 348
+    'Quest %1: the Pip-Boy wraps the text (after the number) at %2 px.',  # 349
+    'Measured with the game font (font1.aaf).',  # 350
+    'Game font not available (or multi-byte encoding): approximate measure.',  # 351
+    '%1 line(s) in the translation, %2 in the source',  # 352
+    'Custom',  # 353
+    'Tokens',  # 354
+    'Spacing',  # 355
+    'Encoding',  # 356
+    'Length',  # 357
+    'Inconsistent duplicate',  # 358
+    'missing: %1',  # 359
+    'unexpected: %1',  # 360
+    'the translation only contains spaces',  # 361
+    'spaces at the start or the end',  # 362
+    'the source has spaces at the start or the end',  # 363
+    'doubled spaces',  # 364
+    'cannot be written as %1: %2',  # 365
+    '%1 characters (limit %2)',  # 366
+    'short label of the interface: %1 characters for %2 in the source',  # 367
+    '%1 characters for %2 in the source',  # 368
+    'elsewhere (%1 times): %2',  # 369
+    'Lost tokens (@Name@, %d, {field})',  # 370
+    'Characters the encoding cannot hold',  # 371
+    'Too long',  # 372
+    'Inconsistent duplicates',  # 373
+    'no limit',  # 374
+    'Maximum number of characters of a translation (0: only report translations much longer than the source)',  # 375
+    'Maximum length:',  # 376
+    'Run the checks',  # 377
+    'The checks apply to the saved files: save your changes first.',  # 378
+    'Export (CSV)...',  # 379
+    'All problems',  # 380
+    'Check',  # 381
+    'Problem',  # 382
+    'Press "Run the checks".',  # 383
+    'Select at least one check.',  # 384
+    'Checking...',  # 385
+    'Checking... %1 / %2 files',  # 386
+    'No problem found.',  # 387
+    '%1 problem(s)',  # 388
+    ' — %1 shown',  # 389
+    'only the first %1 are listed (use the export for all)',  # 390
+    'Export the report',  # 391
+    'Search in the whole project...',  # 392
+    'Replace with (in the translation)...',  # 393
+    'In the translation',  # 394
+    'In the source',  # 395
+    'In both',  # 396
+    'Regular expression',  # 397
+    'Match case',  # 398
+    'Whole words',  # 399
+    'Search',  # 400
+    'Replace the checked lines',  # 401
+    'Replace all',  # 402
+    'Text',  # 403
+    'After replacement',  # 404
+    'Type a text and press Enter.',  # 405
+    'Type a text to search.',  # 406
+    'Invalid regular expression: %1',  # 407
+    'Searching...',  # 408
+    ' (source)',  # 409
+    'No result.',  # 410
+    '%1 line(s), %2 occurrence(s)',  # 411
+    'only the first results are shown',  # 412
+    'Not validated',  # 413
+    'Changed since validation',  # 414
+    'With a comment',  # 415
+    'Comment on this line (kept in the project, not in the game files)...',  # 416
+    'Restore',  # 417
+    'Put the previous translation back',  # 418
+    'Previous translation restored',  # 419
+    'DeepL translation',  # 420
+    'Mass translation',  # 421
+    'Review mark',  # 422
+    'Validation',  # 423
+    'Copy the source',  # 424
+    'Accept as is',  # 425
+    '&Update the output DAT archive now',  # 426
+    'Updating the DAT archive...',  # 427
+    'DAT archive updated: %1 translated file(s), %2 original(s).',  # 428
+    'DAT archive NOT updated: %1',  # 429
+    'DAT archive',  # 430
+    'The DAT archive could not be written:\n%1',  # 431
+    'The output archive cannot be one of the sources of the project.',  # 432
+    'The output archive must be a .dat file.',  # 433
+    'Folder of loose files',  # 434
+    'e.g. french.dat',  # 435
+    'Fallout 2 (zlib)',  # 436
+    'Fallout 1',  # 437
+    'Also store the original texts (reference files)',  # 438
+    'Adds text/<source language>/ copies of the translated files, so that the reference of each translation is in the archive. Turn it off if a later mod must keep providing the original texts.',  # 439
+    'Format:',  # 440
+    'Output',  # 441
+    'Output archive',  # 442
+    'DAT archives (*.dat)',  # 443
+    'The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files',  # 444
+    ', and the original texts under text/%1/.',  # 445
+    'Choose the output archive.',  # 446
 ]

@@ -1,8 +1,11 @@
 #pragma once
 
+#include "core/OutputArchive.h"
 #include "core/Project.h"
+#include "core/ProjectSearch.h"
 
 #include <QHash>
+#include <QSet>
 #include <QMainWindow>
 #include <QTimer>
 #include <atomic>
@@ -18,7 +21,9 @@ class QLabel;
 class QMenu;
 class QProgressBar;
 class QStackedWidget;
+class QualityPanel;
 class QTabWidget;
+class SearchPanel;
 class StatsPanel;
 class TodoPanel;
 class TranslationService;
@@ -39,6 +44,10 @@ public:
     void openFile(const QString &id, const QString &relPath);
     bool analysisRunning() const;
     void applyThemeToAll();
+
+signals:
+    // The output .dat archive of a project was rewritten (or failed).
+    void archiveBuilt(const QString &id, bool ok);
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -96,7 +105,16 @@ private:
     bool confirmClose(const QList<TranslationEditor *> &list);
     void onEditorStats(TranslationEditor *editor, const FileStats &stats);
 
+    // Output as a .dat archive: rebuilt shortly after the files were saved.
+    void scheduleArchive(const QString &id);
+    void buildArchive(const QString &id);
+    void onArchiveBuilt(const QString &id, const OutputArchive::Result &result);
+    void flushArchive(const QString &id);
+
     void exportToDat(const QString &id);
+    void importTranslation(const QString &id);
+    void replaceInProject(const ProjectSearch::Options &options, const QString &replacement,
+                          const QVector<ProjectSearch::Hit> &hits);
     void openOutputFolder(const QString &id);
     void updateUi();
     void showAbout();
@@ -116,17 +134,25 @@ private:
     QProgressBar *m_progress = nullptr;
     DialogTreePanel *m_dialogPanel = nullptr;
     PipboyPanel *m_pipboyPanel = nullptr;
+    SearchPanel *m_searchPanel = nullptr;
+    QDockWidget *m_searchDock = nullptr;
+    QualityPanel *m_qualityPanel = nullptr;
+    QDockWidget *m_qualityDock = nullptr;
     QTimer m_dialogTimer;
     TodoPanel *m_todoPanel = nullptr;
     QTimer m_todoTimer;
     QTimer m_glossaryTimer;
     QStringList m_glossaryPending;
+    QTimer m_archiveTimer;
+    QSet<QString> m_archivePending, m_archiveRunning, m_archiveFailed;
 
     QAction *m_actSave = nullptr, *m_actSaveAll = nullptr, *m_actCloseTab = nullptr;
     QAction *m_actReview = nullptr, *m_actCopySource = nullptr, *m_actConfirm = nullptr;
     QAction *m_actNext = nullptr, *m_actPrev = nullptr, *m_actNextUntranslated = nullptr, *m_actPrevUntranslated = nullptr;
     QAction *m_actFind = nullptr, *m_actSettings = nullptr, *m_actExport = nullptr, *m_actRefresh = nullptr;
     QAction *m_actRebuild = nullptr, *m_actCloseProject = nullptr;
+    QAction *m_actImport = nullptr, *m_actBuildArchive = nullptr, *m_actSearchProject = nullptr, *m_actQuality = nullptr;
+    QAction *m_actUndoOp = nullptr, *m_actRedoOp = nullptr, *m_actValidate = nullptr;
     QAction *m_actTranslateLine = nullptr, *m_actMassTranslate = nullptr, *m_actAppSettings = nullptr;
     TranslationService *m_service = nullptr;
     QList<QAction *> m_dockToggles;

@@ -34,9 +34,13 @@ public:
     QStringList entries() const { return m_entries; }
     void applyNow();
     bool hasBlock() const { return m_hasBlock; }
+    bool questMode() const { return m_questMode; }
+    QString previewText() const;
 
 private:
     void loadBlock(const PipboyText::Block &block);
+    void showQuest(int id);       // quests.msg: preview of the wrapping done by the engine
+    void ensureFont();
     void updatePreview();
     void scheduleApply();
     PipboyText::Measure measure() const;
@@ -51,6 +55,7 @@ private:
 
     PipboyText::Block m_block;
     bool m_hasBlock = false;
+    bool m_questMode = false;
     bool m_loading = false;
     QStringList m_entries;           // what the target text turns into
 

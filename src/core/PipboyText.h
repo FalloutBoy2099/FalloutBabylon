@@ -16,7 +16,8 @@ namespace PipboyText {
 
 constexpr int kDefaultWidthPx = 374;      // width of the Pip-Boy text area (PIPBOY_WINDOW_CONTENT_VIEW_WIDTH)
 constexpr int kDefaultFallbackChars = 53; // used when the font cannot be read: characters per line
-constexpr int kEntriesPerPage = 35;       // the engine turns the page after 35 entries
+constexpr int kQuestWidthPx = 350;        // the engine wraps a quest description (preceded by "N. ") at this width
+constexpr int kEntriesPerPage = 35;      // the engine turns the page after 35 entries
 
 const QString &endDisk();                 // "**END-DISK**"
 const QString &endPar();                  // "**END-PAR**"

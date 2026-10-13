@@ -29,7 +29,7 @@
         <translation>DeepL 不支持“%1”。</translation>
     </message>
     <message>
-        <location filename="../src/core/DeepLClient.cpp" line="139"/>
+        <location filename="../src/core/DeepLClient.cpp" line="140"/>
         <source>No glossary can be created for this language pair.</source>
         <translation>无法为这一语言对创建术语表。</translation>
     </message>
@@ -110,67 +110,228 @@
 <context>
     <name>GlossaryPanel</name>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="57"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="73"/>
+        <source>Do not translate: this term must stay unchanged.</source>
+        <translation>不要翻译：此术语必须保持原样。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="75"/>
         <source>⚠ Several different translations exist in the game files.</source>
         <translation>⚠ 游戏文件中存在多个不同的译法。</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="59"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="77"/>
         <source>Not translated yet: translate the matching /game file first.</source>
         <translation>尚未翻译：请先翻译对应的 /game 文件。</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="70"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="88"/>
         <source>Term</source>
         <translation>术语</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="71"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="89"/>
         <source>Translation</source>
         <translation>译文</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="72"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="90"/>
         <source>Type</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="73"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="91"/>
         <source>Origin</source>
         <translation>来源</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="93"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="111"/>
         <source>Search the glossary...</source>
         <translation>在术语表中搜索...</translation>
     </message>
     <message>
         <location filename="../src/ui/GlossaryPanel.cpp" line="129"/>
+        <source>Add...</source>
+        <translation>添加...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="130"/>
+        <source>Edit...</source>
+        <translation>编辑...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="131"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="132"/>
+        <source>Import...</source>
+        <translation>导入...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="133"/>
+        <source>Export...</source>
+        <translation>导出...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="134"/>
+        <source>Add a term of your own (a name to keep, a word with a fixed translation...)</source>
+        <translation>添加自己的术语（需保留的名称、翻译固定的词语等）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="135"/>
+        <source>Import terms from a CSV / TSV file (term; translation; keep)</source>
+        <translation>从 CSV / TSV 文件导入术语（术语；译文；保留）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="136"/>
+        <source>Export your own terms to a CSV file</source>
+        <translation>将自己的术语导出为 CSV 文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="168"/>
         <source>Building the glossary...</source>
         <translation>正在创建术语表...</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="141"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="180"/>
         <source>No term yet. The glossary is built from the /game message files.</source>
         <translation>暂无术语。术语表由 /game 消息文件生成。</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="143"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="182"/>
         <source>%1 terms · %2 without translation · %3 inconsistent</source>
         <translation>%1 个术语 · %2 个无译文 · %3 个不一致</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="155"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="237"/>
+        <source>New glossary term</source>
+        <translation>新建词汇表术语</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="237"/>
+        <source>Edit the glossary term</source>
+        <translation>编辑词汇表术语</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="240"/>
+        <source>Do not translate (keep the term as is)</source>
+        <translation>不要翻译（保持术语原样）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="247"/>
+        <source>Term (source language):</source>
+        <translation>术语（源语言）：</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="248"/>
+        <source>Translation:</source>
+        <translation>译文：</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="262"/>
+        <source>Both the term and its translation are required.</source>
+        <translation>术语及其译文都是必填的。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="272"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="287"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="301"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="312"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="316"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="323"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="332"/>
+        <source>Glossary</source>
+        <translation>术语表</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="272"/>
+        <source>Select a term first.</source>
+        <translation>请先选择一个术语。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="287"/>
+        <source>Only the terms you added (in bold) can be deleted.</source>
+        <translation>只能删除您添加的术语（粗体显示）。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="295"/>
+        <source>Import glossary terms</source>
+        <translation>导入词汇表术语</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="296"/>
+        <source>Glossaries (*.csv *.tsv *.txt);;All files (*)</source>
+        <translation>词汇表 (*.csv *.tsv *.txt);;所有文件 (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="301"/>
+        <source>Cannot read %1.</source>
+        <translation>无法读取 %1。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="312"/>
+        <source>No term found in this file.</source>
+        <translation>此文件中没有找到任何术语。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="317"/>
+        <source>%1 term(s) imported, %2 line(s) ignored.</source>
+        <translation>已导入 %1 个术语，忽略 %2 行。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="323"/>
+        <source>There is no term of your own to export yet.</source>
+        <translation>还没有可导出的自有术语。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="326"/>
+        <source>Export glossary terms</source>
+        <translation>导出词汇表术语</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="327"/>
+        <source>CSV files (*.csv)</source>
+        <translation>CSV 文件 (*.csv)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="332"/>
+        <source>Cannot write %1.</source>
+        <translation>无法写入 %1。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="347"/>
+        <source>Edit this term...</source>
+        <translation>编辑此术语...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="347"/>
+        <source>Override with my own translation...</source>
+        <translation>用我自己的译文替换...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="354"/>
+        <source>Keep this term as is (do not translate)</source>
+        <translation>保持此术语原样（不翻译）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="358"/>
+        <source>Delete this term</source>
+        <translation>删除此术语</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="362"/>
         <source>Insert &quot;%1&quot;</source>
         <translation>插入“%1”</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="156"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="363"/>
         <source>Copy the term</source>
         <translation>复制术语</translation>
     </message>
     <message>
-        <location filename="../src/ui/GlossaryPanel.cpp" line="158"/>
+        <location filename="../src/ui/GlossaryPanel.cpp" line="365"/>
         <source>Copy the translation</source>
         <translation>复制译文</translation>
     </message>
@@ -189,268 +350,421 @@
     </message>
 </context>
 <context>
+    <name>ImportTranslationDialog</name>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="25"/>
+        <source>Import an existing translation</source>
+        <translation>导入现有翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="28"/>
+        <source>Reuse the translation of another version of the mod (for instance an older installation translated into %1). Only untranslated lines are filled in unless you ask to replace.</source>
+        <translation>重用模组其他版本的翻译（例如已翻译成 %1 的旧安装）。除非您要求替换，否则只填充未翻译的行。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="34"/>
+        <source>Game or mod folder holding the translation</source>
+        <translation>包含翻译的游戏或模组文件夹</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="35"/>
+        <source>Browse...</source>
+        <translation>浏览...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="44"/>
+        <source>Also reuse translations of identical texts found under another id</source>
+        <translation>同时重用在其他 ID 下找到的相同文本的翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="46"/>
+        <source>When the source text changed, import the old translation marked &quot;to review&quot;</source>
+        <translation>源文本已更改时，导入标记为“待审阅”的旧翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="48"/>
+        <source>Replace translations the project already has</source>
+        <translation>替换项目已有的翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="54"/>
+        <source>Import</source>
+        <translation>导入</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="56"/>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="181"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="63"/>
+        <source>Folder</source>
+        <translation>文件夹</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="65"/>
+        <source>Language of its source texts</source>
+        <translation>其源文本的语言</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="66"/>
+        <source>Language of its translation</source>
+        <translation>其译文的语言</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="94"/>
+        <source>Folder holding the translation</source>
+        <translation>包含翻译的文件夹</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="128"/>
+        <source>No text/&lt;language&gt;/ folder found here.</source>
+        <translation>此处未找到 text/&lt;语言&gt;/ 文件夹。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="129"/>
+        <source>%1 source(s) found; languages: %2.</source>
+        <translation>找到 %1 个来源；语言：%2。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="147"/>
+        <source>Replace the translations the project already has? This rewrites the files of the output folder.</source>
+        <translation>替换项目已有的翻译？这将重写输出文件夹中的文件。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="154"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="157"/>
+        <source>Importing...</source>
+        <translation>正在导入...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="183"/>
+        <source>%1 file(s) examined, %2 written.
+%3 line(s) with the same text, %4 with a changed source (to review), %5 found under another id; %6 already translated and kept.</source>
+        <translation>已检查 %1 个文件，写入 %2 个。
+文本相同的行：%3；源文本已更改的行（待审阅）：%4；在其他 ID 下找到的行：%5；已翻译并保留的行：%6。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ImportTranslationDialog.cpp" line="195"/>
+        <source>Cancelling...</source>
+        <translation>正在取消...</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="69"/>
+        <location filename="../src/ui/MainWindow.cpp" line="73"/>
         <source>&lt;h2&gt;Fallout Babylon&lt;/h2&gt;&lt;p&gt;Translation editor for Fallout 1 and Fallout 2 mods.&lt;/p&gt;</source>
         <translation>&lt;h2&gt;Fallout Babylon&lt;/h2&gt;&lt;p&gt;适用于 Fallout 1 和 Fallout 2 模组的翻译编辑器。&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="72"/>
+        <location filename="../src/ui/MainWindow.cpp" line="76"/>
         <source>Open a game folder...</source>
         <translation>打开游戏文件夹...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="73"/>
+        <location filename="../src/ui/MainWindow.cpp" line="77"/>
         <source>New project...</source>
         <translation>新建项目...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="148"/>
+        <location filename="../src/ui/MainWindow.cpp" line="165"/>
         <source>Projects</source>
         <translation>项目</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="154"/>
+        <location filename="../src/ui/MainWindow.cpp" line="171"/>
         <source>Glossary</source>
         <translation>术语表</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="160"/>
+        <location filename="../src/ui/MainWindow.cpp" line="177"/>
         <source>Statistics</source>
         <translation>统计</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="165"/>
+        <location filename="../src/ui/MainWindow.cpp" line="182"/>
         <source>To review</source>
         <translation>待复查</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="170"/>
+        <location filename="../src/ui/MainWindow.cpp" line="187"/>
         <source>Dialogue tree</source>
         <translation>对话树</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="181"/>
+        <location filename="../src/ui/MainWindow.cpp" line="198"/>
         <source>Pip-Boy holodisk</source>
         <translation>Pip-Boy 全息磁盘</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="218"/>
+        <location filename="../src/ui/MainWindow.cpp" line="212"/>
+        <source>Search and replace</source>
+        <translation>查找和替换</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="225"/>
+        <source>Quality report</source>
+        <translation>质量报告</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="269"/>
         <source>&amp;Save</source>
         <translation>保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="224"/>
+        <location filename="../src/ui/MainWindow.cpp" line="275"/>
         <source>Save &amp;all</source>
         <translation>全部保存(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="227"/>
+        <location filename="../src/ui/MainWindow.cpp" line="278"/>
         <source>&amp;Close file</source>
         <translation>关闭文件(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="243"/>
+        <location filename="../src/ui/MainWindow.cpp" line="294"/>
         <source>Mark as &amp;to review</source>
         <translation>标记为待复查(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="245"/>
+        <location filename="../src/ui/MainWindow.cpp" line="296"/>
+        <source>&amp;Validate (or remove the validation)</source>
+        <translation>验证(&amp;V)（或取消验证）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="298"/>
         <source>Copy the &amp;source</source>
         <translation>复制原文(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="247"/>
+        <location filename="../src/ui/MainWindow.cpp" line="300"/>
         <source>&amp;Accept as is</source>
         <translation>按原样接受(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="249"/>
+        <location filename="../src/ui/MainWindow.cpp" line="302"/>
         <source>&amp;Next line</source>
         <translation>下一行(&amp;N)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="250"/>
+        <location filename="../src/ui/MainWindow.cpp" line="303"/>
         <source>&amp;Previous line</source>
         <translation>上一行(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="251"/>
+        <location filename="../src/ui/MainWindow.cpp" line="304"/>
         <source>Next &amp;untranslated line</source>
         <translation>下一条未翻译行(&amp;U)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="253"/>
+        <location filename="../src/ui/MainWindow.cpp" line="306"/>
         <source>Previous untranslated line</source>
         <translation>上一条未翻译行</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="255"/>
+        <location filename="../src/ui/MainWindow.cpp" line="308"/>
         <source>&amp;Find in this file</source>
         <translation>在此文件中查找(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="257"/>
+        <location filename="../src/ui/MainWindow.cpp" line="309"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1181"/>
+        <source>Undo the last operation</source>
+        <translation>撤销上一个操作</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="311"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1183"/>
+        <source>Redo the operation</source>
+        <translation>重做操作</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="314"/>
         <source>&amp;Translate this line with DeepL</source>
         <translation>用 DeepL 翻译此行(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="259"/>
+        <location filename="../src/ui/MainWindow.cpp" line="316"/>
         <source>&amp;Mass translation with DeepL...</source>
         <translation>用 DeepL 批量翻译(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="261"/>
+        <location filename="../src/ui/MainWindow.cpp" line="318"/>
         <source>&amp;Settings...</source>
         <translation>设置(&amp;S)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="269"/>
+        <location filename="../src/ui/MainWindow.cpp" line="326"/>
+        <source>Search and replace in the &amp;project...</source>
+        <translation>在项目中查找和替换(&amp;P)...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="333"/>
+        <source>&amp;Quality report...</source>
+        <translation>质量报告(&amp;Q)...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="338"/>
+        <source>&amp;Import an existing translation...</source>
+        <translation>导入现有翻译(&amp;I)...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="341"/>
         <source>Project &amp;settings...</source>
         <translation>项目设置(&amp;S)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="271"/>
+        <location filename="../src/ui/MainWindow.cpp" line="343"/>
         <source>&amp;Export to a DAT archive...</source>
         <translation>导出到 DAT 压缩包(&amp;E)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="273"/>
+        <location filename="../src/ui/MainWindow.cpp" line="345"/>
+        <source>&amp;Update the output DAT archive now</source>
+        <translation>立即更新输出 DAT 归档(&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="352"/>
         <source>Refresh &amp;statistics</source>
         <translation>刷新统计(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="276"/>
+        <location filename="../src/ui/MainWindow.cpp" line="355"/>
         <source>Rebuild the &amp;glossary</source>
         <translation>重建术语表(&amp;G)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="278"/>
+        <location filename="../src/ui/MainWindow.cpp" line="357"/>
         <source>Close the pro&amp;ject</source>
         <translation>关闭项目(&amp;J)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="284"/>
+        <location filename="../src/ui/MainWindow.cpp" line="363"/>
         <source>&amp;File</source>
         <translation>文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="285"/>
+        <location filename="../src/ui/MainWindow.cpp" line="364"/>
         <source>&amp;New project...</source>
         <translation>新建项目(&amp;N)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="286"/>
+        <location filename="../src/ui/MainWindow.cpp" line="365"/>
         <source>Open a game &amp;folder...</source>
         <translation>打开游戏文件夹(&amp;F)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="287"/>
+        <location filename="../src/ui/MainWindow.cpp" line="366"/>
         <source>Recent &amp;folders</source>
         <translation>最近的文件夹(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="288"/>
+        <location filename="../src/ui/MainWindow.cpp" line="367"/>
         <source>&amp;Saved projects</source>
         <translation>已保存的项目(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="295"/>
-        <location filename="../src/ui/MainWindow.cpp" line="308"/>
+        <location filename="../src/ui/MainWindow.cpp" line="374"/>
+        <location filename="../src/ui/MainWindow.cpp" line="387"/>
         <source>(none)</source>
         <translation>（无）</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="319"/>
+        <location filename="../src/ui/MainWindow.cpp" line="400"/>
         <source>&amp;Quit</source>
         <translation>退出(&amp;Q)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="321"/>
+        <location filename="../src/ui/MainWindow.cpp" line="402"/>
         <source>&amp;Edit</source>
         <translation>编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="333"/>
+        <location filename="../src/ui/MainWindow.cpp" line="419"/>
         <source>&amp;Tools</source>
         <translation>工具(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="342"/>
+        <location filename="../src/ui/MainWindow.cpp" line="429"/>
         <source>&amp;View</source>
         <translation>视图(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="346"/>
+        <location filename="../src/ui/MainWindow.cpp" line="433"/>
         <source>&amp;Theme</source>
         <translation>主题(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="349"/>
+        <location filename="../src/ui/MainWindow.cpp" line="436"/>
         <source>System</source>
         <translation>系统</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="349"/>
+        <location filename="../src/ui/MainWindow.cpp" line="436"/>
         <source>Light</source>
         <translation>浅色</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="349"/>
+        <location filename="../src/ui/MainWindow.cpp" line="436"/>
         <source>Dark</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="363"/>
+        <location filename="../src/ui/MainWindow.cpp" line="450"/>
         <source>&amp;Language</source>
         <translation>语言(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="366"/>
+        <location filename="../src/ui/MainWindow.cpp" line="453"/>
         <source>Automatic (system)</source>
         <translation>自动（跟随系统）</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="372"/>
-        <location filename="../src/ui/MainWindow.cpp" line="388"/>
+        <location filename="../src/ui/MainWindow.cpp" line="459"/>
+        <location filename="../src/ui/MainWindow.cpp" line="475"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="372"/>
-        <location filename="../src/ui/MainWindow.cpp" line="388"/>
+        <location filename="../src/ui/MainWindow.cpp" line="459"/>
+        <location filename="../src/ui/MainWindow.cpp" line="475"/>
         <source>The language will change the next time the application starts.</source>
         <translation>语言将在下次启动应用程序时更改。</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="392"/>
+        <location filename="../src/ui/MainWindow.cpp" line="479"/>
         <source>&amp;Help</source>
         <translation>帮助(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="393"/>
+        <location filename="../src/ui/MainWindow.cpp" line="480"/>
         <source>&amp;About...</source>
         <translation>关于(&amp;A)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="394"/>
+        <location filename="../src/ui/MainWindow.cpp" line="481"/>
         <source>About &amp;Qt...</source>
         <translation>关于 Qt(&amp;Q)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="413"/>
+        <location filename="../src/ui/MainWindow.cpp" line="500"/>
         <source>Open a Fallout game or mod folder</source>
         <translation>打开 Fallout 游戏或模组文件夹</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="443"/>
-        <location filename="../src/ui/MainWindow.cpp" line="447"/>
+        <location filename="../src/ui/MainWindow.cpp" line="536"/>
+        <location filename="../src/ui/MainWindow.cpp" line="540"/>
         <source>Project</source>
         <translation>项目</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="443"/>
+        <location filename="../src/ui/MainWindow.cpp" line="536"/>
         <source>Some sources could not be read:
 
 %1</source>
@@ -459,51 +773,78 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="448"/>
+        <location filename="../src/ui/MainWindow.cpp" line="541"/>
         <source>No .msg file found under text/%1 or text/%2 in the sources of &quot;%3&quot;.</source>
         <translation>在“%3”的来源中，text/%1 和 text/%2 下均未找到 .msg 文件。</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="469"/>
+        <location filename="../src/ui/MainWindow.cpp" line="562"/>
         <source>Project settings</source>
         <translation>项目设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="470"/>
+        <location filename="../src/ui/MainWindow.cpp" line="563"/>
         <source>Save or close the modified files of this project first.</source>
         <translation>请先保存或关闭此项目中已修改的文件。</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="652"/>
+        <location filename="../src/ui/MainWindow.cpp" line="750"/>
         <source>Analysing &quot;%1&quot;...</source>
         <translation>正在分析“%1”...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="650"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1253"/>
+        <source>Updating the DAT archive...</source>
+        <translation>正在更新 DAT 归档...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1264"/>
+        <source>DAT archive updated: %1 translated file(s), %2 original(s).</source>
+        <translation>DAT 归档已更新：%1 个译文文件，%2 个原文文件。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1268"/>
+        <source>DAT archive NOT updated: %1</source>
+        <translation>DAT 归档未更新：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1289"/>
+        <source>DAT archive</source>
+        <translation>DAT 归档</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1289"/>
+        <source>The DAT archive could not be written:
+%1</source>
+        <translation>无法写入 DAT 归档：
+%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="748"/>
         <source>Analysing &quot;%1&quot;: %2 / %3 files</source>
         <translation>正在分析“%1”：%2 / %3 个文件</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="772"/>
-        <location filename="../src/ui/MainWindow.cpp" line="776"/>
-        <location filename="../src/ui/MainWindow.cpp" line="780"/>
+        <location filename="../src/ui/MainWindow.cpp" line="870"/>
+        <location filename="../src/ui/MainWindow.cpp" line="874"/>
+        <location filename="../src/ui/MainWindow.cpp" line="878"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="772"/>
+        <location filename="../src/ui/MainWindow.cpp" line="870"/>
         <source>Cannot read %1:
 %2</source>
         <translation>无法读取 %1：
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="776"/>
+        <location filename="../src/ui/MainWindow.cpp" line="874"/>
         <source>%1 does not exist in the sources of this project.</source>
         <translation>此项目的来源中不存在 %1。</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="781"/>
+        <location filename="../src/ui/MainWindow.cpp" line="879"/>
         <source>%1 contains malformed records; everything after the first one is ignored by the game:
 
 %2</source>
@@ -512,12 +853,12 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="869"/>
+        <location filename="../src/ui/MainWindow.cpp" line="973"/>
         <source>Unsaved changes</source>
         <translation>未保存的更改</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="870"/>
+        <location filename="../src/ui/MainWindow.cpp" line="974"/>
         <source>These files have unsaved changes:
 
 %1</source>
@@ -526,70 +867,110 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="872"/>
+        <location filename="../src/ui/MainWindow.cpp" line="976"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="873"/>
+        <location filename="../src/ui/MainWindow.cpp" line="977"/>
         <source>Discard</source>
         <translation>放弃</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="916"/>
-        <location filename="../src/ui/MainWindow.cpp" line="948"/>
-        <location filename="../src/ui/MainWindow.cpp" line="950"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1008"/>
+        <source>Import an existing translation</source>
+        <translation>导入现有翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1009"/>
+        <source>The files of this project that are open will be closed first. Continue?</source>
+        <translation>此项目中已打开的文件将先被关闭。继续吗？</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1044"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1096"/>
+        <source>Replace</source>
+        <translation>替换</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1045"/>
+        <source>Replace &quot;%1&quot; by &quot;%2&quot; in the translation of %3 line(s) of %4 file(s)?
+
+Files that are not open are saved immediately.</source>
+        <translation>在 %4 个文件的 %3 行译文中，将“%1”替换为“%2”？
+
+未打开的文件会立即保存。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1093"/>
+        <source>%1 replacement(s) in %2 file(s).</source>
+        <translation>在 %2 个文件中替换了 %1 处。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1121"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1153"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1155"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="917"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1122"/>
         <source>Nothing to export yet: save some translated files first.
 (%1 does not exist)</source>
         <translation>暂无可导出的内容：请先保存一些已翻译的文件。
 （%1 不存在）</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="921"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1126"/>
         <source>Fallout 2 archive (zlib) (*.dat)</source>
         <translation>Fallout 2 压缩包 (zlib) (*.dat)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="922"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1127"/>
         <source>Fallout 1 archive (*.dat)</source>
         <translation>Fallout 1 压缩包 (*.dat)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="925"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1130"/>
         <source>Export to a DAT archive</source>
         <translation>导出到 DAT 压缩包</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="948"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1153"/>
         <source>%1 files written to
 %2</source>
         <translation>已写入 %1 个文件到
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="950"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1155"/>
         <source>Cannot write the archive:
 %1</source>
         <translation>无法写入压缩包：
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="981"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1180"/>
+        <source>Undo the operation: %1</source>
+        <translation>撤销操作：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1182"/>
+        <source>Redo the operation: %1</source>
+        <translation>重做操作：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1197"/>
         <source>%1 → %2  ·  encoding %3 / %4</source>
         <translation>%1 → %2  ·  编码 %3 / %4</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="990"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1206"/>
         <source>About Fallout Babylon</source>
         <translation>关于 Fallout Babylon</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="991"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1207"/>
         <source>&lt;h3&gt;Fallout Babylon %1&lt;/h3&gt;&lt;p&gt;Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods.&lt;/p&gt;&lt;p&gt;Built with Qt %2 and Scintilla.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Fallout Babylon %1&lt;/h3&gt;&lt;p&gt;适用于 Fallout 1 和 Fallout 2 模组对话与文本文件的翻译编辑器。&lt;/p&gt;&lt;p&gt;使用 Qt %2 和 Scintilla 构建。&lt;/p&gt;</translation>
     </message>
@@ -736,24 +1117,62 @@
 <context>
     <name>MsgTableModel</name>
     <message>
-        <location filename="../src/ui/MsgTableModel.cpp" line="203"/>
+        <location filename="../src/ui/MsgTableModel.cpp" line="297"/>
+        <source>Changed since it was validated</source>
+        <translation>验证后已更改</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MsgTableModel.cpp" line="297"/>
+        <source>Validated</source>
+        <translation>已验证</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MsgTableModel.cpp" line="299"/>
+        <source>Comment: %1</source>
+        <translation>注释：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MsgTableModel.cpp" line="301"/>
+        <source>Previous translation: %1</source>
+        <translation>上一个译文：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MsgTableModel.cpp" line="337"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../src/ui/MsgTableModel.cpp" line="204"/>
+        <location filename="../src/ui/MsgTableModel.cpp" line="338"/>
         <source>Source (%1)</source>
         <translation>原文 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MsgTableModel.cpp" line="205"/>
+        <location filename="../src/ui/MsgTableModel.cpp" line="339"/>
         <source>Translation (%1)</source>
         <translation>译文 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MsgTableModel.cpp" line="206"/>
+        <location filename="../src/ui/MsgTableModel.cpp" line="340"/>
         <source>St.</source>
         <translation>状态</translation>
+    </message>
+</context>
+<context>
+    <name>OutputArchive</name>
+    <message>
+        <location filename="../src/core/OutputArchive.cpp" line="57"/>
+        <source>The output archive cannot be one of the sources of the project.</source>
+        <translation>输出归档不能是项目的来源之一。</translation>
+    </message>
+    <message>
+        <location filename="../src/core/OutputArchive.cpp" line="59"/>
+        <source>The output archive must be a .dat file.</source>
+        <translation>输出归档必须是 .dat 文件。</translation>
+    </message>
+    <message>
+        <location filename="../src/core/OutputArchive.cpp" line="112"/>
+        <source>Cannot read %1.</source>
+        <translation>无法读取 %1。</translation>
     </message>
 </context>
 <context>
@@ -814,233 +1233,339 @@
         <translation>请打开 game/pipboy.msg 并选择一行全息磁盘文本。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="130"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="129"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="157"/>
+        <source>Select a quest line to see how the Pip-Boy wraps it.</source>
+        <translation>选择一行任务文本，查看 Pip-Boy 如何换行。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/PipboyPanel.cpp" line="135"/>
         <source>The holodisk editor works on game/pipboy.msg.</source>
         <translation>全息磁盘编辑器适用于 game/pipboy.msg。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="162"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="183"/>
+        <source>Quest %1: the Pip-Boy wraps the text (after the number) at %2 px.</source>
+        <translation>任务 %1：Pip-Boy 在 %2 px 处对文本（编号之后）换行。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/PipboyPanel.cpp" line="184"/>
+        <source>Measured with the game font (font1.aaf).</source>
+        <translation>已用游戏字体 (font1.aaf) 测量。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/PipboyPanel.cpp" line="185"/>
+        <source>Game font not available (or multi-byte encoding): approximate measure.</source>
+        <translation>游戏字体不可用（或为多字节编码）：近似测量。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/PipboyPanel.cpp" line="186"/>
+        <source>%1 line(s) in the translation, %2 in the source</source>
+        <translation>译文 %1 行，源文 %2 行</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/PipboyPanel.cpp" line="221"/>
         <source>This line is not part of a holodisk body (a holodisk body ends with **END-DISK**).</source>
         <translation>此行不属于全息磁盘正文（正文以 **END-DISK** 结尾）。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="176"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="231"/>
         <source>Holodisk: records %1 to %2 (%3 entries, %4 page(s) in the Pip-Boy).</source>
         <translation>全息磁盘：记录 %1 至 %2（%3 条，Pip-Boy 中共 %4 页）。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="211"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="266"/>
         <source>Measured with the game font (font1.aaf): lines are cut at %1 px.</source>
         <translation>已用游戏字体 (font1.aaf) 测量：行在 %1 px 处断开。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="212"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="267"/>
         <source>Game font not available (or multi-byte encoding): lines are cut at about %1 characters.</source>
         <translation>游戏字体不可用（或为多字节编码）：行大约在 %1 个字符处断开。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="222"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="277"/>
         <source>Editing...</source>
         <translation>正在编辑...</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="243"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="298"/>
         <source>%1 entries, %2 page(s) in the Pip-Boy</source>
         <translation>%1 条，Pip-Boy 中共 %2 页</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="245"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="300"/>
         <source>%1 line(s) wider than the screen</source>
         <translation>%1 行宽于屏幕</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="247"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="302"/>
         <source>the game only reads 500 entries per holodisk</source>
         <translation>游戏每个全息磁盘只读取 500 条</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="268"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="323"/>
         <source>The translation needs %1 entries but only %2 ids are free before record %3. Shorten it.</source>
         <translation>译文需要 %1 条，但记录 %3 之前只有 %2 个空闲 ID。请缩短译文。</translation>
     </message>
     <message>
-        <location filename="../src/ui/PipboyPanel.cpp" line="300"/>
+        <location filename="../src/ui/PipboyPanel.cpp" line="355"/>
         <source>written to the file</source>
         <translation>已写入文件</translation>
     </message>
 </context>
 <context>
+    <name>Project</name>
+    <message>
+        <location filename="../src/core/Project.cpp" line="519"/>
+        <source>Custom</source>
+        <translation>自定义</translation>
+    </message>
+</context>
+<context>
     <name>ProjectDialog</name>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="51"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="53"/>
         <source>New translation project</source>
         <translation>新建翻译项目</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="51"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="53"/>
         <source>Project settings</source>
         <translation>项目设置</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="55"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="57"/>
         <source>e.g. RPU — French</source>
         <translation>例如：RPU — 中文</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="59"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="61"/>
         <source>Lowest priority first: a later source overrides an earlier one, like in the game.</source>
         <translation>优先级最低的在前：靠后的来源会覆盖前面的，与游戏一致。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="63"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="65"/>
         <source>Game folder...</source>
         <translation>游戏文件夹...</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="64"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="66"/>
         <source>Adds a Fallout folder: its DAT archives and its data folder are detected.</source>
         <translation>添加 Fallout 文件夹：会检测其中的 DAT 压缩包和 data 文件夹。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="65"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="67"/>
         <source>Mod folder...</source>
         <translation>模组文件夹...</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="66"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="68"/>
         <source>DAT archive...</source>
         <translation>DAT 压缩包...</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="67"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="69"/>
         <source>Recent</source>
         <translation>最近</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="68"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="70"/>
         <source>Up</source>
         <translation>上移</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="69"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="71"/>
         <source>Down</source>
         <translation>下移</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="70"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="72"/>
         <source>Remove</source>
         <translation>移除</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="95"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="98"/>
+        <source>Folder of loose files</source>
+        <translation>散文件文件夹</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="99"/>
+        <source>DAT archive</source>
+        <translation>DAT 归档</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="102"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="111"/>
         <source>Browse...</source>
         <translation>浏览...</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="104"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="110"/>
+        <source>e.g. french.dat</source>
+        <translation>例如 french.dat</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="113"/>
+        <source>Fallout 2 (zlib)</source>
+        <translation>Fallout 2 (zlib)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="114"/>
+        <source>Fallout 1</source>
+        <translation>Fallout 1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="116"/>
+        <source>Also store the original texts (reference files)</source>
+        <translation>同时保存原文（参考文件）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="118"/>
+        <source>Adds text/&lt;source language&gt;/ copies of the translated files, so that the reference of each translation is in the archive. Turn it off if a later mod must keep providing the original texts.</source>
+        <translation>为已翻译的文件添加 text/&lt;源语言&gt;/ 副本，使每份译文的参照都在归档中。如果之后加载的模组仍需提供原文，请关闭此项。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="127"/>
+        <source>Format:</source>
+        <translation>格式：</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="138"/>
         <source>Name</source>
         <translation>名称</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="105"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="139"/>
         <source>Sources</source>
         <translation>来源</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="106"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="140"/>
         <source>Source language</source>
         <translation>源语言</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="107"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="141"/>
         <source>Source encoding</source>
         <translation>源编码</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="108"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="142"/>
         <source>Target language</source>
         <translation>目标语言</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="109"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="143"/>
         <source>Target encoding</source>
         <translation>目标编码</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="110"/>
-        <location filename="../src/ui/ProjectDialog.cpp" line="169"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="144"/>
+        <source>Output</source>
+        <translation>输出</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="145"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="206"/>
         <source>Output folder</source>
         <translation>输出文件夹</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="126"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="146"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="214"/>
+        <source>Output archive</source>
+        <translation>输出归档</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="163"/>
         <source>Fallout folder</source>
         <translation>Fallout 文件夹</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="131"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="168"/>
         <source>Mod folder (containing text/ or data/)</source>
         <translation>模组文件夹（包含 text/ 或 data/）</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="136"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="173"/>
         <source>DAT archives</source>
         <translation>DAT 压缩包</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="137"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="174"/>
         <source>DAT archives (*.dat);;All files (*)</source>
         <translation>DAT 压缩包 (*.dat);;所有文件 (*)</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="147"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="184"/>
         <source>(none)</source>
         <translation>（无）</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="217"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="214"/>
+        <source>DAT archives (*.dat)</source>
+        <translation>DAT 归档 (*.dat)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="296"/>
         <source>Add the game folder or the archives of the mod to translate.</source>
         <translation>请添加要翻译的游戏文件夹或模组压缩包。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="227"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="306"/>
         <source>No text/&lt;language&gt;/ folder found in these sources.</source>
         <translation>在这些来源中未找到 text/&lt;语言&gt;/ 文件夹。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="228"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="307"/>
         <source>Languages found: %1.</source>
         <translation>找到的语言：%1。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="286"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="366"/>
+        <source>The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files</source>
+        <translation>译文将提供在 %1 中，每次保存后重建。其中 text/%2/ 包含已翻译的文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="368"/>
+        <source>, and the original texts under text/%1/.</source>
+        <translation>，原文位于 text/%1/。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="373"/>
         <source>Translated files are written to %1 (this folder overrides the sources).</source>
         <translation>译文文件将写入 %1（此文件夹的优先级高于各来源）。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="313"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="409"/>
         <source>Give the project a name.</source>
         <translation>请为项目命名。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="315"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="411"/>
         <source>Add at least one source.</source>
         <translation>请至少添加一个来源。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="317"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="413"/>
         <source>Choose the source and the target language.</source>
         <translation>请选择源语言和目标语言。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="319"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="415"/>
         <source>The source and target languages must differ.</source>
         <translation>源语言和目标语言必须不同。</translation>
     </message>
     <message>
-        <location filename="../src/ui/ProjectDialog.cpp" line="321"/>
+        <location filename="../src/ui/ProjectDialog.cpp" line="417"/>
         <source>Choose an output folder.</source>
         <translation>请选择输出文件夹。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ProjectDialog.cpp" line="419"/>
+        <source>Choose the output archive.</source>
+        <translation>请选择输出归档。</translation>
     </message>
 </context>
 <context>
@@ -1163,22 +1688,22 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../src/core/DeepLClient.cpp" line="114"/>
+        <location filename="../src/core/DeepLClient.cpp" line="115"/>
         <source>Empty answer from DeepL.</source>
         <translation>DeepL 返回了空结果。</translation>
     </message>
     <message>
-        <location filename="../src/core/DeepLClient.cpp" line="120"/>
+        <location filename="../src/core/DeepLClient.cpp" line="121"/>
         <source>A placeholder (@...@, %s...) was altered: check this line.</source>
         <translation>占位符（@...@、%s...）被改动：请检查此行。</translation>
     </message>
     <message>
-        <location filename="../src/core/DeepLClient.cpp" line="157"/>
+        <location filename="../src/core/DeepLClient.cpp" line="158"/>
         <source>The DeepL quota is exhausted.</source>
         <translation>DeepL 配额已用完。</translation>
     </message>
     <message>
-        <location filename="../src/core/DeepLClient.cpp" line="165"/>
+        <location filename="../src/core/DeepLClient.cpp" line="166"/>
         <source>DeepL refused the glossary: the free plan allows a single glossary (delete the existing one in your DeepL account to use the project glossary).</source>
         <translation>DeepL 拒绝了术语表：免费套餐只允许一个术语表（请在 DeepL 账户中删除现有的，以使用项目术语表）。</translation>
     </message>
@@ -1196,6 +1721,249 @@
         <location filename="../src/ui/SettingsDialog.cpp" line="143"/>
         <source>✔ The server answers (%1 issue(s) found in the test sentence).</source>
         <translation>✔ 服务器已响应（测试句中发现 %1 个问题）。</translation>
+    </message>
+</context>
+<context>
+    <name>QualityCheck</name>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="49"/>
+        <source>Tokens</source>
+        <translation>占位符</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="50"/>
+        <source>Spacing</source>
+        <translation>空格</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="51"/>
+        <source>Encoding</source>
+        <translation>编码</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="52"/>
+        <source>Length</source>
+        <translation>长度</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="53"/>
+        <source>Inconsistent duplicate</source>
+        <translation>不一致的重复项</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="54"/>
+        <source>Glossary</source>
+        <translation>术语表</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="79"/>
+        <source>missing: %1</source>
+        <translation>缺少：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="81"/>
+        <source>unexpected: %1</source>
+        <translation>意外：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="89"/>
+        <source>the translation only contains spaces</source>
+        <translation>译文只包含空格</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="92"/>
+        <source>spaces at the start or the end</source>
+        <translation>开头或结尾有空格</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="94"/>
+        <source>the source has spaces at the start or the end</source>
+        <translation>源文开头或结尾有空格</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="96"/>
+        <source>doubled spaces</source>
+        <translation>连续空格</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="107"/>
+        <source>cannot be written as %1: %2</source>
+        <translation>无法以 %1 写入：%2</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="113"/>
+        <source>%1 characters (limit %2)</source>
+        <translation>%1 个字符（上限 %2）</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="117"/>
+        <source>short label of the interface: %1 characters for %2 in the source</source>
+        <translation>界面短标签：%1 个字符，源文为 %2 个</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="121"/>
+        <source>%1 characters for %2 in the source</source>
+        <translation>%1 个字符，源文为 %2 个</translation>
+    </message>
+    <message>
+        <location filename="../src/core/QualityCheck.cpp" line="186"/>
+        <source>elsewhere (%1 times): %2</source>
+        <translation>其他位置（%1 次）：%2</translation>
+    </message>
+</context>
+<context>
+    <name>QualityPanel</name>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="36"/>
+        <source>Lost tokens (@Name@, %d, {field})</source>
+        <translation>丢失的占位符（@Name@、%d、{field}）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="37"/>
+        <source>Spacing</source>
+        <translation>空格</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="38"/>
+        <source>Characters the encoding cannot hold</source>
+        <translation>编码无法容纳的字符</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="39"/>
+        <source>Too long</source>
+        <translation>过长</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="40"/>
+        <source>Inconsistent duplicates</source>
+        <translation>不一致的重复项</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="41"/>
+        <source>Glossary</source>
+        <translation>术语表</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="53"/>
+        <source>no limit</source>
+        <translation>无限制</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="54"/>
+        <source>Maximum number of characters of a translation (0: only report translations much longer than the source)</source>
+        <translation>译文的最大字符数（0：仅报告比源文长得多的译文）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="56"/>
+        <source>Maximum length:</source>
+        <translation>最大长度：</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="60"/>
+        <source>Run the checks</source>
+        <translation>运行检查</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="61"/>
+        <source>The checks apply to the saved files: save your changes first.</source>
+        <translation>检查针对已保存的文件：请先保存更改。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="62"/>
+        <source>Export (CSV)...</source>
+        <translation>导出 (CSV)...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="65"/>
+        <source>All problems</source>
+        <translation>所有问题</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="68"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="142"/>
+        <source>No project open.</source>
+        <translation>没有打开的项目。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <source>Check</source>
+        <translation>检查项</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <source>Problem</source>
+        <translation>问题</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <source>Translation</source>
+        <translation>译文</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="142"/>
+        <source>Press &quot;Run the checks&quot;.</source>
+        <translation>请点击“运行检查”。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="156"/>
+        <source>Select at least one check.</source>
+        <translation>请至少选择一项检查。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="164"/>
+        <source>Checking...</source>
+        <translation>正在检查...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="178"/>
+        <source>Checking... %1 / %2 files</source>
+        <translation>正在检查... %1 / %2 个文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="229"/>
+        <source>No problem found.</source>
+        <translation>未发现问题。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="229"/>
+        <source>%1 problem(s)</source>
+        <translation>%1 个问题</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="231"/>
+        <source> — %1 shown</source>
+        <translation> — 显示 %1 个</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="233"/>
+        <source>only the first %1 are listed (use the export for all)</source>
+        <translation>仅列出前 %1 个（全部内容请使用导出）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="239"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="245"/>
+        <source>Export the report</source>
+        <translation>导出报告</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="240"/>
+        <source>CSV files (*.csv)</source>
+        <translation>CSV 文件 (*.csv)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="245"/>
+        <source>Cannot write %1.</source>
+        <translation>无法写入 %1。</translation>
     </message>
 </context>
 <context>
@@ -1229,6 +1997,130 @@
         <location filename="../src/ui/SciEdit.cpp" line="203"/>
         <source>Select all</source>
         <translation>全选</translation>
+    </message>
+</context>
+<context>
+    <name>SearchPanel</name>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="34"/>
+        <source>Search in the whole project...</source>
+        <translation>在整个项目中搜索...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="37"/>
+        <source>Replace with (in the translation)...</source>
+        <translation>替换为（在译文中）...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="39"/>
+        <source>In the translation</source>
+        <translation>在译文中</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="40"/>
+        <source>In the source</source>
+        <translation>在源文中</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="41"/>
+        <source>In both</source>
+        <translation>两者皆查</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="42"/>
+        <source>Regular expression</source>
+        <translation>正则表达式</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="43"/>
+        <source>Match case</source>
+        <translation>区分大小写</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="44"/>
+        <source>Whole words</source>
+        <translation>全字匹配</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="45"/>
+        <source>Search</source>
+        <translation>搜索</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="46"/>
+        <source>Replace the checked lines</source>
+        <translation>替换选中的行</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="47"/>
+        <source>Replace all</source>
+        <translation>全部替换</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="52"/>
+        <source>File</source>
+        <translation>文件</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="52"/>
+        <source>ID</source>
+        <translation>ID</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="52"/>
+        <source>Text</source>
+        <translation>文本</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="52"/>
+        <source>After replacement</source>
+        <translation>替换后</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="105"/>
+        <location filename="../src/ui/SearchPanel.cpp" line="141"/>
+        <source>No project open.</source>
+        <translation>没有打开的项目。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="141"/>
+        <source>Type a text and press Enter.</source>
+        <translation>输入文本后按回车键。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="162"/>
+        <source>Type a text to search.</source>
+        <translation>请输入要搜索的文本。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="166"/>
+        <source>Invalid regular expression: %1</source>
+        <translation>无效的正则表达式：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="172"/>
+        <source>Searching...</source>
+        <translation>正在搜索...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="208"/>
+        <source> (source)</source>
+        <translation>（源文）</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="224"/>
+        <source>No result.</source>
+        <translation>没有结果。</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="224"/>
+        <source>%1 line(s), %2 occurrence(s)</source>
+        <translation>%1 行，%2 处匹配</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SearchPanel.cpp" line="226"/>
+        <source>only the first results are shown</source>
+        <translation>仅显示前面的结果</translation>
     </message>
 </context>
 <context>
@@ -1475,125 +2367,185 @@
 <context>
     <name>TranslationEditor</name>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="38"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="39"/>
         <source>Search in this file (text or ID)...</source>
         <translation>在此文件中搜索（文本或 ID）...</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="41"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="42"/>
         <source>All lines</source>
         <translation>所有行</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="42"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="43"/>
         <source>Untranslated</source>
         <translation>未翻译</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="43"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="44"/>
         <source>Translated</source>
         <translation>已翻译</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="44"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="45"/>
         <source>To review</source>
         <translation>待复查</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="45"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="46"/>
         <source>Glossary alerts</source>
         <translation>术语表提示</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="97"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="47"/>
+        <source>Validated</source>
+        <translation>已验证</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="48"/>
+        <source>Not validated</source>
+        <translation>未验证</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="49"/>
+        <source>Changed since validation</source>
+        <translation>验证后已更改</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="50"/>
+        <source>With a comment</source>
+        <translation>有注释</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="90"/>
+        <source>Comment on this line (kept in the project, not in the game files)...</source>
+        <translation>对此行的注释（保存在项目中，不写入游戏文件）...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="95"/>
+        <source>Restore</source>
+        <translation>恢复</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="96"/>
+        <source>Put the previous translation back</source>
+        <translation>恢复上一个译文</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="124"/>
         <source>Source (%1)</source>
         <translation>原文 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="98"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="125"/>
         <source>Translation (%1)</source>
         <translation>译文 (%1)</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="152"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="163"/>
+        <source>Previous translation restored</source>
+        <translation>已恢复上一个译文</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="193"/>
         <source>&quot;%1&quot;: not translated in the game files yet</source>
         <translation>“%1”：游戏文件中尚未翻译</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="155"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="196"/>
         <source>Insert &quot;%1&quot; in the translation</source>
         <translation>将“%1”插入译文</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="167"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="208"/>
         <source>Replace with &quot;%1&quot;</source>
         <translation>替换为“%1”</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="171"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="212"/>
         <source>Translate this line with DeepL</source>
         <translation>用 DeepL 翻译此行</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="185"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="226"/>
         <source>Glossary: %1 → %2</source>
         <translation>术语表：%1 → %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="195"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="236"/>
         <source>%1 lines</source>
         <translation>%1 行</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="405"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="428"/>
+        <source>Replace</source>
+        <translation>替换</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="466"/>
         <source>DeepL</source>
         <translation>DeepL</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="405"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="466"/>
         <source>Enter your DeepL API key in Tools &gt; Settings first.</source>
         <translation>请先在“工具 &gt; 设置”中输入 DeepL API 密钥。</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="413"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="474"/>
         <source>Translating with DeepL...</source>
         <translation>正在用 DeepL 翻译...</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="470"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="492"/>
+        <source>DeepL translation</source>
+        <translation>DeepL 翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="516"/>
+        <source>Mass translation</source>
+        <translation>批量翻译</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="551"/>
+        <source>Previous translation: %1</source>
+        <translation>上一个译文：%1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="566"/>
         <source>Glossary:</source>
         <translation>术语表：</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="478"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="574"/>
         <source>&lt;i&gt;Not translated in the game files yet&lt;/i&gt;</source>
         <translation>&lt;i&gt;游戏文件中尚未翻译&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="487"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="583"/>
         <source>Inconsistent translations in the game files</source>
         <translation>游戏文件中的译法不一致</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="522"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="618"/>
         <source>%1 / %2 lines</source>
         <translation>%1 / %2 行</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="545"/>
-        <location filename="../src/ui/TranslationEditor.cpp" line="549"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="641"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="645"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="545"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="641"/>
         <source>Cannot save %1:
 %2</source>
         <translation>无法保存 %1：
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="550"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="646"/>
         <source>Some characters cannot be represented in the encoding of the target files (%1) and were replaced by &apos;?&apos;:
 
 %2
@@ -1605,21 +2557,41 @@ Choose another encoding in the project settings or reword the text.</source>
 
 请在项目设置中选择其他编码，或改写文本。</translation>
     </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="664"/>
+        <source>Review mark</source>
+        <translation>“待审阅”标记</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="677"/>
+        <source>Validation</source>
+        <translation>验证</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="692"/>
+        <source>Copy the source</source>
+        <translation>复制源文</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="706"/>
+        <source>Accept as is</source>
+        <translation>按原样接受</translation>
+    </message>
 </context>
 <context>
     <name>TranslationService</name>
     <message>
-        <location filename="../src/ui/TranslationService.cpp" line="76"/>
+        <location filename="../src/ui/TranslationService.cpp" line="79"/>
         <source>DeepL glossary not used: %1</source>
         <translation>未使用 DeepL 术语表：%1</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationService.cpp" line="106"/>
+        <location filename="../src/ui/TranslationService.cpp" line="109"/>
         <source>DeepL glossary</source>
         <translation>DeepL 术语表</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationService.cpp" line="107"/>
+        <location filename="../src/ui/TranslationService.cpp" line="110"/>
         <source>Your DeepL account already contains a glossary:
 
 %1

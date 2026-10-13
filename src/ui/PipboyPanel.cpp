@@ -119,16 +119,71 @@ void PipboyPanel::setEditor(TranslationEditor *editor)
 {
     if (m_hasBlock && m_applyTimer.isActive())
         applyNow();   // do not lose the last keystrokes of the previous file
-    if (editor && editor->relPath() == QLatin1String("game/pipboy.msg")) {
+    const bool quests = editor && editor->relPath() == QLatin1String("game/quests.msg");
+    if (editor && (quests || editor->relPath() == QLatin1String("game/pipboy.msg"))) {
         m_editor = editor;
         m_model = editor->model();
         m_project = editor->sharedProject();
+        m_questMode = quests;
+        if (quests)
+            setIdle(tr("Select a quest line to see how the Pip-Boy wraps it."));
     } else {
+        m_questMode = false;
         m_editor = nullptr;
         m_model = nullptr;
         m_project.reset();
         setIdle(tr("The holodisk editor works on game/pipboy.msg."));
     }
+}
+
+QString PipboyPanel::previewText() const
+{
+    return m_preview->toPlainText();
+}
+
+void PipboyPanel::ensureFont()
+{
+    // The font of the project (cached per project): the game draws the Pip-Boy with font1.aaf.
+    if (m_fontProject != m_project->config().id) {
+        m_font = PipboyText::Font::fromAaf(m_project->readInterfaceFont(1));
+        m_fontProject = m_project->config().id;
+    }
+}
+
+void PipboyPanel::showQuest(int id)
+{
+    const int row = m_model->rowForId(id);
+    if (row < 0) {
+        setIdle(tr("Select a quest line to see how the Pip-Boy wraps it."));
+        return;
+    }
+    ensureFont();
+    PipboyText::Measure m = measure();
+    m.maxWidth = PipboyText::kQuestWidthPx;
+    const TranslationRow &r = m_model->row(row);
+    // The engine writes "N. " before the description and wraps the whole at 350 px.
+    auto wrap = [&](const QString &text) {
+        QStringList lines = PipboyText::layout(QStringLiteral("1. ") + text, m);
+        lines.removeAll(PipboyText::endDisk());
+        lines.removeAll(PipboyText::endPar());
+        return lines;
+    };
+    const QStringList source = wrap(r.source), target = wrap(r.target.isEmpty() ? r.source : r.target);
+    m_hasBlock = false;
+    m_target->setEnabled(false);
+    m_reload->setEnabled(false);
+    m_loading = true;
+    m_source->setPlainText(source.join(QLatin1Char('\n')));
+    m_target->setPlainText(target.join(QLatin1Char('\n')));
+    m_loading = false;
+    QStringList lines;
+    for (const QString &line : target)
+        lines << QStringLiteral("%1  %2").arg(m.width(line), 4).arg(line);
+    m_preview->setPlainText(lines.join(QLatin1Char('\n')));
+    m_info->setText(tr("Quest %1: the Pip-Boy wraps the text (after the number) at %2 px.").arg(id).arg(m.maxWidth));
+    m_mode->setText(m.exact() ? tr("Measured with the game font (font1.aaf).")
+                              : tr("Game font not available (or multi-byte encoding): approximate measure."));
+    m_status->setText(tr("%1 line(s) in the translation, %2 in the source").arg(target.size()).arg(source.size()));
 }
 
 PipboyText::Measure PipboyPanel::measure() const
@@ -145,6 +200,10 @@ void PipboyPanel::showId(int id)
 {
     if (!m_editor || !m_model || !m_project)
         return;
+    if (m_questMode) {
+        showQuest(id);
+        return;
+    }
     if (m_hasBlock && m_block.contains(id))
         return;   // still the same holodisk
     if (m_hasBlock && m_applyTimer.isActive())
@@ -164,11 +223,7 @@ void PipboyPanel::showId(int id)
 
 void PipboyPanel::loadBlock(const PipboyText::Block &block)
 {
-    // The font of the project (cached per project): the game draws the Pip-Boy with font1.aaf.
-    if (m_fontProject != m_project->config().id) {
-        m_font = PipboyText::Font::fromAaf(m_project->readInterfaceFont(1));
-        m_fontProject = m_project->config().id;
-    }
+    ensureFont();
     m_block = block;
     m_hasBlock = true;
     m_target->setEnabled(true);

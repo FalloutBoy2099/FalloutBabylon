@@ -2,6 +2,7 @@
 
 #include "TextCodec.h"
 
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -158,6 +159,12 @@ QStringList Project::messageFiles() const
     return files;
 }
 
+QByteArray Project::readSourceText(const QString &rel, QString *error) const
+{
+    QReadLocker locker(&m_lock);
+    return m_vfs.read(sourcePath(rel), error);
+}
+
 QString Project::sourcePath(const QString &rel) const
 {
     return prefixFor(m_config.sourceLanguage) + rel;
@@ -184,6 +191,20 @@ SegmentStatus Project::statusOf(const TranslationRow &row)
     if (row.target == row.source && !row.confirmed)
         return SegmentStatus::Untranslated;
     return SegmentStatus::Translated;
+}
+
+bool TranslationRow::changedSinceValidation() const
+{
+    return validated != 0 && Project::textHash(target) != validated;
+}
+
+quint32 Project::textHash(const QString &text)
+{
+    quint32 h = 2166136261u;                       // FNV-1a over the UTF-16 units
+    for (QChar c : text) {
+        h = (h ^ c.unicode()) * 16777619u;
+    }
+    return h ? h : 1u;                             // 0 means "never validated"
 }
 
 QByteArray Project::readDialogScript(const QString &relPath, QString *error) const
@@ -246,6 +267,9 @@ TranslationDoc Project::loadDocument(const QString &rel, QString *error) const
         if (flagsIt != m_flags.constEnd()) {
             row.review = flagsIt->review.contains(s.id);
             row.confirmed = flagsIt->confirmed.contains(s.id);
+            row.comment = flagsIt->comments.value(s.id);
+            row.previous = flagsIt->previous.value(s.id);
+            row.validated = flagsIt->validated.value(s.id, 0);
         }
         seen.insert(s.id);
         doc.rows.push_back(row);
@@ -266,7 +290,7 @@ TranslationDoc Project::loadDocument(const QString &rel, QString *error) const
     return doc;
 }
 
-bool Project::saveDocument(const TranslationDoc &doc, QString *error, QString *unencodable)
+bool Project::saveDocument(const TranslationDoc &doc, QString *error, QString *unencodable, bool persistState)
 {
     MsgFile file;
     file.crlf = doc.crlf;
@@ -299,12 +323,19 @@ bool Project::saveDocument(const TranslationDoc &doc, QString *error, QString *u
             flags.review.insert(row.id);
         if (row.confirmed)
             flags.confirmed.insert(row.id);
+        if (!row.comment.isEmpty())
+            flags.comments.insert(row.id, row.comment);
+        if (!row.previous.isEmpty())
+            flags.previous.insert(row.id, row.previous);
+        if (row.validated)
+            flags.validated.insert(row.id, row.validated);
     }
-    if (flags.review.isEmpty() && flags.confirmed.isEmpty())
+    if (flags.isEmpty())
         m_flags.remove(doc.relPath);
     else
         m_flags.insert(doc.relPath, flags);
-    saveStateLocked();
+    if (persistState)
+        saveStateLocked();
     return true;
 }
 
@@ -334,18 +365,123 @@ FileStats Project::statisticsOf(const TranslationDoc &doc)
     return s;
 }
 
+QString Project::statsSignature(const QString &rel) const
+{
+    QString sig = QStringLiteral("%1|%2|%3|%4|").arg(m_config.sourceLanguage, m_config.targetLanguage, m_config.sourceEncoding,
+                                                    m_config.targetEncoding);
+    sig += m_vfs.signature(sourcePath(rel)) + QLatin1Char('#') + m_vfs.signature(targetPath(rel));
+    const auto it = m_flags.constFind(rel);
+    if (it != m_flags.constEnd()) {
+        QList<int> r = it->review.values(), c = it->confirmed.values();
+        std::sort(r.begin(), r.end());
+        std::sort(c.begin(), c.end());
+        QString flags;
+        for (int id : std::as_const(r))
+            flags += QString::number(id) + QLatin1Char(',');
+        flags += QLatin1Char(';');
+        for (int id : std::as_const(c))
+            flags += QString::number(id) + QLatin1Char(',');
+        sig += QStringLiteral("#%1").arg(textHash(flags));
+    }
+    return sig;
+}
+
+void Project::loadStatsCache() const
+{
+    if (m_cacheLoaded)
+        return;
+    m_cacheLoaded = true;
+    if (m_statsCacheFile.isEmpty())
+        return;
+    QFile f(m_statsCacheFile);
+    if (!f.open(QIODevice::ReadOnly))
+        return;
+    const QJsonObject root = QJsonDocument::fromJson(f.readAll()).object();
+    if (root.value(QStringLiteral("version")).toInt() != 1)
+        return;
+    const QJsonObject files = root.value(QStringLiteral("files")).toObject();
+    for (auto it = files.begin(); it != files.end(); ++it) {
+        const QJsonArray a = it.value().toObject().value(QStringLiteral("s")).toArray();
+        if (a.size() < 8)
+            continue;
+        FileStats s;
+        s.relPath = it.key();
+        s.displayName = Statistics::displayNameFor(s.relPath);
+        s.kind = int(kindOf(s.relPath));
+        s.lines = a.at(0).toInt();
+        s.translated = a.at(1).toInt();
+        s.review = a.at(2).toInt();
+        s.untranslated = a.at(3).toInt();
+        s.words = qint64(a.at(4).toDouble());
+        s.wordsRemaining = qint64(a.at(5).toDouble());
+        s.chars = qint64(a.at(6).toDouble());
+        s.charsRemaining = qint64(a.at(7).toDouble());
+        m_statsCache.insert(it.key(), {it.value().toObject().value(QStringLiteral("sig")).toString(), s});
+    }
+}
+
+void Project::saveStatsCache() const
+{
+    if (m_statsCacheFile.isEmpty() || !m_cacheDirty)
+        return;
+    QJsonObject files;
+    for (auto it = m_statsCache.begin(); it != m_statsCache.end(); ++it) {
+        const FileStats &s = it->second;
+        files.insert(it.key(), QJsonObject{{QStringLiteral("sig"), it->first},
+                                           {QStringLiteral("s"), QJsonArray{s.lines, s.translated, s.review, s.untranslated,
+                                                                            double(s.words), double(s.wordsRemaining),
+                                                                            double(s.chars), double(s.charsRemaining)}}});
+    }
+    QDir().mkpath(QFileInfo(m_statsCacheFile).absolutePath());
+    QSaveFile f(m_statsCacheFile);
+    if (f.open(QIODevice::WriteOnly)) {
+        f.write(QJsonDocument(QJsonObject{{QStringLiteral("version"), 1}, {QStringLiteral("files"), files}}).toJson(QJsonDocument::Compact));
+        f.commit();
+        m_cacheDirty = false;
+    }
+}
+
 QVector<FileStats> Project::computeStatistics(const ProgressFn &progress, const std::atomic_bool *cancel) const
 {
     QVector<FileStats> all;
     const QStringList files = messageFiles();
+    {
+        QMutexLocker locker(&m_cacheMutex);
+        loadStatsCache();
+        m_cacheHits = 0;
+    }
     for (int i = 0; i < files.size(); ++i) {
         if (cancel && cancel->load())
             break;
-        FileStats s = statisticsOf(loadDocument(files.at(i)));
+        const QString &rel = files.at(i);
+        QString sig;
+        {
+            QReadLocker locker(&m_lock);
+            sig = statsSignature(rel);
+        }
+        FileStats s;
+        bool cached = false;
+        {
+            QMutexLocker locker(&m_cacheMutex);
+            const auto it = m_statsCache.constFind(rel);
+            if (it != m_statsCache.constEnd() && it->first == sig) {
+                s = it->second;
+                cached = true;
+                ++m_cacheHits;
+            }
+        }
+        if (!cached) {
+            s = statisticsOf(loadDocument(rel));
+            QMutexLocker locker(&m_cacheMutex);
+            m_statsCache.insert(rel, {sig, s});
+            m_cacheDirty = true;
+        }
         all.push_back(s);
         if (progress)
             progress(i + 1, int(files.size()), s);
     }
+    QMutexLocker locker(&m_cacheMutex);
+    saveStatsCache();
     return all;
 }
 
@@ -379,8 +515,23 @@ Glossary Project::buildGlossary(const std::atomic_bool *cancel) const
                          QStringLiteral("%1#%2").arg(rel.mid(rel.lastIndexOf(QLatin1Char('/')) + 1)).arg(row.id));
         }
     }
+    for (const CustomTerm &t : customTerms())
+        glossary.addCustom(t.source, t.target, t.keep, QCoreApplication::translate("Project", "Custom"));
     glossary.finalize(m_config.sourceLanguage, m_config.targetLanguage);
     return glossary;
+}
+
+QVector<CustomTerm> Project::customTerms() const
+{
+    QReadLocker locker(&m_lock);
+    return m_customTerms;
+}
+
+void Project::setCustomTerms(const QVector<CustomTerm> &terms)
+{
+    QWriteLocker locker(&m_lock);
+    m_customTerms = terms;
+    saveStateLocked();
 }
 
 QVector<TodoItem> Project::reviewItems(const QSet<QString> &skip) const
@@ -415,18 +566,39 @@ void Project::loadState()
 void Project::loadStateLocked()
 {
     m_flags.clear();
+    m_customTerms.clear();
     if (m_stateFile.isEmpty())
         return;
     QFile f(m_stateFile);
     if (!f.open(QIODevice::ReadOnly))
         return;
-    const QJsonObject files = QJsonDocument::fromJson(f.readAll()).object().value(QStringLiteral("files")).toObject();
+    const QJsonObject root = QJsonDocument::fromJson(f.readAll()).object();
+    for (const QJsonValue &v : root.value(QStringLiteral("customTerms")).toArray()) {
+        const QJsonObject o = v.toObject();
+        CustomTerm t;
+        t.source = o.value(QStringLiteral("source")).toString();
+        t.target = o.value(QStringLiteral("target")).toString();
+        t.keep = o.value(QStringLiteral("keep")).toBool();
+        if (!t.source.isEmpty())
+            m_customTerms.push_back(t);
+    }
+    const QJsonObject files = root.value(QStringLiteral("files")).toObject();
     for (auto it = files.begin(); it != files.end(); ++it) {
         FileFlags flags;
         for (const QJsonValue &v : it.value().toObject().value(QStringLiteral("review")).toArray())
             flags.review.insert(v.toInt());
         for (const QJsonValue &v : it.value().toObject().value(QStringLiteral("confirmed")).toArray())
             flags.confirmed.insert(v.toInt());
+        const QJsonObject o = it.value().toObject();
+        const QJsonObject comments = o.value(QStringLiteral("comments")).toObject();
+        for (auto c = comments.begin(); c != comments.end(); ++c)
+            flags.comments.insert(c.key().toInt(), c.value().toString());
+        const QJsonObject previous = o.value(QStringLiteral("previous")).toObject();
+        for (auto c = previous.begin(); c != previous.end(); ++c)
+            flags.previous.insert(c.key().toInt(), c.value().toString());
+        const QJsonObject validated = o.value(QStringLiteral("validated")).toObject();
+        for (auto c = validated.begin(); c != validated.end(); ++c)
+            flags.validated.insert(c.key().toInt(), quint32(c.value().toDouble()));
         m_flags.insert(it.key(), flags);
     }
 }
@@ -449,12 +621,38 @@ void Project::saveStateLocked() const
         std::sort(c.begin(), c.end());
         for (int id : std::as_const(r)) review.append(id);
         for (int id : std::as_const(c)) confirmed.append(id);
-        files.insert(it.key(), QJsonObject{{QStringLiteral("review"), review}, {QStringLiteral("confirmed"), confirmed}});
+        QJsonObject entry{{QStringLiteral("review"), review}, {QStringLiteral("confirmed"), confirmed}};
+        auto putTexts = [&](const char *key, const QHash<int, QString> &map) {
+            if (map.isEmpty())
+                return;
+            QJsonObject o;
+            for (auto m = map.begin(); m != map.end(); ++m)
+                o.insert(QString::number(m.key()), m.value());
+            entry.insert(QString::fromLatin1(key), o);
+        };
+        putTexts("comments", it->comments);
+        putTexts("previous", it->previous);
+        if (!it->validated.isEmpty()) {
+            QJsonObject o;
+            for (auto m = it->validated.begin(); m != it->validated.end(); ++m)
+                o.insert(QString::number(m.key()), double(m.value()));
+            entry.insert(QStringLiteral("validated"), o);
+        }
+        files.insert(it.key(), entry);
     }
     QDir().mkpath(QFileInfo(m_stateFile).absolutePath());
     QSaveFile f(m_stateFile);
     if (f.open(QIODevice::WriteOnly)) {
-        f.write(QJsonDocument(QJsonObject{{QStringLiteral("files"), files}}).toJson(QJsonDocument::Compact));
+        QJsonObject root{{QStringLiteral("files"), files}};
+        if (!m_customTerms.isEmpty()) {
+            QJsonArray terms;
+            for (const CustomTerm &t : m_customTerms)
+                terms.append(QJsonObject{{QStringLiteral("source"), t.source},
+                                         {QStringLiteral("target"), t.target},
+                                         {QStringLiteral("keep"), t.keep}});
+            root.insert(QStringLiteral("customTerms"), terms);
+        }
+        f.write(QJsonDocument(root).toJson(QJsonDocument::Compact));
         f.commit();
     }
 }

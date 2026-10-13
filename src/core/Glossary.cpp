@@ -17,7 +17,15 @@ void Glossary::add(const QString &source, const QString &target, const QString &
     const QString s = source.simplified();
     if (s.isEmpty())
         return;
-    m_raw.push_back({s, target.simplified(), category, origin});
+    m_raw.push_back({s, target.simplified(), category, origin, false, false});
+}
+
+void Glossary::addCustom(const QString &source, const QString &target, bool keep, const QString &category)
+{
+    const QString s = source.simplified();
+    if (s.isEmpty())
+        return;
+    m_raw.push_back({s, keep ? s : target.simplified(), category, QStringLiteral("(manual)"), true, keep});
 }
 
 void Glossary::finalize(const QString &sourceLanguage, const QString &targetLanguage)
@@ -28,6 +36,7 @@ void Glossary::finalize(const QString &sourceLanguage, const QString &targetLang
         GlossaryTerm term;
         QHash<QString, int> counts;       // lower-cased target -> occurrences
         QHash<QString, QString> spelling; // lower-cased target -> first spelling seen
+        QHash<QString, int> customCounts; // same, for the terms entered by hand
     };
     QVector<Group> groups;
     QHash<QString, int> byKey;
@@ -49,15 +58,26 @@ void Glossary::finalize(const QString &sourceLanguage, const QString &targetLang
         }
         Group &g = groups[idx];
         g.term.origins << r.origin;
+        if (r.custom) {
+            if (!g.term.custom) {
+                g.term.custom = true;
+                g.term.source = r.source;
+                g.term.category = r.category;
+            }
+            g.term.keep = r.keep;
+        }
         if (!r.target.isEmpty()) {
             const QString lower = r.target.toLower();
-            g.counts[lower] += 1;
-            if (!g.spelling.contains(lower))
+            (r.custom ? g.customCounts : g.counts)[lower] += 1;
+            if (!g.spelling.contains(lower) || r.custom)
                 g.spelling.insert(lower, r.target);
         }
     }
 
     for (Group &g : groups) {
+        // What the user typed is the reference: the translations of the game files are ignored for that term.
+        if (g.term.custom)
+            g.counts = g.customCounts;
         QList<QString> keys = g.counts.keys();
         std::sort(keys.begin(), keys.end(), [&](const QString &a, const QString &b) {
             const int ca = g.counts.value(a), cb = g.counts.value(b);

@@ -85,7 +85,8 @@ void DeepLClient::translate(const QString &text, const QString &context, const O
         done({}, tr("DeepL does not support %1.").arg(source.isEmpty() ? o.sourceLanguage : o.targetLanguage));
         return;
     }
-    const Placeholders::Protected p = Placeholders::protect(text);
+    const Placeholders::Protected p =
+        Placeholders::protect(text, o.glossaryId.isEmpty() ? o.localGlossary.get() : nullptr);
 
     QJsonObject body;
     body.insert(QStringLiteral("text"), QJsonArray{p.xml});

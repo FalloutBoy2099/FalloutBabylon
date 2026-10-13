@@ -27,6 +27,9 @@ DeepLClient::Options TranslationService::deeplOptions(const Project &project) co
     o.sourceLanguage = project.config().sourceLanguage;
     o.targetLanguage = project.config().targetLanguage;
     o.formality = AppSettings::deeplFormality();
+    // Without a DeepL glossary (free plan limit, unsupported language pair...), the terms are substituted locally.
+    if (AppSettings::deeplUseGlossary())
+        o.localGlossary = project.glossarySnapshot();
     return o;
 }
 

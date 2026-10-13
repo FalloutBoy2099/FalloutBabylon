@@ -4,7 +4,9 @@
 
 #include <QDialog>
 
+class QCheckBox;
 class QComboBox;
+class QFormLayout;
 class QLabel;
 class QLineEdit;
 class QListWidget;
@@ -31,6 +33,8 @@ private:
     void updateTargetEncoding();
     void updateOutputDefault();
     void updateOutputHint();
+    void updateOutputMode();
+    QString defaultArchiveFor() const;
     void accept() override;
 
     ProjectConfig m_config;
@@ -39,6 +43,12 @@ private:
     QLineEdit *m_name = nullptr;
     QListWidget *m_sources = nullptr;
     QLineEdit *m_output = nullptr;
+    QComboBox *m_outputMode = nullptr;
+    QFormLayout *m_outputForm = nullptr;
+    QWidget *m_folderRow = nullptr, *m_archiveRow = nullptr;
+    QLineEdit *m_archive = nullptr;
+    QComboBox *m_archiveFormat = nullptr;
+    QCheckBox *m_archiveSource = nullptr;
     QComboBox *m_sourceLanguage = nullptr;
     QComboBox *m_targetLanguage = nullptr;
     QComboBox *m_sourceEncoding = nullptr;

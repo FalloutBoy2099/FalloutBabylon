@@ -283,4 +283,169 @@ VALUES = [
     'Tłumaczenie wymaga %1 wpisów, ale przed rekordem %3 wolnych jest tylko %2 identyfikatorów. Skróć je.',  # 279
     'zapisano w pliku',  # 280
     'Przetłumaczone pliki są zapisywane w %1 (ten folder ma pierwszeństwo przed źródłami).',  # 281
+    'Nie tłumacz: ten termin musi pozostać bez zmian.',  # 282
+    'Dodaj...',  # 283
+    'Edytuj...',  # 284
+    'Usuń',  # 285
+    'Importuj...',  # 286
+    'Eksportuj...',  # 287
+    'Dodaj własny termin (nazwę do zachowania, słowo ze stałym tłumaczeniem...)',  # 288
+    'Importuj terminy z pliku CSV / TSV (termin; tłumaczenie; zachowaj)',  # 289
+    'Eksportuj własne terminy do pliku CSV',  # 290
+    'Nowy termin słownika',  # 291
+    'Edytuj termin słownika',  # 292
+    'Nie tłumacz (zachowaj termin bez zmian)',  # 293
+    'Termin (język źródłowy):',  # 294
+    'Tłumaczenie:',  # 295
+    'Wymagany jest zarówno termin, jak i jego tłumaczenie.',  # 296
+    'Najpierw wybierz termin.',  # 297
+    'Można usuwać tylko terminy dodane przez Ciebie (pogrubione).',  # 298
+    'Importuj terminy słownika',  # 299
+    'Słowniki (*.csv *.tsv *.txt);;Wszystkie pliki (*)',  # 300
+    'Nie można odczytać %1.',  # 301
+    'W tym pliku nie znaleziono żadnego terminu.',  # 302
+    'Zaimportowano terminów: %1, pominięto wierszy: %2.',  # 303
+    'Nie ma jeszcze własnych terminów do wyeksportowania.',  # 304
+    'Eksportuj terminy słownika',  # 305
+    'Pliki CSV (*.csv)',  # 306
+    'Nie można zapisać %1.',  # 307
+    'Edytuj ten termin...',  # 308
+    'Zastąp własnym tłumaczeniem...',  # 309
+    'Zachowaj ten termin bez zmian (nie tłumacz)',  # 310
+    'Usuń ten termin',  # 311
+    'Importuj istniejące tłumaczenie',  # 312
+    'Używa ponownie tłumaczenia innej wersji moda (na przykład starej instalacji przetłumaczonej na %1). Wypełniane są tylko nieprzetłumaczone wiersze, chyba że poprosisz o zastąpienie.',  # 313
+    'Folder gry lub moda zawierający tłumaczenie',  # 314
+    'Użyj też tłumaczeń identycznych tekstów znalezionych pod innym identyfikatorem',  # 315
+    'Jeśli tekst źródłowy się zmienił, zaimportuj stare tłumaczenie oznaczone „do sprawdzenia”',  # 316
+    'Zastąp tłumaczenia, które projekt już ma',  # 317
+    'Importuj',  # 318
+    'Folder',  # 319
+    'Język jego tekstów źródłowych',  # 320
+    'Język jego tłumaczenia',  # 321
+    'Folder z tłumaczeniem',  # 322
+    'Nie znaleziono tutaj folderu text/<język>/.',  # 323
+    'Znaleziono źródeł: %1; języki: %2.',  # 324
+    'Zastąpić tłumaczenia, które projekt już ma? Spowoduje to ponowny zapis plików w folderze wyjściowym.',  # 325
+    'Anuluj',  # 326
+    'Importowanie...',  # 327
+    'Przejrzano plików: %1, zapisano: %2.\nWierszy z tym samym tekstem: %3, ze zmienionym źródłem (do sprawdzenia): %4, znalezionych pod innym identyfikatorem: %5; już przetłumaczonych i zachowanych: %6.',  # 328
+    'Anulowanie...',  # 329
+    'Znajdź i zamień',  # 330
+    'Raport jakości',  # 331
+    '&Zatwierdź (lub usuń zatwierdzenie)',  # 332
+    'Cofnij ostatnią operację',  # 333
+    'Ponów operację',  # 334
+    'Znajdź i zamień w &projekcie...',  # 335
+    '&Raport jakości...',  # 336
+    '&Importuj istniejące tłumaczenie...',  # 337
+    'Otwarte pliki tego projektu zostaną najpierw zamknięte. Kontynuować?',  # 338
+    'Zamień',  # 339
+    'Zamienić „%1” na „%2” w tłumaczeniu %3 wierszy w %4 plikach?\n\nPliki, które nie są otwarte, zostaną zapisane natychmiast.',  # 340
+    'Zamian: %1 w plikach: %2.',  # 341
+    'Cofnij operację: %1',  # 342
+    'Ponów operację: %1',  # 343
+    'Zmieniono po zatwierdzeniu',  # 344
+    'Zatwierdzone',  # 345
+    'Komentarz: %1',  # 346
+    'Poprzednie tłumaczenie: %1',  # 347
+    'Wybierz wiersz zadania, aby zobaczyć, jak Pip-Boy go zawija.',  # 348
+    'Zadanie %1: Pip-Boy zawija tekst (po numerze) przy %2 px.',  # 349
+    'Zmierzono czcionką gry (font1.aaf).',  # 350
+    'Czcionka gry niedostępna (lub kodowanie wielobajtowe): pomiar przybliżony.',  # 351
+    'Wierszy w tłumaczeniu: %1, w źródle: %2',  # 352
+    'Własny',  # 353
+    'Znaczniki',  # 354
+    'Spacje',  # 355
+    'Kodowanie',  # 356
+    'Długość',  # 357
+    'Niespójny duplikat',  # 358
+    'brakuje: %1',  # 359
+    'nieoczekiwane: %1',  # 360
+    'tłumaczenie zawiera tylko spacje',  # 361
+    'spacje na początku lub na końcu',  # 362
+    'źródło ma spacje na początku lub na końcu',  # 363
+    'podwójne spacje',  # 364
+    'nie można zapisać w %1: %2',  # 365
+    'znaków: %1 (limit %2)',  # 366
+    'krótka etykieta interfejsu: znaków %1 przy %2 w źródle',  # 367
+    'znaków: %1 przy %2 w źródle',  # 368
+    'gdzie indziej (%1 razy): %2',  # 369
+    'Utracone znaczniki (@Nazwa@, %d, {pole})',  # 370
+    'Znaki, których kodowanie nie obsługuje',  # 371
+    'Za długie',  # 372
+    'Niespójne duplikaty',  # 373
+    'bez limitu',  # 374
+    'Maksymalna liczba znaków tłumaczenia (0: zgłaszaj tylko tłumaczenia znacznie dłuższe od źródła)',  # 375
+    'Maksymalna długość:',  # 376
+    'Uruchom kontrole',  # 377
+    'Kontrole dotyczą zapisanych plików: najpierw zapisz zmiany.',  # 378
+    'Eksportuj (CSV)...',  # 379
+    'Wszystkie problemy',  # 380
+    'Kontrola',  # 381
+    'Problem',  # 382
+    'Naciśnij „Uruchom kontrole”.',  # 383
+    'Wybierz co najmniej jedną kontrolę.',  # 384
+    'Sprawdzanie...',  # 385
+    'Sprawdzanie... plików: %1 / %2',  # 386
+    'Nie znaleziono problemów.',  # 387
+    'Problemów: %1',  # 388
+    ' — wyświetlono: %1',  # 389
+    'wyświetlono tylko pierwsze %1 (użyj eksportu, aby uzyskać wszystkie)',  # 390
+    'Eksportuj raport',  # 391
+    'Szukaj w całym projekcie...',  # 392
+    'Zamień na (w tłumaczeniu)...',  # 393
+    'W tłumaczeniu',  # 394
+    'W źródle',  # 395
+    'W obu',  # 396
+    'Wyrażenie regularne',  # 397
+    'Uwzględniaj wielkość liter',  # 398
+    'Całe słowa',  # 399
+    'Szukaj',  # 400
+    'Zamień zaznaczone wiersze',  # 401
+    'Zamień wszystko',  # 402
+    'Tekst',  # 403
+    'Po zamianie',  # 404
+    'Wpisz tekst i naciśnij Enter.',  # 405
+    'Wpisz tekst do wyszukania.',  # 406
+    'Nieprawidłowe wyrażenie regularne: %1',  # 407
+    'Wyszukiwanie...',  # 408
+    ' (źródło)',  # 409
+    'Brak wyników.',  # 410
+    'Wierszy: %1, wystąpień: %2',  # 411
+    'wyświetlono tylko pierwsze wyniki',  # 412
+    'Niezatwierdzone',  # 413
+    'Zmienione po zatwierdzeniu',  # 414
+    'Z komentarzem',  # 415
+    'Komentarz do tego wiersza (zapisywany w projekcie, nie w plikach gry)...',  # 416
+    'Przywróć',  # 417
+    'Przywróć poprzednie tłumaczenie',  # 418
+    'Przywrócono poprzednie tłumaczenie',  # 419
+    'Tłumaczenie DeepL',  # 420
+    'Tłumaczenie zbiorcze',  # 421
+    'Oznaczenie „do sprawdzenia”',  # 422
+    'Zatwierdzenie',  # 423
+    'Kopiowanie źródła',  # 424
+    'Zaakceptuj bez zmian',  # 425
+    '&Zaktualizuj teraz wyjściowe archiwum DAT',  # 426
+    'Aktualizowanie archiwum DAT...',  # 427
+    'Archiwum DAT zaktualizowane: przetłumaczonych plików: %1, oryginałów: %2.',  # 428
+    'Archiwum DAT NIE zostało zaktualizowane: %1',  # 429
+    'Archiwum DAT',  # 430
+    'Nie można zapisać archiwum DAT:\n%1',  # 431
+    'Archiwum wyjściowe nie może być jednym ze źródeł projektu.',  # 432
+    'Archiwum wyjściowe musi być plikiem .dat.',  # 433
+    'Folder luźnych plików',  # 434
+    'np. french.dat',  # 435
+    'Fallout 2 (zlib)',  # 436
+    'Fallout 1',  # 437
+    'Zapisz także teksty oryginalne (pliki referencyjne)',  # 438
+    'Dodaje kopie text/<język źródłowy>/ przetłumaczonych plików, aby odniesienie każdego tłumaczenia było w archiwum. Wyłącz, jeśli później wczytywany mod ma nadal dostarczać teksty oryginalne.',  # 439
+    'Format:',  # 440
+    'Wyjście',  # 441
+    'Archiwum wyjściowe',  # 442
+    'Archiwa DAT (*.dat)',  # 443
+    'Tłumaczenie jest dostarczane w %1, odbudowywanym po każdym zapisie. Zawiera text/%2/ z przetłumaczonymi plikami',  # 444
+    ' oraz teksty oryginalne w text/%1/.',  # 445
+    'Wybierz archiwum wyjściowe.',  # 446
 ]
