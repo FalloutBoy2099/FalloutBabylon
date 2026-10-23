@@ -1,5 +1,6 @@
 #include "QualityPanel.h"
 
+#include "core/ProjectStore.h"
 #include "core/Statistics.h"
 
 #include <QCheckBox>
@@ -167,7 +168,12 @@ void QualityPanel::runNow()
     const auto cancel = m_cancel;
     // The glossary may be replaced on the UI thread while the checks run: work on a copy.
     const std::shared_ptr<const Glossary> glossary = project->glossarySnapshot();
-    QThreadPool::globalInstance()->start([this, project, cancel, glossary, opts, generation] {
+    const QString cacheFile = ProjectStore::qaCacheFile(project->config().id);
+    QThreadPool::globalInstance()->start([this, project, cancel, glossary, opts, generation, cacheFile] {
+        // Files that did not change since the last run are answered from the cache.
+        QualityCheck::Cache cache;
+        cache.open(cacheFile, QualityCheck::cacheKey(*project, glossary.get(), opts));
+        int hits = 0;
         const QVector<QualityCheck::Issue> issues = QualityCheck::run(
             *project, glossary.get(), opts,
             [this, cancel, generation](int done, int total) {
@@ -178,18 +184,20 @@ void QualityPanel::runNow()
                         m_status->setText(tr("Checking... %1 / %2 files").arg(done).arg(total));
                 }, Qt::QueuedConnection);
             },
-            cancel.get());
+            cancel.get(), &cache, &hits);
         if (cancel->load())
             return;
-        QMetaObject::invokeMethod(this, [this, generation, issues] { showResults(generation, issues); }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(this, [this, generation, issues, hits] { showResults(generation, issues, hits); },
+                                  Qt::QueuedConnection);
     });
 }
 
-void QualityPanel::showResults(int generation, const QVector<QualityCheck::Issue> &issues)
+void QualityPanel::showResults(int generation, const QVector<QualityCheck::Issue> &issues, int cacheHits)
 {
     if (generation != m_generation)
         return;
     m_running = false;
+    m_cacheHits = cacheHits;
     m_run->setEnabled(true);
     m_issues = issues;
     m_export->setEnabled(!issues.isEmpty());
@@ -231,6 +239,8 @@ void QualityPanel::applyFilter()
         status += tr(" — %1 shown").arg(shown.size());
     if (shown.size() > kMaxRows)
         status += QStringLiteral("  ⚠ ") + tr("only the first %1 are listed (use the export for all)").arg(kMaxRows);
+    if (m_cacheHits > 0)
+        status += QStringLiteral("  ·  ") + tr("%1 file(s) taken from the cache").arg(m_cacheHits);
     m_status->setText(status);
 }
 

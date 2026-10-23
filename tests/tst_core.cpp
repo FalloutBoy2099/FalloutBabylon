@@ -1,4 +1,5 @@
 #include <QDir>
+#include <QElapsedTimer>
 #include <QFileInfo>
 #include <QFile>
 #include <QTemporaryDir>
@@ -8,8 +9,10 @@
 #include "core/DatArchive.h"
 #include "core/DatWriter.h"
 #include "core/DialogGraph.h"
+#include "core/GameReport.h"
 #include "core/Glossary.h"
 #include "core/Int2Ssl.h"
+#include "core/IntStrings.h"
 #include "core/Lzss.h"
 #include "core/MsgFile.h"
 #include "core/Placeholders.h"
@@ -18,8 +21,10 @@
 #include "core/Project.h"
 #include "core/ProjectSearch.h"
 #include "core/QualityCheck.h"
+#include "core/ScriptStrings.h"
 #include "core/TermMatcher.h"
 #include "core/TextCodec.h"
+#include "core/TranslationIndex.h"
 #include "core/TranslationMemory.h"
 #include "core/VirtualFileSystem.h"
 
@@ -552,6 +557,507 @@ private slots:
         QVERIFY(truncated);
     }
 
+    // A tiny compiled script: no procedure, no identifier, two strings, code that pushes both.
+    static QByteArray tinyScript(const QByteArray &first, const QByteArray &second)
+    {
+        auto be32 = [](quint32 v) {
+            QByteArray b(4, '\0');
+            qToBigEndian<quint32>(v, reinterpret_cast<uchar *>(b.data()));
+            return b;
+        };
+        auto be16 = [](quint16 v) {
+            QByteArray b(2, '\0');
+            qToBigEndian<quint16>(v, reinterpret_cast<uchar *>(b.data()));
+            return b;
+        };
+        auto entry = [&](const QByteArray &text) {
+            const int allocated = (text.size() + 2) & ~1;
+            return be16(quint16(allocated)) + text + QByteArray(allocated - text.size(), '\0');
+        };
+        QByteArray table = entry(first) + entry(second);
+        const quint32 bodyOffset = 42 + 4 + 24 + 4 + 4 + 4 + quint32(table.size()) + 4;
+        QByteArray out(42, '\0');
+        out += be32(1);                       // one procedure: name, type, time, condition, body offset, arguments
+        out += be32(0) + be32(0) + be32(0) + be32(0) + be32(bodyOffset) + be32(0);
+        out += be32(0) + be32(0xFFFFFFFFu);   // identifiers (empty) and terminator
+        out += be32(quint32(table.size())) + table + be32(0xFFFFFFFFu);
+        const quint32 firstOperand = 4 + 2;                                   // from the size field
+        const quint32 secondOperand = 4 + entry(first).size() + 2;
+        out += be16(0x9001) + be32(firstOperand) + be16(0x9001) + be32(secondOperand) + be16(0x9001) + be32(firstOperand);
+        out += be16(0x8019);                  // some operator without operand
+        return out;
+    }
+
+    void intStringsParseAndPatch()
+    {
+        const QByteArray script = tinyScript("You see Sammy.", "Hurt dude");
+        IntStrings::Table t = IntStrings::parse(script);
+        QVERIFY2(t.valid, qPrintable(t.error));
+        QVERIFY(t.codeDecoded);
+        QCOMPARE(t.entries.size(), 2);
+        QCOMPARE(t.entries[0].text, QByteArray("You see Sammy."));
+        QCOMPARE(t.entries[0].capacity(), 15);       // 14 characters + NUL + padding = 16 bytes
+        QCOMPARE(t.entries[1].text, QByteArray("Hurt dude"));
+        QCOMPARE(t.usedOperands.size(), 2);
+        QVERIFY(t.usedOperands.contains(t.entries[0].operand) && t.usedOperands.contains(t.entries[1].operand));
+        QVERIFY(IntStrings::looksTranslatable("You see Sammy."));
+        QVERIFY(!IntStrings::looksTranslatable("obj_name"));
+        QVERIFY(!IntStrings::looksTranslatable("art/critters/hmwarr"));
+
+        // fits in place: the file keeps its size and its layout
+        QHash<quint32, QByteArray> texts;
+        texts.insert(t.entries[0].operand, "Vous voyez Sammy.");        // 17 characters: too long for 15
+        IntStrings::PatchResult r = IntStrings::patch(script, texts, false);
+        QCOMPARE(r.data, script);
+        QCOMPARE(r.problems.size(), 1);
+        texts.insert(t.entries[0].operand, "C'est Sammy.");
+        r = IntStrings::patch(script, texts, false);
+        QCOMPARE(r.inPlace, 1);
+        QCOMPARE(r.data.size(), script.size());
+        t = IntStrings::parse(r.data);
+        QVERIFY(t.valid);
+        QCOMPARE(t.entries[0].text, QByteArray("C'est Sammy."));
+        QCOMPARE(t.entries[1].text, QByteArray("Hurt dude"));
+        QCOMPARE(t.usedOperands.size(), 2);
+
+        // longer: appended at the end, both pushes of that string redirected
+        texts.clear();
+        texts.insert(t.entries[0].operand, "Vous voyez Sammy, la fille du forgeron.");
+        r = IntStrings::patch(script, texts, true);
+        QCOMPARE(r.enlarged, 1);
+        QVERIFY(r.data.size() > script.size());
+        const IntStrings::Table moved = IntStrings::parse(r.data);
+        QVERIFY(moved.valid && moved.codeDecoded);
+        QCOMPARE(moved.entries.size(), 2);                          // the table itself is unchanged
+        QCOMPARE(moved.usedOperands.size(), 2);                     // both pushes of the first string moved together
+        quint32 newOperand = 0;
+        for (quint32 op : moved.usedOperands)
+            if (op != moved.entries[1].operand)
+                newOperand = op;
+        QVERIFY(newOperand > moved.entries[1].operand);
+        // the new entry sits right at the end of the file and is read like any other
+        const int pos = int(moved.tablePos) + int(newOperand);
+        QCOMPARE(r.data.mid(pos, 39), QByteArray("Vous voyez Sammy, la fille du forgeron."));
+        QCOMPARE(r.data.at(pos + 39), '\0');
+    }
+
+    void scriptStringsProject()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg", "{1}{}{Hello}\r\n");
+        writeFile(root + "/m/scripts/sammy.int", tinyScript("You see Sammy.", "Hurt dude"));
+        ProjectConfig c;
+        c.id = "ss";
+        c.name = "ss";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state/ss.state.json");
+        p.reload();
+
+        QCOMPARE(p.scriptNames(), QStringList{"sammy"});
+        QVector<ScriptStrings::Text> texts = ScriptStrings::scan(p);
+        QCOMPARE(texts.size(), 2);
+        QCOMPARE(texts[0].source, QString("You see Sammy."));
+        QCOMPARE(texts[0].capacity, 15);
+
+        // one text fits, one does not
+        QVector<ScriptTranslation> translations;
+        translations.push_back({"sammy", texts[0].operand, texts[0].source, "C'est Sammy."});
+        translations.push_back({"sammy", texts[1].operand, texts[1].source, "Il s'est fait mal, le pauvre."});
+        p.setScriptTranslations(translations);
+        ScriptStrings::ApplyResult r = ScriptStrings::apply(p, p.scriptTranslations(), false);
+        QCOMPARE(r.scripts, 1);
+        QCOMPARE(r.inPlace, 1);
+        QCOMPARE(r.problems.size(), 1);
+        QVERIFY(QFileInfo::exists(root + "/out/scripts/sammy.int"));
+        QVERIFY(QFileInfo::exists(root + "/state/ss.scripts/sammy.int"));      // the original is kept
+        QFile patched(root + "/out/scripts/sammy.int");
+        QVERIFY(patched.open(QIODevice::ReadOnly));
+        const IntStrings::Table t = IntStrings::parse(patched.readAll());
+        patched.close();                    // Windows cannot delete an open file
+        QCOMPARE(t.entries[0].text, QByteArray("C'est Sammy."));
+        QCOMPARE(t.entries[1].text, QByteArray("Hurt dude"));
+
+        // the translations survive a reload of the project, and the original is still what is scanned
+        Project q(c);
+        q.setStateFile(root + "/state/ss.state.json");
+        q.reload();
+        QCOMPARE(q.scriptTranslations().size(), 2);
+        QCOMPARE(q.scriptTranslations()[0].target, QString("C'est Sammy."));
+        QCOMPARE(ScriptStrings::scan(q)[0].source, QString("You see Sammy."));
+
+        // the output archive carries the translated script
+        c.outputArchive = root + "/delivery/french.dat";
+        Project d(c);
+        d.setStateFile(root + "/state/ss.state.json");
+        d.reload();
+        const OutputArchive::Result built = OutputArchive::build(d);
+        QVERIFY2(built.ok, qPrintable(built.error));
+        QCOMPARE(built.scripts, 1);
+        const auto dat = DatArchive::open(c.outputArchive);
+        QVERIFY(dat && dat->indexOf("scripts/sammy.int") >= 0);
+
+        // nothing left to say: the translated script goes away
+        r = ScriptStrings::apply(p, {}, false);
+        QCOMPARE(r.scripts, 0);
+        QVERIFY(!QFileInfo::exists(root + "/out/scripts/sammy.int"));
+    }
+
+    void qualityAndSuggestionsRealIfAvailable()
+    {
+        // BABYLON_TM_OLD = an installation with a French translation (read only): quality report with its cache,
+        // translation memory, texts of the scripts.
+        const QString install = qEnvironmentVariable("BABYLON_TM_OLD");
+        if (install.isEmpty())
+            QSKIP("BABYLON_TM_OLD not set");
+        QTemporaryDir dir;
+        ProjectConfig c;
+        c.id = "realqa";
+        c.name = "realqa";
+        c.sources = VirtualFileSystem::discoverSources(install);
+        c.outputDir = dir.path() + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(dir.path() + "/state.json");
+        p.reload();
+
+        QElapsedTimer timer;
+        timer.start();
+        const auto glossary = std::make_shared<Glossary>(p.buildGlossary());
+        qInfo() << "glossary ms" << timer.restart() << "terms" << glossary->terms().size();
+        QualityCheck::Options o;
+        const QString cacheFile = dir.path() + "/qa.json";
+        const QString key = QualityCheck::cacheKey(p, glossary.get(), o);
+        int hits = 0;
+        QualityCheck::Cache first;
+        first.open(cacheFile, key);
+        const auto issues = QualityCheck::run(p, glossary.get(), o, {}, nullptr, &first, &hits);
+        qInfo() << "quality, first run ms" << timer.restart() << "issues" << issues.size() << "hits" << hits;
+        QCOMPARE(hits, 0);
+        QualityCheck::Cache second;
+        second.open(cacheFile, key);
+        const auto again = QualityCheck::run(p, glossary.get(), o, {}, nullptr, &second, &hits);
+        qInfo() << "quality, cached run ms" << timer.restart() << "issues" << again.size() << "hits" << hits;
+        QCOMPARE(again.size(), issues.size());
+        QVERIFY(hits > 100);
+
+        const auto index = TranslationIndex::build(p);
+        qInfo() << "translation memory ms" << timer.restart() << "lines" << index->size();
+        QVERIFY(index->size() > 1000);
+        const auto found = index->find("Welcome to Vault City. How may I help you today?", 5, 0.6);
+        qInfo() << "query ms" << timer.restart() << "matches" << found.size();
+        if (!found.isEmpty())
+            qInfo() << "best:" << found.first().score << found.first().source << "->" << found.first().target;
+
+        const auto scripts = ScriptStrings::scan(p);
+        qInfo() << "script texts ms" << timer.restart() << "texts" << scripts.size();
+    }
+
+    void intStringsRealScripts()
+    {
+        const QString folder = qEnvironmentVariable("BABYLON_F1_SCRIPTS");
+        if (folder.isEmpty())
+            QSKIP("BABYLON_F1_SCRIPTS not set");
+        const QFileInfoList files = QDir(folder).entryInfoList({"*.int", "*.INT"}, QDir::Files);
+        QVERIFY(!files.isEmpty());
+        int withStrings = 0, candidates = 0, outsideTable = 0, badBody = 0;
+        QString sample;
+        for (const QFileInfo &fi : files) {
+            QFile f(fi.absoluteFilePath());
+            QVERIFY(f.open(QIODevice::ReadOnly));
+            const QByteArray bytes = f.readAll();
+            const IntStrings::Table t = IntStrings::parse(bytes);
+            QVERIFY2(t.valid, qPrintable(fi.fileName() + ": " + t.error));
+            QVERIFY2(t.codeDecoded, qPrintable(fi.fileName() + ": code does not decode"));
+            QSet<quint32> known;
+            for (const auto &e : t.entries)
+                known.insert(e.operand);
+            for (quint32 used : t.usedOperands)
+                if (!known.contains(used))
+                    ++outsideTable;
+            if (t.bodyPos < t.codePos || t.bodyPos > bytes.size()) {
+                ++badBody;
+                qInfo() << "odd body start in" << fi.fileName() << t.bodyPos << t.codePos << bytes.size();
+            }
+            if (!t.entries.isEmpty())
+                ++withStrings;
+            for (const auto &e : t.entries)
+                if (IntStrings::looksTranslatable(e.text)) {
+                    ++candidates;
+                    if (sample.isEmpty())
+                        sample = fi.fileName() + ": " + QString::fromLatin1(e.text);
+                }
+            // an unchanged text leaves the file as it was
+            QHash<quint32, QByteArray> same;
+            for (const auto &e : t.entries)
+                same.insert(e.operand, e.text);
+            QCOMPARE(IntStrings::patch(bytes, same, true).data, bytes);
+        }
+        qInfo() << "scripts" << files.size() << "with strings" << withStrings << "texts" << candidates << "e.g." << sample;
+        QCOMPARE(badBody, 0);
+        QCOMPARE(outsideTable, 0);                  // in the procedure bodies, every push designates a string of the table
+        QVERIFY(candidates > 20);
+
+        // end to end with the real decompiler: the patched script says what was written, in place or lengthened
+        const QString path = QDir(folder).filePath("BARSTOW.INT");
+        if (QFileInfo::exists(path) && !Int2Ssl::findExecutable().isEmpty()) {
+            QFile f(path);
+            QVERIFY(f.open(QIODevice::ReadOnly));
+            const QByteArray original = f.readAll();
+            const IntStrings::Table t = IntStrings::parse(original);
+            QHash<quint32, QByteArray> texts;
+            QByteArray shortOne, longOne;
+            for (const auto &e : t.entries) {
+                if (!IntStrings::looksTranslatable(e.text) || !t.usedOperands.contains(e.operand))
+                    continue;
+                if (longOne.isEmpty()) {
+                    longOne = "Vous voyez Zack Barstow, un initie des Enfants de la Cathedrale, qui vous regarde avec mefiance.";
+                    texts.insert(e.operand, longOne);
+                } else if (shortOne.isEmpty() && e.capacity() >= 10) {
+                    shortOne = "Bonjour !";
+                    texts.insert(e.operand, shortOne);
+                }
+            }
+            QVERIFY(!longOne.isEmpty() && !shortOne.isEmpty());
+            QString error;
+            const QString before = Int2Ssl::decompile(original, &error);
+
+            // in place only: the real decompiler reads the new text, the long one is refused
+            IntStrings::PatchResult r = IntStrings::patch(original, texts, false);
+            QCOMPARE(r.inPlace, 1);
+            QCOMPARE(r.enlarged, 0);
+            QCOMPARE(r.problems.size(), 1);
+            QCOMPARE(r.data.size(), original.size());
+            QString after = Int2Ssl::decompile(r.data, &error);
+            QVERIFY2(!after.isEmpty(), qPrintable(error));
+            QVERIFY(after.contains(QString::fromLatin1(shortOne)));
+            QVERIFY(!after.contains(QString::fromLatin1(longOne)));
+            QVERIFY(!before.contains(QString::fromLatin1(shortOne)));
+
+            // lengthened: appended after the code (tools that read the whole file as code, int2ssl included,
+            // do not like that; the game only follows the pushes)
+            r = IntStrings::patch(original, texts, true);
+            QCOMPARE(r.enlarged, 1);
+            const IntStrings::Table moved = IntStrings::parse(r.data);
+            QVERIFY(moved.valid);
+            QCOMPARE(moved.entries.size(), t.entries.size());
+            const qint64 tail = r.data.size() - (2 + ((longOne.size() + 2) & ~1));
+            QCOMPARE(r.data.mid(tail + 2, longOne.size()), longOne);
+        }
+    }
+
+    void gameReportRemarks()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/abel.msg", "{100}{}{Hello there.}\r\n{101}{}{You are not welcome.}\r\n");
+        writeFile(root + "/m/text/french/dialog/abel.msg", "{100}{}{Bonjour.}\r\n{101}{}{Vous n'etes pas le bienvenu.}\r\n");
+        writeFile(root + "/m/text/english/game/misc.msg", "{200}{}{Hello there.}\r\n");
+        writeFile(root + "/m/text/french/game/misc.msg", "{200}{}{Salut.}\r\n");
+        ProjectConfig c;
+        c.id = "gr";
+        c.name = "gr";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+
+        const QString report =
+            "# written by the game\r\n"
+            "dialog/abel.msg 101 the sentence is too rude\r\n"
+            "abel.msg#100\r\n"
+            "text/french/game/misc.msg:200 wrong word\r\n"
+            "Vous n'etes pas le bienvenu\r\n"
+            "Hello there\r\n"
+            "dialog/abel.msg 999 no such line\r\n"
+            "A text that exists nowhere\r\n"
+            "\r\n";
+        const auto remarks = GameReport::parse(report);
+        QCOMPARE(remarks.size(), 7);
+        QCOMPARE(remarks[0].relPath, QString("dialog/abel.msg"));
+        QCOMPARE(remarks[0].id, 101);
+        QCOMPARE(remarks[0].note, QString("the sentence is too rude"));
+        QCOMPARE(remarks[1].relPath, QString("abel.msg"));
+        QCOMPARE(remarks[2].relPath, QString("game/misc.msg"));        // text/<language>/ prefix dropped
+        QVERIFY(remarks[3].relPath.isEmpty());                          // free text
+
+        const auto outcome = GameReport::resolve(p, remarks, 1);
+        QStringList found;
+        for (const auto &r : outcome.found)
+            found << QString("%1:%2").arg(r.relPath).arg(r.id);
+        found.sort();
+        // 101 and 100 by id, misc 200 by id, the rude sentence found by its text (translation)
+        QVERIFY(found.contains("dialog/abel.msg:101"));
+        QVERIFY(found.contains("dialog/abel.msg:100"));
+        QVERIFY(found.contains("game/misc.msg:200"));
+        QCOMPARE(outcome.notFound.size(), 2);                           // id 999, the unknown text
+        QCOMPARE(outcome.ambiguous.size(), 1);                          // "Hello there" is the source of two lines (> 1)
+
+        // the marks only touch the saved state: no .msg file is written
+        QVector<ReviewMark> marks;
+        for (const auto &r : outcome.found)
+            marks.push_back({r.relPath, r.id, r.comment});
+        QVERIFY(p.markForReview(marks) > 0);
+        QCOMPARE(p.markForReview(marks), 0);                            // idempotent
+        QVERIFY(!QFileInfo::exists(root + "/out/text/french/dialog/abel.msg"));
+        const TranslationDoc doc = p.loadDocument("dialog/abel.msg");
+        QVERIFY(doc.rows[1].review);
+        QVERIFY(doc.rows[1].comment.contains("too rude"));
+        QVERIFY(doc.rows[1].comment.contains("Game report"));
+        Project again(c);
+        again.setStateFile(root + "/state.json");
+        again.reload();
+        QVERIFY(again.loadDocument("dialog/abel.msg").rows[1].review);   // persisted
+    }
+
+    void translationIndexSuggestions()
+    {
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg",
+                  "{1}{}{You need a Stimpak to heal your wounds.}\r\n"
+                  "{2}{}{The Vault Dweller returns home.}\r\n"
+                  "{3}{}{Goodbye.}\r\n"
+                  "{4}{}{Nothing yet.}\r\n");
+        writeFile(root + "/m/text/french/dialog/a.msg",
+                  "{1}{}{Il vous faut un Stimpak pour soigner vos blessures.}\r\n"
+                  "{2}{}{L'Habitant de l'Abri rentre chez lui.}\r\n"
+                  "{3}{}{Au revoir.}\r\n");
+        writeFile(root + "/m/text/english/dialog/b.msg",
+                  "{1}{}{You need a Stimpak to heal your wounds.}\r\n"
+                  "{2}{}{You need a Super Stimpak to heal your wounds.}\r\n"
+                  "{3}{}{Goodbye.}\r\n");
+        writeFile(root + "/m/text/french/dialog/b.msg", "{1}{}{Il vous faut un Stimpak pour soigner vos blessures.}\r\n");
+        ProjectConfig c;
+        c.id = "ti";
+        c.name = "ti";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+
+        const auto index = TranslationIndex::build(p);
+        QCOMPARE(index->size(), 4);       // a.msg 1-3 and b.msg 1 (untranslated lines are not indexed)
+
+        // the same text elsewhere: an exact suggestion; the line itself is not offered
+        auto found = index->find("You need a Stimpak to heal your wounds.", 5, 0.7, "dialog/b.msg", 2);
+        QVERIFY(!found.isEmpty());
+        QCOMPARE(found.first().score, 1.0);
+        QCOMPARE(found.first().target, QString("Il vous faut un Stimpak pour soigner vos blessures."));
+        QCOMPARE(found.first().count, 2);       // translated the same way in two files
+
+        // a close text: a fuzzy suggestion below 100 %
+        found = index->find("You need a Super Stimpak to heal your wounds.", 5, 0.7, "dialog/b.msg", 2);
+        QVERIFY(!found.isEmpty());
+        QVERIFY(found.first().score < 1.0 && found.first().score > 0.7);
+        QCOMPARE(found.first().source, QString("You need a Stimpak to heal your wounds."));
+
+        // nothing similar, and a line asking about itself
+        QVERIFY(index->find("Completely different sentence about robots.", 5, 0.7).isEmpty());
+        QVERIFY(index->find("The Vault Dweller returns home.", 5, 0.7, "dialog/a.msg", 2).isEmpty());
+
+        // a saved file is taken into account without rebuilding everything
+        TranslationDoc doc = p.loadDocument("dialog/a.msg");
+        doc.rows[3].target = "Rien pour l'instant.";
+        index->updateFile(doc);
+        QCOMPARE(index->size(), 5);
+        found = index->find("Nothing yet.", 5, 0.7);
+        QVERIFY(!found.isEmpty());
+        QCOMPARE(found.first().target, QString("Rien pour l'instant."));
+        doc.rows[3].target.clear();
+        index->updateFile(doc);
+        QVERIFY(index->find("Nothing yet.", 5, 0.7).isEmpty());
+
+        QCOMPARE(TranslationIndex::similarity("abc", "abc"), 1.0);
+        QVERIFY(TranslationIndex::similarity("kitten", "sitting") < 0.6);
+    }
+
+    void msgRepair()
+    {
+        const QString broken =
+            "# header\r\n"
+            "{100}{}{Fine line}\r\n"
+            "{101}{Two fields}\r\n"
+            "{102}{}{Missing the closing brace\r\n"
+            "{103}{}Missing the opening brace}\r\n"
+            "{abc}{}{Not a number}\r\n"
+            "\r\n"
+            "{104}{}{Multi\r\nline is fine}\r\n"
+            "{105}{}{Last one}\r\n";
+        const MsgFile before = MsgFile::parse(broken);
+        QVERIFY(!before.warnings.isEmpty());
+
+        const MsgRepair::Result r = MsgRepair::repair(broken);
+        QVERIFY(r.changed());
+        QCOMPARE(r.unrepaired, 0);
+        QCOMPARE(r.fixes.size(), 4);
+        const MsgFile after = MsgFile::parse(r.text);
+        QVERIFY2(after.warnings.isEmpty(), qPrintable(after.warnings.join("; ")));
+        QVector<int> ids;
+        for (const MsgEntry &e : after.entries)
+            ids << e.id;
+        QCOMPARE(ids, (QVector<int>{100, 101, 102, 103, 104, 105}));
+        auto text = [&](int id) {
+            for (const MsgEntry &e : after.entries)
+                if (e.id == id)
+                    return e.text;
+            return QString("<none>");
+        };
+        QCOMPARE(text(101), QString("Two fields"));
+        QCOMPARE(text(102), QString("Missing the closing brace"));
+        QCOMPARE(text(103), QString("Missing the opening brace"));
+        QCOMPARE(text(104), QString("Multi\nline is fine"));
+        QVERIFY(r.text.contains("# [abc][][Not a number]"));   // kept, out of the game's way
+        QVERIFY(r.text.contains("\r\n"));                       // line endings preserved
+        QVERIFY(r.text.startsWith("# header"));
+
+        // a healthy file is left alone, byte for byte
+        const QString fine = "{1}{}{One}\r\n\r\n# note\r\n{2}{}{Two\r\nlines}\r\n";
+        const MsgRepair::Result same = MsgRepair::repair(fine);
+        QVERIFY(!same.changed());
+        QVERIFY(same.fixes.isEmpty());
+        QCOMPARE(same.text, fine);
+
+        // through a project: the corrected translation is written next to the sources and the original kept
+        QTemporaryDir dir;
+        const QString root = dir.path();
+        writeFile(root + "/m/text/english/dialog/a.msg", "{1}{}{One}\r\n{2}{}{Two}\r\n{3}{}{Three}\r\n");
+        writeFile(root + "/out/text/french/dialog/a.msg", "{1}{}{Un}\r\n{2}{Deux}\r\n{3}{}{Trois}\r\n");
+        ProjectConfig c;
+        c.id = "rep";
+        c.name = "rep";
+        c.sources = {root + "/m"};
+        c.outputDir = root + "/out";
+        c.sourceLanguage = "english";
+        c.targetLanguage = "french";
+        Project p(c);
+        p.setStateFile(root + "/state.json");
+        p.reload();
+        TranslationDoc doc = p.loadDocument("dialog/a.msg");
+        QVERIFY(!doc.targetWarnings.isEmpty());
+        QCOMPARE(doc.rows[2].target, QString());                // record 3 is lost behind the broken one
+        QString error;
+        const MsgRepair::Result fixed = p.repairTargetFile("dialog/a.msg", &error);
+        QVERIFY2(error.isEmpty(), qPrintable(error));
+        QCOMPARE(fixed.fixes.size(), 1);
+        QVERIFY(QFileInfo::exists(root + "/out/text/french/dialog/a.msg.bak"));
+        doc = p.loadDocument("dialog/a.msg");
+        QVERIFY(doc.targetWarnings.isEmpty());
+        QCOMPARE(doc.rows[1].target, QString("Deux"));
+        QCOMPARE(doc.rows[2].target, QString("Trois"));
+    }
+
     void outputArchiveBuild()
     {
         QTemporaryDir dir;
@@ -793,6 +1299,47 @@ private slots:
         QVERIFY(found);
         for (const auto &i : issues)
             QVERIFY(i.id != 6);                        // untranslated lines are not reported here
+
+        // the cache: a second run reads nothing, and gives the same answer
+        {
+            const QString cacheFile = root + "/qa.cache.json";
+            const QString key = QualityCheck::cacheKey(p, nullptr, o);
+            int hits = -1;
+            QualityCheck::Cache first;
+            first.open(cacheFile, key);
+            const auto fresh = QualityCheck::run(p, nullptr, o, {}, nullptr, &first, &hits);
+            QCOMPARE(hits, 0);
+            QCOMPARE(fresh.size(), issues.size());
+
+            QualityCheck::Cache second;
+            second.open(cacheFile, key);
+            QVERIFY(second.size() > 0);
+            const auto cached = QualityCheck::run(p, nullptr, o, {}, nullptr, &second, &hits);
+            QCOMPARE(hits, 1);                       // the project has a single message file
+            QCOMPARE(cached.size(), fresh.size());
+            for (int i = 0; i < cached.size(); ++i) {
+                QCOMPARE(cached[i].id, fresh[i].id);
+                QCOMPARE(int(cached[i].kind), int(fresh[i].kind));
+                QCOMPARE(cached[i].message, fresh[i].message);
+                QCOMPARE(cached[i].target, fresh[i].target);
+            }
+
+            // a changed file is read again
+            TranslationDoc edited = p.loadDocument("dialog/a.msg");
+            edited.rows[1].target = "Phrase simple ici";
+            QVERIFY(p.saveDocument(edited));
+            QualityCheck::Cache third;
+            third.open(cacheFile, key);
+            QualityCheck::run(p, nullptr, o, {}, nullptr, &third, &hits);
+            QCOMPARE(hits, 0);
+
+            // other checks, other cache
+            QualityCheck::Options narrow = o;
+            narrow.kinds = QualityCheck::Tokens;
+            QualityCheck::Cache other;
+            other.open(cacheFile, QualityCheck::cacheKey(p, nullptr, narrow));
+            QCOMPARE(other.size(), 0);
+        }
 
         // a restricted selection
         QualityCheck::Options only;

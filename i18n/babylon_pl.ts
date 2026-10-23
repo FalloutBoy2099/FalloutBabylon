@@ -108,6 +108,14 @@
     </message>
 </context>
 <context>
+    <name>GameReport</name>
+    <message>
+        <location filename="../src/core/GameReport.cpp" line="10"/>
+        <source>Game report</source>
+        <translation>Raport z gry</translation>
+    </message>
+</context>
+<context>
     <name>GlossaryPanel</name>
     <message>
         <location filename="../src/ui/GlossaryPanel.cpp" line="73"/>
@@ -456,315 +464,369 @@ Wierszy z tym samym tekstem: %3, ze zmienionym źródłem (do sprawdzenia): %4, 
     </message>
 </context>
 <context>
+    <name>IntStrings</name>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="165"/>
+        <source>not a readable script (%1)</source>
+        <translation>nieczytelny skrypt (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="177"/>
+        <source>a text contains a NUL character</source>
+        <translation>tekst zawiera znak NUL</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="188"/>
+        <source>&quot;%1&quot;: %2 characters for %3 available</source>
+        <translation>„%1”: %2 znaków przy %3 dostępnych</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="194"/>
+        <source>&quot;%1&quot;: used by the start-up code of the script, the text cannot be lengthened</source>
+        <translation>„%1”: używany przez kod startowy skryptu, tekstu nie można wydłużyć</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="199"/>
+        <source>&quot;%1&quot;: the code cannot be read safely, the text cannot be lengthened</source>
+        <translation>„%1”: kodu nie da się bezpiecznie odczytać, tekstu nie można wydłużyć</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="73"/>
+        <location filename="../src/ui/MainWindow.cpp" line="81"/>
         <source>&lt;h2&gt;Fallout Babylon&lt;/h2&gt;&lt;p&gt;Translation editor for Fallout 1 and Fallout 2 mods.&lt;/p&gt;</source>
         <translation>&lt;h2&gt;Fallout Babylon&lt;/h2&gt;&lt;p&gt;Edytor tłumaczeń modów do Fallouta 1 i Fallouta 2.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="76"/>
+        <location filename="../src/ui/MainWindow.cpp" line="84"/>
         <source>Open a game folder...</source>
         <translation>Otwórz folder gry...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="77"/>
+        <location filename="../src/ui/MainWindow.cpp" line="85"/>
         <source>New project...</source>
         <translation>Nowy projekt...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="165"/>
+        <location filename="../src/ui/MainWindow.cpp" line="200"/>
         <source>Projects</source>
         <translation>Projekty</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="171"/>
+        <location filename="../src/ui/MainWindow.cpp" line="206"/>
         <source>Glossary</source>
         <translation>Glosariusz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="177"/>
+        <location filename="../src/ui/MainWindow.cpp" line="212"/>
         <source>Statistics</source>
         <translation>Statystyki</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="182"/>
+        <location filename="../src/ui/MainWindow.cpp" line="217"/>
         <source>To review</source>
         <translation>Do sprawdzenia</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="187"/>
+        <location filename="../src/ui/MainWindow.cpp" line="222"/>
         <source>Dialogue tree</source>
         <translation>Drzewo dialogu</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="198"/>
+        <location filename="../src/ui/MainWindow.cpp" line="233"/>
+        <source>Suggestions</source>
+        <translation>Sugestie</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="245"/>
         <source>Pip-Boy holodisk</source>
         <translation>Holodysk Pip-Boya</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="212"/>
+        <location filename="../src/ui/MainWindow.cpp" line="259"/>
         <source>Search and replace</source>
         <translation>Znajdź i zamień</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="225"/>
+        <location filename="../src/ui/MainWindow.cpp" line="272"/>
         <source>Quality report</source>
         <translation>Raport jakości</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="269"/>
+        <location filename="../src/ui/MainWindow.cpp" line="279"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1446"/>
+        <source>Texts in the scripts</source>
+        <translation>Teksty w skryptach</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="334"/>
         <source>&amp;Save</source>
         <translation>&amp;Zapisz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="275"/>
+        <location filename="../src/ui/MainWindow.cpp" line="340"/>
         <source>Save &amp;all</source>
         <translation>Zapisz &amp;wszystko</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="278"/>
+        <location filename="../src/ui/MainWindow.cpp" line="343"/>
         <source>&amp;Close file</source>
         <translation>&amp;Zamknij plik</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="294"/>
+        <location filename="../src/ui/MainWindow.cpp" line="359"/>
         <source>Mark as &amp;to review</source>
         <translation>Oznacz jako &amp;do sprawdzenia</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="296"/>
+        <location filename="../src/ui/MainWindow.cpp" line="361"/>
         <source>&amp;Validate (or remove the validation)</source>
         <translation>&amp;Zatwierdź (lub usuń zatwierdzenie)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="298"/>
+        <location filename="../src/ui/MainWindow.cpp" line="363"/>
         <source>Copy the &amp;source</source>
         <translation>Kopiuj &amp;oryginał</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="300"/>
+        <location filename="../src/ui/MainWindow.cpp" line="365"/>
         <source>&amp;Accept as is</source>
         <translation>&amp;Zatwierdź bez zmian</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="302"/>
+        <location filename="../src/ui/MainWindow.cpp" line="367"/>
         <source>&amp;Next line</source>
         <translation>&amp;Następny wiersz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="303"/>
+        <location filename="../src/ui/MainWindow.cpp" line="368"/>
         <source>&amp;Previous line</source>
         <translation>&amp;Poprzedni wiersz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="304"/>
+        <location filename="../src/ui/MainWindow.cpp" line="369"/>
         <source>Next &amp;untranslated line</source>
         <translation>Następny &amp;nieprzetłumaczony wiersz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="306"/>
+        <location filename="../src/ui/MainWindow.cpp" line="371"/>
         <source>Previous untranslated line</source>
         <translation>Poprzedni nieprzetłumaczony wiersz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="308"/>
+        <location filename="../src/ui/MainWindow.cpp" line="373"/>
         <source>&amp;Find in this file</source>
         <translation>&amp;Znajdź w tym pliku</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="309"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1181"/>
+        <location filename="../src/ui/MainWindow.cpp" line="374"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1370"/>
         <source>Undo the last operation</source>
         <translation>Cofnij ostatnią operację</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="311"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1183"/>
+        <location filename="../src/ui/MainWindow.cpp" line="376"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1372"/>
         <source>Redo the operation</source>
         <translation>Ponów operację</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="314"/>
+        <location filename="../src/ui/MainWindow.cpp" line="379"/>
         <source>&amp;Translate this line with DeepL</source>
         <translation>&amp;Przetłumacz ten wiersz w DeepL</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="316"/>
+        <location filename="../src/ui/MainWindow.cpp" line="381"/>
         <source>&amp;Mass translation with DeepL...</source>
         <translation>Tłumaczenie &amp;masowe w DeepL...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="318"/>
+        <location filename="../src/ui/MainWindow.cpp" line="383"/>
         <source>&amp;Settings...</source>
         <translation>&amp;Ustawienia...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="326"/>
+        <location filename="../src/ui/MainWindow.cpp" line="391"/>
         <source>Search and replace in the &amp;project...</source>
         <translation>Znajdź i zamień w &amp;projekcie...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="333"/>
+        <location filename="../src/ui/MainWindow.cpp" line="398"/>
+        <source>&amp;Texts in the scripts...</source>
+        <translation>&amp;Teksty w skryptach...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="403"/>
+        <source>Import a &amp;game report...</source>
+        <translation>Importuj raport z &amp;gry...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="405"/>
+        <source>&amp;Follow a game report file...</source>
+        <translation>&amp;Śledź plik raportu z gry...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="408"/>
         <source>&amp;Quality report...</source>
         <translation>&amp;Raport jakości...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="338"/>
+        <location filename="../src/ui/MainWindow.cpp" line="413"/>
         <source>&amp;Import an existing translation...</source>
         <translation>&amp;Importuj istniejące tłumaczenie...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="341"/>
+        <location filename="../src/ui/MainWindow.cpp" line="416"/>
         <source>Project &amp;settings...</source>
         <translation>Ustawienia &amp;projektu...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="343"/>
+        <location filename="../src/ui/MainWindow.cpp" line="418"/>
         <source>&amp;Export to a DAT archive...</source>
         <translation>&amp;Eksportuj do archiwum DAT...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="345"/>
+        <location filename="../src/ui/MainWindow.cpp" line="420"/>
         <source>&amp;Update the output DAT archive now</source>
         <translation>&amp;Zaktualizuj teraz wyjściowe archiwum DAT</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="352"/>
+        <location filename="../src/ui/MainWindow.cpp" line="427"/>
         <source>Refresh &amp;statistics</source>
         <translation>Odśwież &amp;statystyki</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="355"/>
+        <location filename="../src/ui/MainWindow.cpp" line="430"/>
         <source>Rebuild the &amp;glossary</source>
         <translation>Odbuduj &amp;glosariusz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="357"/>
+        <location filename="../src/ui/MainWindow.cpp" line="432"/>
         <source>Close the pro&amp;ject</source>
         <translation>Zamknij pro&amp;jekt</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="363"/>
+        <location filename="../src/ui/MainWindow.cpp" line="438"/>
         <source>&amp;File</source>
         <translation>&amp;Plik</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="364"/>
+        <location filename="../src/ui/MainWindow.cpp" line="439"/>
         <source>&amp;New project...</source>
         <translation>&amp;Nowy projekt...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="365"/>
+        <location filename="../src/ui/MainWindow.cpp" line="440"/>
         <source>Open a game &amp;folder...</source>
         <translation>Otwórz &amp;folder gry...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="366"/>
+        <location filename="../src/ui/MainWindow.cpp" line="441"/>
         <source>Recent &amp;folders</source>
         <translation>Ostatnie &amp;foldery</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="367"/>
+        <location filename="../src/ui/MainWindow.cpp" line="442"/>
         <source>&amp;Saved projects</source>
         <translation>Zapisane &amp;projekty</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="374"/>
-        <location filename="../src/ui/MainWindow.cpp" line="387"/>
+        <location filename="../src/ui/MainWindow.cpp" line="449"/>
+        <location filename="../src/ui/MainWindow.cpp" line="462"/>
         <source>(none)</source>
         <translation>(brak)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="400"/>
+        <location filename="../src/ui/MainWindow.cpp" line="475"/>
         <source>&amp;Quit</source>
         <translation>&amp;Zakończ</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="402"/>
+        <location filename="../src/ui/MainWindow.cpp" line="477"/>
         <source>&amp;Edit</source>
         <translation>&amp;Edycja</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="419"/>
+        <location filename="../src/ui/MainWindow.cpp" line="494"/>
         <source>&amp;Tools</source>
         <translation>&amp;Narzędzia</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="429"/>
+        <location filename="../src/ui/MainWindow.cpp" line="507"/>
         <source>&amp;View</source>
         <translation>&amp;Widok</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="433"/>
+        <location filename="../src/ui/MainWindow.cpp" line="511"/>
         <source>&amp;Theme</source>
         <translation>&amp;Motyw</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="436"/>
+        <location filename="../src/ui/MainWindow.cpp" line="514"/>
         <source>System</source>
         <translation>Systemowy</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="436"/>
+        <location filename="../src/ui/MainWindow.cpp" line="514"/>
         <source>Light</source>
         <translation>Jasny</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="436"/>
+        <location filename="../src/ui/MainWindow.cpp" line="514"/>
         <source>Dark</source>
         <translation>Ciemny</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="450"/>
+        <location filename="../src/ui/MainWindow.cpp" line="528"/>
         <source>&amp;Language</source>
         <translation>&amp;Język</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="453"/>
+        <location filename="../src/ui/MainWindow.cpp" line="531"/>
         <source>Automatic (system)</source>
         <translation>Automatyczny (systemowy)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="459"/>
-        <location filename="../src/ui/MainWindow.cpp" line="475"/>
+        <location filename="../src/ui/MainWindow.cpp" line="537"/>
+        <location filename="../src/ui/MainWindow.cpp" line="553"/>
         <source>Language</source>
         <translation>Język</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="459"/>
-        <location filename="../src/ui/MainWindow.cpp" line="475"/>
+        <location filename="../src/ui/MainWindow.cpp" line="537"/>
+        <location filename="../src/ui/MainWindow.cpp" line="553"/>
         <source>The language will change the next time the application starts.</source>
         <translation>Język zmieni się przy następnym uruchomieniu aplikacji.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="479"/>
+        <location filename="../src/ui/MainWindow.cpp" line="557"/>
         <source>&amp;Help</source>
         <translation>Po&amp;moc</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="480"/>
+        <location filename="../src/ui/MainWindow.cpp" line="558"/>
         <source>&amp;About...</source>
         <translation>&amp;O programie...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="481"/>
+        <location filename="../src/ui/MainWindow.cpp" line="559"/>
         <source>About &amp;Qt...</source>
         <translation>O &amp;Qt...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="500"/>
+        <location filename="../src/ui/MainWindow.cpp" line="578"/>
         <source>Open a Fallout game or mod folder</source>
         <translation>Otwórz folder gry lub moda Fallout</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="536"/>
-        <location filename="../src/ui/MainWindow.cpp" line="540"/>
+        <location filename="../src/ui/MainWindow.cpp" line="614"/>
+        <location filename="../src/ui/MainWindow.cpp" line="618"/>
         <source>Project</source>
         <translation>Projekt</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="536"/>
+        <location filename="../src/ui/MainWindow.cpp" line="614"/>
         <source>Some sources could not be read:
 
 %1</source>
@@ -773,78 +835,199 @@ Wierszy z tym samym tekstem: %3, ze zmienionym źródłem (do sprawdzenia): %4, 
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="541"/>
+        <location filename="../src/ui/MainWindow.cpp" line="619"/>
         <source>No .msg file found under text/%1 or text/%2 in the sources of &quot;%3&quot;.</source>
         <translation>Nie znaleziono pliku .msg w text/%1 ani text/%2 w źródłach „%3”.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="562"/>
+        <location filename="../src/ui/MainWindow.cpp" line="652"/>
         <source>Project settings</source>
         <translation>Ustawienia projektu</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="563"/>
+        <location filename="../src/ui/MainWindow.cpp" line="653"/>
         <source>Save or close the modified files of this project first.</source>
         <translation>Najpierw zapisz lub zamknij zmodyfikowane pliki tego projektu.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="750"/>
+        <location filename="../src/ui/MainWindow.cpp" line="850"/>
         <source>Analysing &quot;%1&quot;...</source>
         <translation>Analiza „%1”...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1253"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1035"/>
+        <source>The translation file %1 contains malformed records; the game ignores everything after the first one, so part of the translation is not read:
+
+%2
+
+Repair it automatically? A copy of the original is kept as .bak.</source>
+        <translation>Plik tłumaczenia %1 zawiera błędnie zapisane rekordy; gra pomija wszystko po pierwszym z nich, więc część tłumaczenia nie jest odczytywana:
+
+%2
+
+Naprawić automatycznie? Kopia oryginału zostanie zachowana jako .bak.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1040"/>
+        <source>Repair</source>
+        <translation>Napraw</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1041"/>
+        <source>Open as is</source>
+        <translation>Otwórz bez zmian</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1047"/>
+        <source>Cannot repair %1:
+%2</source>
+        <translation>Nie można naprawić %1:
+%2</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1051"/>
+        <source>line %1 (%2): %3</source>
+        <translation>wiersz %1 (%2): %3</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1053"/>
+        <source>%1 record(s) repaired, %2 left as they are.
+
+%3</source>
+        <translation>Naprawiono rekordów: %1, pozostawiono bez zmian: %2.
+
+%3</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1442"/>
+        <source>%1 script(s) written: %2 text(s) in place, %3 lengthened.</source>
+        <translation>Zapisano skryptów: %1; tekstów na miejscu: %2, wydłużonych: %3.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1445"/>
+        <source>Not written:</source>
+        <translation>Nie zapisano:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1455"/>
+        <source>Import a game report</source>
+        <translation>Importuj raport z gry</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1456"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1484"/>
+        <source>Text files (*.txt *.log);;All files (*)</source>
+        <translation>Pliki tekstowe (*.txt *.log);;Wszystkie pliki (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1484"/>
+        <source>File the game writes its report to</source>
+        <translation>Plik, do którego gra zapisuje raport</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1501"/>
+        <source>Following %1: lines written there are marked &quot;to review&quot;.</source>
+        <translation>Śledzenie %1: zapisane tam wiersze są oznaczane jako „do sprawdzenia”.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1522"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1539"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1549"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1591"/>
+        <source>Game report</source>
+        <translation>Raport z gry</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1522"/>
+        <source>Cannot read %1.</source>
+        <translation>Nie można odczytać %1.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1539"/>
+        <source>The report is empty.</source>
+        <translation>Raport jest pusty.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1549"/>
+        <source>No remark found in this file.</source>
+        <translation>W tym pliku nie znaleziono żadnej uwagi.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1581"/>
+        <source>Game report: %1 line(s) marked &quot;to review&quot;, %2 not found.</source>
+        <translation>Raport z gry: oznaczono wierszy „do sprawdzenia”: %1, nie znaleziono: %2.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1585"/>
+        <source>%1 line(s) marked &quot;to review&quot;.</source>
+        <translation>Oznaczono wierszy „do sprawdzenia”: %1.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1587"/>
+        <source>Not found:</source>
+        <translation>Nie znaleziono:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1589"/>
+        <source>Too many matches (give the file and the id):</source>
+        <translation>Zbyt wiele dopasowań (podaj plik i identyfikator):</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1616"/>
         <source>Updating the DAT archive...</source>
         <translation>Aktualizowanie archiwum DAT...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1264"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1627"/>
         <source>DAT archive updated: %1 translated file(s), %2 original(s).</source>
         <translation>Archiwum DAT zaktualizowane: przetłumaczonych plików: %1, oryginałów: %2.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1268"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1631"/>
         <source>DAT archive NOT updated: %1</source>
         <translation>Archiwum DAT NIE zostało zaktualizowane: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1289"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1652"/>
         <source>DAT archive</source>
         <translation>Archiwum DAT</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1289"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1652"/>
         <source>The DAT archive could not be written:
 %1</source>
         <translation>Nie można zapisać archiwum DAT:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="748"/>
+        <location filename="../src/ui/MainWindow.cpp" line="848"/>
         <source>Analysing &quot;%1&quot;: %2 / %3 files</source>
         <translation>Analiza „%1”: %2 / %3 plików</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="870"/>
-        <location filename="../src/ui/MainWindow.cpp" line="874"/>
-        <location filename="../src/ui/MainWindow.cpp" line="878"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1025"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1029"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1034"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1047"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1052"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1061"/>
         <source>Open</source>
         <translation>Otwórz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="870"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1025"/>
         <source>Cannot read %1:
 %2</source>
         <translation>Nie można odczytać %1:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="874"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1029"/>
         <source>%1 does not exist in the sources of this project.</source>
         <translation>%1 nie istnieje w źródłach tego projektu.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="879"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1062"/>
         <source>%1 contains malformed records; everything after the first one is ignored by the game:
 
 %2</source>
@@ -853,12 +1036,12 @@ Wierszy z tym samym tekstem: %3, ze zmienionym źródłem (do sprawdzenia): %4, 
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="973"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1161"/>
         <source>Unsaved changes</source>
         <translation>Niezapisane zmiany</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="974"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1162"/>
         <source>These files have unsaved changes:
 
 %1</source>
@@ -867,33 +1050,33 @@ Wierszy z tym samym tekstem: %3, ze zmienionym źródłem (do sprawdzenia): %4, 
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="976"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1164"/>
         <source>Save</source>
         <translation>Zapisz</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="977"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1165"/>
         <source>Discard</source>
         <translation>Odrzuć</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1008"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1196"/>
         <source>Import an existing translation</source>
         <translation>Importuj istniejące tłumaczenie</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1009"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1197"/>
         <source>The files of this project that are open will be closed first. Continue?</source>
         <translation>Otwarte pliki tego projektu zostaną najpierw zamknięte. Kontynuować?</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1044"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1096"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1232"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1285"/>
         <source>Replace</source>
         <translation>Zamień</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1045"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1233"/>
         <source>Replace &quot;%1&quot; by &quot;%2&quot; in the translation of %3 line(s) of %4 file(s)?
 
 Files that are not open are saved immediately.</source>
@@ -902,75 +1085,75 @@ Files that are not open are saved immediately.</source>
 Pliki, które nie są otwarte, zostaną zapisane natychmiast.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1093"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1282"/>
         <source>%1 replacement(s) in %2 file(s).</source>
         <translation>Zamian: %1 w plikach: %2.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1121"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1153"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1155"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1310"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1342"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1344"/>
         <source>Export</source>
         <translation>Eksportuj</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1122"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1311"/>
         <source>Nothing to export yet: save some translated files first.
 (%1 does not exist)</source>
         <translation>Na razie nie ma czego eksportować: najpierw zapisz kilka przetłumaczonych plików.
 (%1 nie istnieje)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1126"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1315"/>
         <source>Fallout 2 archive (zlib) (*.dat)</source>
         <translation>Archiwum Fallout 2 (zlib) (*.dat)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1127"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1316"/>
         <source>Fallout 1 archive (*.dat)</source>
         <translation>Archiwum Fallout 1 (*.dat)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1130"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1319"/>
         <source>Export to a DAT archive</source>
         <translation>Eksportuj do archiwum DAT</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1153"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1342"/>
         <source>%1 files written to
 %2</source>
         <translation>Zapisano %1 plików w
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1155"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1344"/>
         <source>Cannot write the archive:
 %1</source>
         <translation>Nie można zapisać archiwum:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1180"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1369"/>
         <source>Undo the operation: %1</source>
         <translation>Cofnij operację: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1182"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1371"/>
         <source>Redo the operation: %1</source>
         <translation>Ponów operację: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1197"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1395"/>
         <source>%1 → %2  ·  encoding %3 / %4</source>
         <translation>%1 → %2  ·  kodowanie %3 / %4</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1206"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1404"/>
         <source>About Fallout Babylon</source>
         <translation>O programie Fallout Babylon</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1207"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1405"/>
         <source>&lt;h3&gt;Fallout Babylon %1&lt;/h3&gt;&lt;p&gt;Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods.&lt;/p&gt;&lt;p&gt;Built with Qt %2 and Scintilla.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Fallout Babylon %1&lt;/h3&gt;&lt;p&gt;Edytor tłumaczeń plików dialogów i tekstów modów do Fallouta 1 i Fallouta 2.&lt;/p&gt;&lt;p&gt;Zbudowano z użyciem Qt %2 i Scintilli.&lt;/p&gt;</translation>
     </message>
@@ -1317,7 +1500,7 @@ Pliki, które nie są otwarte, zostaną zapisane natychmiast.</translation>
 <context>
     <name>Project</name>
     <message>
-        <location filename="../src/core/Project.cpp" line="519"/>
+        <location filename="../src/core/Project.cpp" line="566"/>
         <source>Custom</source>
         <translation>Własny</translation>
     </message>
@@ -1726,87 +1909,87 @@ Pozostało %5 słów / %6 znaków</translation>
 <context>
     <name>QualityCheck</name>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="49"/>
+        <location filename="../src/core/QualityCheck.cpp" line="57"/>
         <source>Tokens</source>
         <translation>Znaczniki</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="50"/>
+        <location filename="../src/core/QualityCheck.cpp" line="58"/>
         <source>Spacing</source>
         <translation>Spacje</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="51"/>
+        <location filename="../src/core/QualityCheck.cpp" line="59"/>
         <source>Encoding</source>
         <translation>Kodowanie</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="52"/>
+        <location filename="../src/core/QualityCheck.cpp" line="60"/>
         <source>Length</source>
         <translation>Długość</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="53"/>
+        <location filename="../src/core/QualityCheck.cpp" line="61"/>
         <source>Inconsistent duplicate</source>
         <translation>Niespójny duplikat</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="54"/>
+        <location filename="../src/core/QualityCheck.cpp" line="62"/>
         <source>Glossary</source>
         <translation>Glosariusz</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="79"/>
+        <location filename="../src/core/QualityCheck.cpp" line="87"/>
         <source>missing: %1</source>
         <translation>brakuje: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="81"/>
+        <location filename="../src/core/QualityCheck.cpp" line="89"/>
         <source>unexpected: %1</source>
         <translation>nieoczekiwane: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="89"/>
+        <location filename="../src/core/QualityCheck.cpp" line="97"/>
         <source>the translation only contains spaces</source>
         <translation>tłumaczenie zawiera tylko spacje</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="92"/>
+        <location filename="../src/core/QualityCheck.cpp" line="100"/>
         <source>spaces at the start or the end</source>
         <translation>spacje na początku lub na końcu</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="94"/>
+        <location filename="../src/core/QualityCheck.cpp" line="102"/>
         <source>the source has spaces at the start or the end</source>
         <translation>źródło ma spacje na początku lub na końcu</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="96"/>
+        <location filename="../src/core/QualityCheck.cpp" line="104"/>
         <source>doubled spaces</source>
         <translation>podwójne spacje</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="107"/>
+        <location filename="../src/core/QualityCheck.cpp" line="115"/>
         <source>cannot be written as %1: %2</source>
         <translation>nie można zapisać w %1: %2</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="113"/>
+        <location filename="../src/core/QualityCheck.cpp" line="121"/>
         <source>%1 characters (limit %2)</source>
         <translation>znaków: %1 (limit %2)</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="117"/>
+        <location filename="../src/core/QualityCheck.cpp" line="125"/>
         <source>short label of the interface: %1 characters for %2 in the source</source>
         <translation>krótka etykieta interfejsu: znaków %1 przy %2 w źródle</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="121"/>
+        <location filename="../src/core/QualityCheck.cpp" line="129"/>
         <source>%1 characters for %2 in the source</source>
         <translation>znaków: %1 przy %2 w źródle</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="186"/>
+        <location filename="../src/core/QualityCheck.cpp" line="379"/>
         <source>elsewhere (%1 times): %2</source>
         <translation>gdzie indziej (%1 razy): %2</translation>
     </message>
@@ -1814,154 +1997,159 @@ Pozostało %5 słów / %6 znaków</translation>
 <context>
     <name>QualityPanel</name>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="36"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="37"/>
         <source>Lost tokens (@Name@, %d, {field})</source>
         <translation>Utracone znaczniki (@Nazwa@, %d, {pole})</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="37"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="38"/>
         <source>Spacing</source>
         <translation>Spacje</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="38"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="39"/>
         <source>Characters the encoding cannot hold</source>
         <translation>Znaki, których kodowanie nie obsługuje</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="39"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="40"/>
         <source>Too long</source>
         <translation>Za długie</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="40"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="41"/>
         <source>Inconsistent duplicates</source>
         <translation>Niespójne duplikaty</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="41"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="42"/>
         <source>Glossary</source>
         <translation>Glosariusz</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="53"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="54"/>
         <source>no limit</source>
         <translation>bez limitu</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="54"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="55"/>
         <source>Maximum number of characters of a translation (0: only report translations much longer than the source)</source>
         <translation>Maksymalna liczba znaków tłumaczenia (0: zgłaszaj tylko tłumaczenia znacznie dłuższe od źródła)</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="56"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="57"/>
         <source>Maximum length:</source>
         <translation>Maksymalna długość:</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="60"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="61"/>
         <source>Run the checks</source>
         <translation>Uruchom kontrole</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="61"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="62"/>
         <source>The checks apply to the saved files: save your changes first.</source>
         <translation>Kontrole dotyczą zapisanych plików: najpierw zapisz zmiany.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="62"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="63"/>
         <source>Export (CSV)...</source>
         <translation>Eksportuj (CSV)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="65"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="66"/>
         <source>All problems</source>
         <translation>Wszystkie problemy</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="68"/>
-        <location filename="../src/ui/QualityPanel.cpp" line="142"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="69"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="143"/>
         <source>No project open.</source>
         <translation>Brak otwartego projektu.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>Check</source>
         <translation>Kontrola</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>File</source>
         <translation>Plik</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>Problem</source>
         <translation>Problem</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>Translation</source>
         <translation>Tłumaczenie</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="142"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="143"/>
         <source>Press &quot;Run the checks&quot;.</source>
         <translation>Naciśnij „Uruchom kontrole”.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="156"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="157"/>
         <source>Select at least one check.</source>
         <translation>Wybierz co najmniej jedną kontrolę.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="164"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="165"/>
         <source>Checking...</source>
         <translation>Sprawdzanie...</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="178"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="184"/>
         <source>Checking... %1 / %2 files</source>
         <translation>Sprawdzanie... plików: %1 / %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="229"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="237"/>
         <source>No problem found.</source>
         <translation>Nie znaleziono problemów.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="229"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="237"/>
         <source>%1 problem(s)</source>
         <translation>Problemów: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="231"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="239"/>
         <source> — %1 shown</source>
         <translation> — wyświetlono: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="233"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="241"/>
         <source>only the first %1 are listed (use the export for all)</source>
         <translation>wyświetlono tylko pierwsze %1 (użyj eksportu, aby uzyskać wszystkie)</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="239"/>
-        <location filename="../src/ui/QualityPanel.cpp" line="245"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="243"/>
+        <source>%1 file(s) taken from the cache</source>
+        <translation>Plików z pamięci podręcznej: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="249"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="255"/>
         <source>Export the report</source>
         <translation>Eksportuj raport</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="240"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="250"/>
         <source>CSV files (*.csv)</source>
         <translation>Pliki CSV (*.csv)</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="245"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="255"/>
         <source>Cannot write %1.</source>
         <translation>Nie można zapisać %1.</translation>
     </message>
@@ -1997,6 +2185,110 @@ Pozostało %5 słów / %6 znaków</translation>
         <location filename="../src/ui/SciEdit.cpp" line="203"/>
         <source>Select all</source>
         <translation>Zaznacz wszystko</translation>
+    </message>
+</context>
+<context>
+    <name>ScriptStringsPanel</name>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="25"/>
+        <source>Scan the scripts</source>
+        <translation>Analizuj skrypty</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="26"/>
+        <source>Looks for the texts written in the code of the scripts (not in the .msg files).</source>
+        <translation>Szuka tekstów zapisanych w kodzie skryptów (a nie w plikach .msg).</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="27"/>
+        <source>Write the translated scripts</source>
+        <translation>Zapisz przetłumaczone skrypty</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="28"/>
+        <source>Writes scripts/&lt;name&gt;.int with the translations into the output (folder or archive).</source>
+        <translation>Zapisuje scripts/&lt;nazwa&gt;.int z tłumaczeniami w wyniku (folder lub archiwum).</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="29"/>
+        <source>Allow longer texts (experimental)</source>
+        <translation>Zezwól na dłuższe teksty (eksperymentalne)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="30"/>
+        <source>A text longer than the original is appended at the end of the script and the code is redirected to it. The game reads strings through their offset and does not check where it points, but this is not guaranteed: test it in the game. Without it, only translations that fit the room of the original are written.</source>
+        <translation>Tekst dłuższy od oryginału jest dopisywany na końcu skryptu, a kod jest do niego przekierowywany. Gra odczytuje ciągi po ich położeniu, nie sprawdzając, dokąd prowadzi, ale nie jest to gwarantowane: przetestuj w grze. Bez tej opcji zapisywane są tylko tłumaczenia mieszczące się w miejscu oryginału.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="35"/>
+        <source>Filter the texts...</source>
+        <translation>Filtruj teksty...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="37"/>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="122"/>
+        <source>No project open.</source>
+        <translation>Brak otwartego projektu.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Script</source>
+        <translation>Skrypt</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Original text</source>
+        <translation>Tekst oryginalny</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Translation</source>
+        <translation>Tłumaczenie</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Room</source>
+        <translation>Miejsce</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="119"/>
+        <source>The sources of this project contain no compiled script.</source>
+        <translation>Źródła tego projektu nie zawierają skompilowanego skryptu.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="120"/>
+        <source>Press &quot;Scan the scripts&quot;.</source>
+        <translation>Naciśnij „Analizuj skrypty”.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="143"/>
+        <source>Scanning the scripts...</source>
+        <translation>Analizowanie skryptów...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="154"/>
+        <source>Scanning the scripts... %1 / %2</source>
+        <translation>Analizowanie skryptów... %1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="200"/>
+        <source>%1 text(s) in the scripts, %2 translated.</source>
+        <translation>Tekstów w skryptach: %1, przetłumaczonych: %2.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="212"/>
+        <source>%1 max</source>
+        <translation>maks. %1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="218"/>
+        <source>will be appended</source>
+        <translation>zostanie dopisany na końcu</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="220"/>
+        <source>too long</source>
+        <translation>za długi</translation>
     </message>
 </context>
 <context>
@@ -2314,6 +2606,64 @@ Pozostało %5 słów / %6 znaków</translation>
     </message>
 </context>
 <context>
+    <name>SuggestionPanel</name>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="33"/>
+        <source>Minimum similarity of the texts offered</source>
+        <translation>Minimalne podobieństwo proponowanych tekstów</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>%</source>
+        <translation>%</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>Translation</source>
+        <translation>Tłumaczenie</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>Similar text</source>
+        <translation>Podobny tekst</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>Origin</source>
+        <translation>Pochodzenie</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="49"/>
+        <source>Minimum:</source>
+        <translation>Minimum:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="97"/>
+        <source>Select a line to see what was already translated for the same or a similar text.</source>
+        <translation>Wybierz wiersz, aby zobaczyć, co już przetłumaczono dla tego samego lub podobnego tekstu.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="101"/>
+        <source>Building the translation memory of the project...</source>
+        <translation>Budowanie pamięci tłumaczeniowej projektu...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="105"/>
+        <source>This line has nothing to translate.</source>
+        <translation>Ten wiersz nie ma nic do tłumaczenia.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="126"/>
+        <source>No similar translated text.</source>
+        <translation>Brak podobnego przetłumaczonego tekstu.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="127"/>
+        <source>%1 suggestion(s): double-click to use one.</source>
+        <translation>Sugestii: %1 — kliknij dwukrotnie, aby użyć.</translation>
+    </message>
+</context>
+<context>
     <name>Theme</name>
     <message>
         <location filename="../src/ui/Theme.cpp" line="162"/>
@@ -2507,45 +2857,50 @@ Pozostało %5 słów / %6 znaków</translation>
         <translation>Tłumaczenie zbiorcze</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="551"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="550"/>
+        <source>Suggestion used</source>
+        <translation>Użyto sugestii</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="588"/>
         <source>Previous translation: %1</source>
         <translation>Poprzednie tłumaczenie: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="566"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="603"/>
         <source>Glossary:</source>
         <translation>Glosariusz:</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="574"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="611"/>
         <source>&lt;i&gt;Not translated in the game files yet&lt;/i&gt;</source>
         <translation>&lt;i&gt;Jeszcze nieprzetłumaczone w plikach gry&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="583"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="620"/>
         <source>Inconsistent translations in the game files</source>
         <translation>Niespójne tłumaczenia w plikach gry</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="618"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="655"/>
         <source>%1 / %2 lines</source>
         <translation>%1 / %2 wierszy</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="641"/>
-        <location filename="../src/ui/TranslationEditor.cpp" line="645"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="678"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="682"/>
         <source>Save</source>
         <translation>Zapisz</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="641"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="678"/>
         <source>Cannot save %1:
 %2</source>
         <translation>Nie można zapisać %1:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="646"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="683"/>
         <source>Some characters cannot be represented in the encoding of the target files (%1) and were replaced by &apos;?&apos;:
 
 %2
@@ -2558,22 +2913,23 @@ Choose another encoding in the project settings or reword the text.</source>
 Wybierz inne kodowanie w ustawieniach projektu lub przeformułuj tekst.</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="664"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="525"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="701"/>
         <source>Review mark</source>
         <translation>Oznaczenie „do sprawdzenia”</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="677"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="714"/>
         <source>Validation</source>
         <translation>Zatwierdzenie</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="692"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="729"/>
         <source>Copy the source</source>
         <translation>Kopiowanie źródła</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="706"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="743"/>
         <source>Accept as is</source>
         <translation>Zaakceptuj bez zmian</translation>
     </message>

@@ -448,4 +448,62 @@ VALUES = [
     'Die Übersetzung wird in %1 geliefert und nach jedem Speichern neu aufgebaut. Es enthält text/%2/ mit den übersetzten Dateien',  # 444
     ' und die Originaltexte unter text/%1/.',  # 445
     'Wählen Sie das Ausgabearchiv.',  # 446
+    'Spielbericht',  # 447
+    'Skript nicht lesbar (%1)',  # 448
+    'ein Text enthält ein NUL-Zeichen',  # 449
+    '„%1“: %2 Zeichen bei %3 verfügbaren',  # 450
+    '„%1“: vom Startcode des Skripts verwendet, der Text kann nicht verlängert werden',  # 451
+    '„%1“: der Code kann nicht sicher gelesen werden, der Text kann nicht verlängert werden',  # 452
+    'Vorschläge',  # 453
+    'Texte in den Skripten',  # 454
+    '&Texte in den Skripten...',  # 455
+    '&Spielbericht importieren...',  # 456
+    '&Spielbericht-Datei verfolgen...',  # 457
+    'Die Übersetzungsdatei %1 enthält fehlerhafte Einträge; das Spiel ignoriert alles nach dem ersten, daher wird ein Teil der Übersetzung nicht gelesen:\n\n%2\n\nAutomatisch reparieren? Eine Kopie des Originals bleibt als .bak erhalten.',  # 458
+    'Reparieren',  # 459
+    'Unverändert öffnen',  # 460
+    '%1 kann nicht repariert werden:\n%2',  # 461
+    'Zeile %1 (%2): %3',  # 462
+    '%1 Eintrag/Einträge repariert, %2 unverändert gelassen.\n\n%3',  # 463
+    '%1 Skript(e) geschrieben: %2 Text(e) an Ort und Stelle, %3 verlängert.',  # 464
+    'Nicht geschrieben:',  # 465
+    'Spielbericht importieren',  # 466
+    'Textdateien (*.txt *.log);;Alle Dateien (*)',  # 467
+    'Datei, in die das Spiel seinen Bericht schreibt',  # 468
+    '%1 wird verfolgt: dort geschriebene Zeilen werden als „zu prüfen“ markiert.',  # 469
+    'Der Bericht ist leer.',  # 470
+    'In dieser Datei wurde keine Anmerkung gefunden.',  # 471
+    'Spielbericht: %1 Zeile(n) als „zu prüfen“ markiert, %2 nicht gefunden.',  # 472
+    '%1 Zeile(n) als „zu prüfen“ markiert.',  # 473
+    'Nicht gefunden:',  # 474
+    'Zu viele Treffer (Datei und ID angeben):',  # 475
+    '%1 Datei(en) aus dem Cache',  # 476
+    'Skripte analysieren',  # 477
+    'Sucht die im Code der Skripte geschriebenen Texte (nicht in den .msg-Dateien).',  # 478
+    'Übersetzte Skripte schreiben',  # 479
+    'Schreibt scripts/<Name>.int mit den Übersetzungen in die Ausgabe (Ordner oder Archiv).',  # 480
+    'Längere Texte erlauben (experimentell)',  # 481
+    'Ein Text, der länger ist als das Original, wird am Ende des Skripts angehängt und der Code darauf umgeleitet. Das Spiel liest Zeichenketten über ihre Position, ohne zu prüfen, wohin sie zeigt, aber das ist nicht garantiert: im Spiel testen. Ohne diese Option werden nur Übersetzungen geschrieben, die in den Platz des Originals passen.',  # 482
+    'Texte filtern...',  # 483
+    'Skript',  # 484
+    'Originaltext',  # 485
+    'Platz',  # 486
+    'Die Quellen dieses Projekts enthalten kein kompiliertes Skript.',  # 487
+    'Klicken Sie auf „Skripte analysieren“.',  # 488
+    'Skripte werden analysiert...',  # 489
+    'Skripte werden analysiert... %1 / %2',  # 490
+    '%1 Text(e) in den Skripten, %2 übersetzt.',  # 491
+    'max. %1',  # 492
+    'wird angehängt',  # 493
+    'zu lang',  # 494
+    'Mindestähnlichkeit der vorgeschlagenen Texte',  # 495
+    '%',  # 496
+    'Ähnlicher Text',  # 497
+    'Minimum:',  # 498
+    'Wählen Sie eine Zeile, um zu sehen, was für denselben oder einen ähnlichen Text schon übersetzt wurde.',  # 499
+    'Das Übersetzungsgedächtnis des Projekts wird aufgebaut...',  # 500
+    'Diese Zeile hat nichts zu übersetzen.',  # 501
+    'Kein ähnlicher übersetzter Text.',  # 502
+    '%1 Vorschlag/Vorschläge: Doppelklick zum Übernehmen.',  # 503
+    'Vorschlag übernommen',  # 504
 ]

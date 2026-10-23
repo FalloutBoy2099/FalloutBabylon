@@ -9,8 +9,10 @@
 #include "ProjectDialog.h"
 #include "ProjectTree.h"
 #include "QualityPanel.h"
+#include "ScriptStringsPanel.h"
 #include "SearchPanel.h"
 #include "SettingsDialog.h"
+#include "SuggestionPanel.h"
 #include "StatsPanel.h"
 #include "TranslationService.h"
 #include "TodoPanel.h"
@@ -36,6 +38,7 @@
 #include <QSettings>
 #include <QStackedWidget>
 #include <QStatusBar>
+#include <QStringConverter>
 #include <QTabWidget>
 #include <QThreadPool>
 #include <QTranslator>
@@ -53,6 +56,11 @@ const UiLanguage kUiLanguages[] = {
     {"de", "Deutsch"}, {"pl", "Polski"}, {"cs", "Čeština"}, {"ru", "Русский"},
     {"zh", "中文"},
 };
+
+QString reportKey(const QString &id, const char *name)
+{
+    return QStringLiteral("gameReport/%1/%2").arg(id, QString::fromLatin1(name));
+}
 
 }
 
@@ -118,6 +126,32 @@ MainWindow::MainWindow()
                 startAnalysis(id, true, false);
     });
 
+    m_reportTimer.setSingleShot(true);
+    m_reportTimer.setInterval(800);
+    connect(&m_reportTimer, &QTimer::timeout, this, [this] {
+        const QSet<QString> paths = m_reportPending;
+        m_reportPending.clear();
+        for (const QString &path : paths)
+            if (m_reportProject.contains(path))
+                processReport(m_reportProject.value(path), path, false);
+    });
+    connect(&m_reportWatcher, &QFileSystemWatcher::fileChanged, this, [this](const QString &path) {
+        // a file replaced by the game stops being watched: arm it again
+        if (m_reportProject.contains(path) && QFileInfo::exists(path) && !m_reportWatcher.files().contains(path))
+            m_reportWatcher.addPath(path);
+        m_reportPending.insert(path);
+        m_reportTimer.start();
+    });
+    connect(&m_reportWatcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString &) {
+        // the report file may have just been created
+        for (auto it = m_reportProject.cbegin(); it != m_reportProject.cend(); ++it)
+            if (QFileInfo::exists(it.key()) && !m_reportWatcher.files().contains(it.key())) {
+                m_reportWatcher.addPath(it.key());
+                m_reportPending.insert(it.key());
+                m_reportTimer.start();
+            }
+    });
+
     m_archiveTimer.setSingleShot(true);
     m_archiveTimer.setInterval(1000);
     connect(&m_archiveTimer, &QTimer::timeout, this, [this] {
@@ -141,6 +175,7 @@ MainWindow::MainWindow()
         m_pipboyPanel->setEditor(currentEditor());
         if (currentEditor())
             m_pipboyPanel->showId(currentEditor()->currentId());
+        m_suggestTimer.start();
         updateUi();
     });
 
@@ -194,6 +229,18 @@ void MainWindow::createDocks()
     });
     tabifyDockWidget(glossaryDock, statsDock);
     tabifyDockWidget(statsDock, todoDock);
+    m_suggestPanel = new SuggestionPanel;
+    auto *suggestDock = new QDockWidget(tr("Suggestions"), this);
+    suggestDock->setObjectName(QStringLiteral("dockSuggestions"));
+    suggestDock->setWidget(m_suggestPanel);
+    addDockWidget(Qt::BottomDockWidgetArea, suggestDock);
+    connect(m_suggestPanel, &SuggestionPanel::useRequested, this, [this](const QString &text, double score) {
+        if (TranslationEditor *e = currentEditor())
+            e->applySuggestion(text, score);
+    });
+    m_suggestTimer.setSingleShot(true);
+    m_suggestTimer.setInterval(150);
+    connect(&m_suggestTimer, &QTimer::timeout, this, [this] { showSuggestions(); });
     m_pipboyPanel = new PipboyPanel;
     auto *pipboyDock = new QDockWidget(tr("Pip-Boy holodisk"), this);
     pipboyDock->setObjectName(QStringLiteral("dockPipboy"));
@@ -228,6 +275,23 @@ void MainWindow::createDocks()
     addDockWidget(Qt::BottomDockWidgetArea, m_qualityDock);
     tabifyDockWidget(m_searchDock, m_qualityDock);
     m_qualityDock->hide();
+    m_scriptPanel = new ScriptStringsPanel;
+    m_scriptDock = new QDockWidget(tr("Texts in the scripts"), this);
+    m_scriptDock->setObjectName(QStringLiteral("dockScriptStrings"));
+    m_scriptDock->setWidget(m_scriptPanel);
+    addDockWidget(Qt::BottomDockWidgetArea, m_scriptDock);
+    tabifyDockWidget(m_qualityDock, m_scriptDock);
+    m_scriptDock->hide();
+    connect(m_scriptPanel, &ScriptStringsPanel::translationsChanged, this, [this](const QVector<ScriptTranslation> &translations) {
+        const auto it = m_sessions.constFind(m_activeProject);
+        if (it != m_sessions.constEnd())
+            it->project->setScriptTranslations(translations);
+    });
+    connect(m_scriptPanel, &ScriptStringsPanel::applyRequested, this, [this](const QVector<ScriptTranslation> &translations, bool enlarge) {
+        applyScriptStrings(m_activeProject, translations, enlarge);
+    });
+    tabifyDockWidget(m_qualityDock, suggestDock);
+    suggestDock->raise();
     connect(m_qualityPanel, &QualityPanel::openRequested, this, [this](const QString &rel, int id) {
         openFile(m_activeProject, rel);
         if (TranslationEditor *e = currentEditor())
@@ -261,7 +325,8 @@ void MainWindow::createDocks()
 
     m_dockToggles << projectDock->toggleViewAction() << glossaryDock->toggleViewAction() << statsDock->toggleViewAction()
                   << todoDock->toggleViewAction() << dialogDock->toggleViewAction() << pipboyDock->toggleViewAction()
-                  << m_searchDock->toggleViewAction() << m_qualityDock->toggleViewAction();
+                  << m_searchDock->toggleViewAction() << m_qualityDock->toggleViewAction()
+                  << suggestDock->toggleViewAction() << m_scriptDock->toggleViewAction();
 }
 
 void MainWindow::createActions()
@@ -330,6 +395,16 @@ void MainWindow::createActions()
         m_searchDock->raise();
         m_searchPanel->focusQuery();
     });
+    m_actScripts = new QAction(tr("&Texts in the scripts..."), this);
+    connect(m_actScripts, &QAction::triggered, this, [this] {
+        m_scriptDock->show();
+        m_scriptDock->raise();
+    });
+    m_actGameReport = new QAction(tr("Import a &game report..."), this);
+    connect(m_actGameReport, &QAction::triggered, this, [this] { importGameReport(m_activeProject); });
+    m_actWatchReport = new QAction(tr("&Follow a game report file..."), this);
+    m_actWatchReport->setCheckable(true);
+    connect(m_actWatchReport, &QAction::triggered, this, [this](bool on) { toggleReportWatch(on); });
     m_actQuality = new QAction(tr("&Quality report..."), this);
     connect(m_actQuality, &QAction::triggered, this, [this] {
         m_qualityDock->show();
@@ -421,6 +496,9 @@ void MainWindow::createMenus()
     tools->addAction(m_actMassTranslate);
     tools->addSeparator();
     tools->addAction(m_actQuality);
+    tools->addAction(m_actScripts);
+    tools->addAction(m_actGameReport);
+    tools->addAction(m_actWatchReport);
     tools->addAction(m_actRefresh);
     tools->addAction(m_actRebuild);
     tools->addSeparator();
@@ -545,6 +623,18 @@ bool MainWindow::openProject(const ProjectConfig &config)
     session.project = project;
     m_sessions.insert(config.id, session);
     m_order << config.id;
+    {
+        // a report file followed in a previous session is followed again (only what was not read yet)
+        const QString path = QSettings().value(reportKey(config.id, "path")).toString();
+        if (!path.isEmpty()) {
+            m_reportOffset[path] = QSettings().value(reportKey(config.id, "offset")).toLongLong();
+            armReportWatch(config.id, path);
+            if (QFileInfo(path).size() > m_reportOffset.value(path)) {
+                m_reportPending.insert(path);
+                m_reportTimer.start();
+            }
+        }
+    }
     m_tree->addProject(config.id, config.name, files);
     setActiveProject(config.id);
     persistOpenProjects();
@@ -586,6 +676,14 @@ bool MainWindow::closeProject(const QString &id)
     }
     m_sessions[id].cancelAll();
     flushArchive(id);
+    for (auto r = m_reportProject.begin(); r != m_reportProject.end();) {      // stop following its report
+        if (r.value() == id) {
+            m_reportWatcher.removePath(r.key());
+            r = m_reportProject.erase(r);
+        } else {
+            ++r;
+        }
+    }
     m_sessions.remove(id);
     m_order.removeAll(id);
     m_tree->removeProject(id);
@@ -617,6 +715,8 @@ void MainWindow::setActiveProject(const QString &id)
     m_activeProject = id;
     const auto it = m_sessions.constFind(id);
     m_searchPanel->setProject(it == m_sessions.constEnd() ? nullptr : it->project);
+    m_suggestPanel->setIndex(it == m_sessions.constEnd() ? nullptr : it->index);
+    m_scriptPanel->setProject(it == m_sessions.constEnd() ? nullptr : it->project);
     m_qualityPanel->setProject(it == m_sessions.constEnd() ? nullptr : it->project);
     m_glossaryPanel->setEditable(it != m_sessions.constEnd());
     m_glossaryPanel->setCustomTerms(it == m_sessions.constEnd() ? QVector<CustomTerm>() : it->project->customTerms());
@@ -741,12 +841,12 @@ void MainWindow::updateProgress()
     QString text;
     int done = 0, total = 0;
     for (auto it = m_sessions.cbegin(); it != m_sessions.cend(); ++it) {
-        busy = busy || it->glossaryJob.running || it->statsJob.running;
+        busy = busy || it->glossaryJob.running || it->statsJob.running || it->indexJob.running;
         if (it->statsJob.running && it->statsTotal > 0 && total == 0) {
             done = it->statsDone;
             total = it->statsTotal;
             text = tr("Analysing \"%1\": %2 / %3 files").arg(it->project->config().name).arg(done).arg(total);
-        } else if (text.isEmpty() && (it->glossaryJob.running || it->statsJob.running)) {
+        } else if (text.isEmpty() && (it->glossaryJob.running || it->statsJob.running || it->indexJob.running)) {
             text = tr("Analysing \"%1\"...").arg(it->project->config().name);
         }
     }
@@ -801,15 +901,70 @@ void MainWindow::onStatsBatch(const QString &id, int generation, const QVector<F
 
     it->statsDone = done;
     it->statsTotal = total;
-    if (done >= total)
+    if (done >= total) {
         it->statsJob.running = false;
+        startIndex(id);                 // the files are known: build the translation memory
+    }
     updateProgress();
+}
+
+void MainWindow::startIndex(const QString &id)
+{
+    auto it = m_sessions.find(id);
+    if (it == m_sessions.end())
+        return;
+    Session &s = it.value();
+    s.indexJob.cancel->store(true);
+    s.indexJob.cancel = std::make_shared<std::atomic_bool>(false);
+    s.indexJob.generation = ++m_generationCounter;
+    s.indexJob.running = true;
+    const std::shared_ptr<Project> project = s.project;
+    const std::shared_ptr<std::atomic_bool> cancel = s.indexJob.cancel;
+    const int generation = s.indexJob.generation;
+    QThreadPool::globalInstance()->start([this, id, project, cancel, generation] {
+        const std::shared_ptr<TranslationIndex> index = TranslationIndex::build(*project, {}, cancel.get());
+        if (cancel->load())
+            return;
+        QMetaObject::invokeMethod(this, [this, id, generation, index] { onIndexReady(id, generation, index); },
+                                  Qt::QueuedConnection);
+    });
+    updateProgress();
+}
+
+void MainWindow::onIndexReady(const QString &id, int generation, const std::shared_ptr<TranslationIndex> &index)
+{
+    auto it = m_sessions.find(id);
+    if (it == m_sessions.end() || it->indexJob.generation != generation)
+        return;
+    it->indexJob.running = false;
+    it->index = index;
+    // Files being edited are more recent than what was read from disk.
+    for (TranslationEditor *e : editorsOf(id))
+        index->updateFile(e->model()->doc());
+    if (id == m_activeProject)
+        m_suggestPanel->setIndex(index);
+    updateProgress();
+}
+
+void MainWindow::showSuggestions()
+{
+    TranslationEditor *e = currentEditor();
+    if (!e || e->currentId() < 0) {
+        m_suggestPanel->clear();
+        return;
+    }
+    const int row = e->model()->rowForId(e->currentId());
+    if (row < 0 || !e->model()->row(row).inSource) {
+        m_suggestPanel->clear();
+        return;
+    }
+    m_suggestPanel->showFor(e->relPath(), e->currentId(), e->model()->row(row).source);
 }
 
 bool MainWindow::analysisRunning() const
 {
     for (auto it = m_sessions.cbegin(); it != m_sessions.cend(); ++it)
-        if (it->glossaryJob.running || it->statsJob.running)
+        if (it->glossaryJob.running || it->statsJob.running || it->indexJob.running)
             return true;
     return false;
 }
@@ -874,7 +1029,35 @@ void MainWindow::openFile(const QString &id, const QString &relPath)
         QMessageBox::information(this, tr("Open"), tr("%1 does not exist in the sources of this project.").arg(relPath));
         return;
     }
-    if (!doc.warnings.isEmpty())
+    if (!doc.targetWarnings.isEmpty()) {
+        // The translation file itself is damaged: offer to repair it, then read it again.
+        QMessageBox box(QMessageBox::Warning, tr("Open"),
+                        tr("The translation file %1 contains malformed records; the game ignores everything after the first "
+                           "one, so part of the translation is not read:\n\n%2\n\nRepair it automatically? A copy of the "
+                           "original is kept as .bak.")
+                            .arg(relPath, doc.targetWarnings.join(QLatin1Char('\n'))),
+                        QMessageBox::NoButton, this);
+        QPushButton *repair = box.addButton(tr("Repair"), QMessageBox::AcceptRole);
+        box.addButton(tr("Open as is"), QMessageBox::RejectRole);
+        box.exec();
+        if (box.clickedButton() == repair) {
+            QString repairError;
+            const MsgRepair::Result fixed = it->project->repairTargetFile(relPath, &repairError);
+            if (!repairError.isEmpty()) {
+                QMessageBox::warning(this, tr("Open"), tr("Cannot repair %1:\n%2").arg(relPath, repairError));
+            } else {
+                QStringList lines;
+                for (const MsgRepair::Fix &f : fixed.fixes)
+                    lines << tr("line %1 (%2): %3").arg(f.line).arg(f.kind, f.before);
+                QMessageBox::information(this, tr("Open"),
+                                         tr("%1 record(s) repaired, %2 left as they are.\n\n%3")
+                                             .arg(fixed.fixes.size() - fixed.unrepaired).arg(fixed.unrepaired)
+                                             .arg(lines.mid(0, 12).join(QLatin1Char('\n'))));
+                doc = it->project->loadDocument(relPath, &error);
+            }
+        }
+    }
+    if (!doc.warnings.isEmpty() && doc.targetWarnings.size() < doc.warnings.size())
         QMessageBox::warning(this, tr("Open"),
                              tr("%1 contains malformed records; everything after the first one is ignored by the game:\n\n%2")
                                  .arg(relPath, doc.warnings.join(QLatin1Char('\n'))));
@@ -888,8 +1071,12 @@ void MainWindow::openFile(const QString &id, const QString &relPath)
         m_tree->setFileDirty(projectIdOf(editor), editor->relPath(), dirty);
         if (!dirty && Project::kindOf(editor->relPath()) == FileKind::Game)
             scheduleGlossaryRebuild(projectIdOf(editor)); // names may have been translated
-        if (!dirty)
+        if (!dirty) {
             scheduleArchive(projectIdOf(editor));          // saved: the output archive follows
+            const auto s = m_sessions.constFind(projectIdOf(editor));
+            if (s != m_sessions.constEnd() && s->index)
+                s->index->updateFile(editor->model()->doc());   // ... and so do the suggestions
+        }
     });
     connect(editor, &TranslationEditor::statsChanged, this, [this, editor](const FileStats &s) { onEditorStats(editor, s); });
     connect(editor, &TranslationEditor::historyChanged, this, [this, editor] {
@@ -900,6 +1087,7 @@ void MainWindow::openFile(const QString &id, const QString &relPath)
         if (editor == currentEditor()) {
             m_dialogPanel->selectId(id);
             m_pipboyPanel->showId(id);
+            m_suggestTimer.start();
         }
     });
 
@@ -1090,6 +1278,7 @@ void MainWindow::replaceInProject(const ProjectSearch::Options &options, const Q
     m_todoTimer.start();
     scheduleGlossaryRebuild(m_activeProject);
     scheduleArchive(m_activeProject);
+    startIndex(m_activeProject);
     QString text = tr("%1 replacement(s) in %2 file(s).").arg(total).arg(files);
     if (!problems.isEmpty())
         text += QStringLiteral("\n\n") + problems.join(QLatin1Char('\n'));
@@ -1184,6 +1373,15 @@ void MainWindow::updateUi()
     }
     for (QAction *a : {m_actSettings, m_actExport, m_actImport, m_actRefresh, m_actRebuild, m_actCloseProject})
         a->setEnabled(anyProject && m_sessions.contains(m_activeProject));
+    m_actGameReport->setEnabled(anyProject && m_sessions.contains(m_activeProject));
+    m_actWatchReport->setEnabled(anyProject && m_sessions.contains(m_activeProject));
+    {
+        bool watching = false;
+        for (auto it = m_reportProject.cbegin(); it != m_reportProject.cend(); ++it)
+            watching = watching || it.value() == m_activeProject;
+        const QSignalBlocker blocker(m_actWatchReport);
+        m_actWatchReport->setChecked(watching);
+    }
     m_actBuildArchive->setEnabled(anyProject && m_sessions.contains(m_activeProject)
                                   && OutputArchive::enabled(m_sessions.value(m_activeProject).project->config()));
 
@@ -1226,6 +1424,171 @@ void MainWindow::closeEvent(QCloseEvent *event)
     for (const QString &id : m_sessions.keys())
         flushArchive(id);
     event->accept();
+}
+
+// ----------------------------------------------------------------------------- texts in the scripts
+
+void MainWindow::applyScriptStrings(const QString &id, const QVector<ScriptTranslation> &translations, bool enlarge)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd())
+        return;
+    const std::shared_ptr<Project> project = it->project;
+    project->setScriptTranslations(translations);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    const ScriptStrings::ApplyResult result = ScriptStrings::apply(*project, translations, enlarge);
+    QApplication::restoreOverrideCursor();
+    scheduleArchive(id);
+    QString text = tr("%1 script(s) written: %2 text(s) in place, %3 lengthened.")
+                       .arg(result.scripts).arg(result.inPlace).arg(result.enlarged);
+    if (!result.problems.isEmpty())
+        text += QStringLiteral("\n\n") + tr("Not written:") + QStringLiteral("\n") + result.problems.mid(0, 10).join(QLatin1Char('\n'));
+    QMessageBox::information(this, tr("Texts in the scripts"), text);
+}
+
+// ----------------------------------------------------------------------------- game report
+
+void MainWindow::importGameReport(const QString &id)
+{
+    if (!m_sessions.contains(id))
+        return;
+    const QString path = QFileDialog::getOpenFileName(this, tr("Import a game report"), QString(),
+                                                      tr("Text files (*.txt *.log);;All files (*)"));
+    if (!path.isEmpty())
+        processReport(id, path, true);
+}
+
+void MainWindow::toggleReportWatch(bool on)
+{
+    const QString id = m_activeProject;
+    if (!m_sessions.contains(id)) {
+        m_actWatchReport->setChecked(false);
+        return;
+    }
+    // forget what was watched for this project
+    for (auto it = m_reportProject.begin(); it != m_reportProject.end();) {
+        if (it.value() == id) {
+            m_reportWatcher.removePath(it.key());
+            m_reportWatcher.removePath(QFileInfo(it.key()).absolutePath());
+            it = m_reportProject.erase(it);
+        } else {
+            ++it;
+        }
+    }
+    QSettings settings;
+    settings.remove(reportKey(id, "path"));
+    settings.remove(reportKey(id, "offset"));
+    if (!on)
+        return;
+    const QString path = QFileDialog::getSaveFileName(
+        this, tr("File the game writes its report to"), QStringLiteral("babylon-report.txt"), tr("Text files (*.txt *.log);;All files (*)"),
+        nullptr, QFileDialog::DontConfirmOverwrite);
+    if (path.isEmpty()) {
+        m_actWatchReport->setChecked(false);
+        return;
+    }
+    followReport(id, path);
+}
+
+void MainWindow::followReport(const QString &id, const QString &path)
+{
+    // only what is written from now on is followed
+    m_reportOffset[path] = QFileInfo(path).size();
+    QSettings settings;
+    settings.setValue(reportKey(id, "path"), path);
+    settings.setValue(reportKey(id, "offset"), m_reportOffset.value(path));
+    armReportWatch(id, path);
+    statusBar()->showMessage(tr("Following %1: lines written there are marked \"to review\".").arg(QDir::toNativeSeparators(path)), 8000);
+    updateUi();
+}
+
+void MainWindow::armReportWatch(const QString &id, const QString &path)
+{
+    m_reportProject.insert(path, id);
+    if (QFileInfo::exists(path))
+        m_reportWatcher.addPath(path);
+    else
+        m_reportWatcher.addPath(QFileInfo(path).absolutePath());     // the file will be created by the game
+}
+
+void MainWindow::processReport(const QString &id, const QString &path, bool whole)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd())
+        return;
+    QFile file(path);
+    if (!file.open(QIODevice::ReadOnly)) {
+        if (whole)
+            QMessageBox::warning(this, tr("Game report"), tr("Cannot read %1.").arg(path));
+        return;
+    }
+    qint64 from = whole ? 0 : m_reportOffset.value(path, 0);
+    if (file.size() < from)
+        from = 0;                                  // the file was emptied: a new report
+    file.seek(from);
+    QByteArray bytes = file.readAll();
+    if (!whole && !bytes.isEmpty() && !bytes.endsWith('\n')) {
+        const int cut = bytes.lastIndexOf('\n') + 1;      // the game is still writing the last line
+        bytes.truncate(cut);
+    }
+    m_reportOffset[path] = from + bytes.size();
+    if (!whole && m_reportProject.contains(path))
+        QSettings().setValue(reportKey(id, "offset"), m_reportOffset.value(path));
+    if (bytes.isEmpty()) {
+        if (whole)
+            QMessageBox::information(this, tr("Game report"), tr("The report is empty."));
+        return;
+    }
+    QStringDecoder utf8(QStringDecoder::Utf8);
+    QString text = utf8(bytes);
+    if (utf8.hasError())
+        text = QString::fromLatin1(bytes);
+    const QVector<GameReport::Remark> remarks = GameReport::parse(text);
+    if (remarks.isEmpty()) {
+        if (whole)
+            QMessageBox::information(this, tr("Game report"), tr("No remark found in this file."));
+        return;
+    }
+    const std::shared_ptr<Project> project = it->project;
+    QThreadPool::globalInstance()->start([this, id, project, remarks, whole] {
+        const GameReport::Outcome outcome = GameReport::resolve(*project, remarks);
+        QMetaObject::invokeMethod(this, [this, id, outcome, whole] { onReportResolved(id, outcome, !whole); }, Qt::QueuedConnection);
+    });
+}
+
+void MainWindow::onReportResolved(const QString &id, const GameReport::Outcome &outcome, bool silent)
+{
+    const auto it = m_sessions.constFind(id);
+    if (it == m_sessions.constEnd())
+        return;
+    QVector<ReviewMark> openMarks, closedMarks;
+    QSet<QString> open;
+    for (TranslationEditor *e : editorsOf(id))
+        open.insert(e->relPath());
+    for (const GameReport::Resolved &r : outcome.found)
+        (open.contains(r.relPath) ? openMarks : closedMarks).push_back({r.relPath, r.id, r.comment});
+
+    int changed = 0;
+    for (TranslationEditor *e : editorsOf(id))
+        changed += e->markForReview(openMarks);
+    const int closedChanged = it->project->markForReview(closedMarks);
+    changed += closedChanged;
+    if (closedChanged)
+        startAnalysis(id, false, true);
+    m_todoTimer.start();
+
+    if (silent) {
+        statusBar()->showMessage(tr("Game report: %1 line(s) marked \"to review\", %2 not found.")
+                                     .arg(changed).arg(outcome.notFound.size() + outcome.ambiguous.size()), 12000);
+        return;
+    }
+    QString text = tr("%1 line(s) marked \"to review\".").arg(changed);
+    if (!outcome.notFound.isEmpty())
+        text += QStringLiteral("\n\n") + tr("Not found:") + QStringLiteral("\n") + outcome.notFound.mid(0, 8).join(QLatin1Char('\n'));
+    if (!outcome.ambiguous.isEmpty())
+        text += QStringLiteral("\n\n") + tr("Too many matches (give the file and the id):") + QStringLiteral("\n")
+            + outcome.ambiguous.mid(0, 8).join(QLatin1Char('\n'));
+    QMessageBox::information(this, tr("Game report"), text);
 }
 
 // ----------------------------------------------------------------------------- output archive

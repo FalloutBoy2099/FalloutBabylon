@@ -108,6 +108,14 @@
     </message>
 </context>
 <context>
+    <name>GameReport</name>
+    <message>
+        <location filename="../src/core/GameReport.cpp" line="10"/>
+        <source>Game report</source>
+        <translation>Hlášení ze hry</translation>
+    </message>
+</context>
+<context>
     <name>GlossaryPanel</name>
     <message>
         <location filename="../src/ui/GlossaryPanel.cpp" line="73"/>
@@ -456,315 +464,369 @@
     </message>
 </context>
 <context>
+    <name>IntStrings</name>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="165"/>
+        <source>not a readable script (%1)</source>
+        <translation>nečitelný skript (%1)</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="177"/>
+        <source>a text contains a NUL character</source>
+        <translation>text obsahuje znak NUL</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="188"/>
+        <source>&quot;%1&quot;: %2 characters for %3 available</source>
+        <translation>„%1“: %2 znaků při %3 dostupných</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="194"/>
+        <source>&quot;%1&quot;: used by the start-up code of the script, the text cannot be lengthened</source>
+        <translation>„%1“: používá úvodní kód skriptu, text nelze prodloužit</translation>
+    </message>
+    <message>
+        <location filename="../src/core/IntStrings.cpp" line="199"/>
+        <source>&quot;%1&quot;: the code cannot be read safely, the text cannot be lengthened</source>
+        <translation>„%1“: kód nelze bezpečně přečíst, text nelze prodloužit</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="73"/>
+        <location filename="../src/ui/MainWindow.cpp" line="81"/>
         <source>&lt;h2&gt;Fallout Babylon&lt;/h2&gt;&lt;p&gt;Translation editor for Fallout 1 and Fallout 2 mods.&lt;/p&gt;</source>
         <translation>&lt;h2&gt;Fallout Babylon&lt;/h2&gt;&lt;p&gt;Překladatelský editor pro módy Falloutu 1 a Falloutu 2.&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="76"/>
+        <location filename="../src/ui/MainWindow.cpp" line="84"/>
         <source>Open a game folder...</source>
         <translation>Otevřít složku hry...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="77"/>
+        <location filename="../src/ui/MainWindow.cpp" line="85"/>
         <source>New project...</source>
         <translation>Nový projekt...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="165"/>
+        <location filename="../src/ui/MainWindow.cpp" line="200"/>
         <source>Projects</source>
         <translation>Projekty</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="171"/>
+        <location filename="../src/ui/MainWindow.cpp" line="206"/>
         <source>Glossary</source>
         <translation>Glosář</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="177"/>
+        <location filename="../src/ui/MainWindow.cpp" line="212"/>
         <source>Statistics</source>
         <translation>Statistiky</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="182"/>
+        <location filename="../src/ui/MainWindow.cpp" line="217"/>
         <source>To review</source>
         <translation>Ke kontrole</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="187"/>
+        <location filename="../src/ui/MainWindow.cpp" line="222"/>
         <source>Dialogue tree</source>
         <translation>Strom dialogu</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="198"/>
+        <location filename="../src/ui/MainWindow.cpp" line="233"/>
+        <source>Suggestions</source>
+        <translation>Návrhy</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="245"/>
         <source>Pip-Boy holodisk</source>
         <translation>Holodisk Pip-Boye</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="212"/>
+        <location filename="../src/ui/MainWindow.cpp" line="259"/>
         <source>Search and replace</source>
         <translation>Najít a nahradit</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="225"/>
+        <location filename="../src/ui/MainWindow.cpp" line="272"/>
         <source>Quality report</source>
         <translation>Zpráva o kvalitě</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="269"/>
+        <location filename="../src/ui/MainWindow.cpp" line="279"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1446"/>
+        <source>Texts in the scripts</source>
+        <translation>Texty ve skriptech</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="334"/>
         <source>&amp;Save</source>
         <translation>&amp;Uložit</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="275"/>
+        <location filename="../src/ui/MainWindow.cpp" line="340"/>
         <source>Save &amp;all</source>
         <translation>Uložit &amp;vše</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="278"/>
+        <location filename="../src/ui/MainWindow.cpp" line="343"/>
         <source>&amp;Close file</source>
         <translation>&amp;Zavřít soubor</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="294"/>
+        <location filename="../src/ui/MainWindow.cpp" line="359"/>
         <source>Mark as &amp;to review</source>
         <translation>Označit jako &amp;ke kontrole</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="296"/>
+        <location filename="../src/ui/MainWindow.cpp" line="361"/>
         <source>&amp;Validate (or remove the validation)</source>
         <translation>&amp;Schválit (nebo zrušit schválení)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="298"/>
+        <location filename="../src/ui/MainWindow.cpp" line="363"/>
         <source>Copy the &amp;source</source>
         <translation>Kopírovat &amp;originál</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="300"/>
+        <location filename="../src/ui/MainWindow.cpp" line="365"/>
         <source>&amp;Accept as is</source>
         <translation>&amp;Přijmout beze změny</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="302"/>
+        <location filename="../src/ui/MainWindow.cpp" line="367"/>
         <source>&amp;Next line</source>
         <translation>&amp;Další řádek</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="303"/>
+        <location filename="../src/ui/MainWindow.cpp" line="368"/>
         <source>&amp;Previous line</source>
         <translation>&amp;Předchozí řádek</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="304"/>
+        <location filename="../src/ui/MainWindow.cpp" line="369"/>
         <source>Next &amp;untranslated line</source>
         <translation>Další &amp;nepřeložený řádek</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="306"/>
+        <location filename="../src/ui/MainWindow.cpp" line="371"/>
         <source>Previous untranslated line</source>
         <translation>Předchozí nepřeložený řádek</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="308"/>
+        <location filename="../src/ui/MainWindow.cpp" line="373"/>
         <source>&amp;Find in this file</source>
         <translation>&amp;Hledat v tomto souboru</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="309"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1181"/>
+        <location filename="../src/ui/MainWindow.cpp" line="374"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1370"/>
         <source>Undo the last operation</source>
         <translation>Vrátit poslední operaci</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="311"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1183"/>
+        <location filename="../src/ui/MainWindow.cpp" line="376"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1372"/>
         <source>Redo the operation</source>
         <translation>Opakovat operaci</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="314"/>
+        <location filename="../src/ui/MainWindow.cpp" line="379"/>
         <source>&amp;Translate this line with DeepL</source>
         <translation>&amp;Přeložit tento řádek pomocí DeepL</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="316"/>
+        <location filename="../src/ui/MainWindow.cpp" line="381"/>
         <source>&amp;Mass translation with DeepL...</source>
         <translation>&amp;Hromadný překlad pomocí DeepL...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="318"/>
+        <location filename="../src/ui/MainWindow.cpp" line="383"/>
         <source>&amp;Settings...</source>
         <translation>&amp;Nastavení...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="326"/>
+        <location filename="../src/ui/MainWindow.cpp" line="391"/>
         <source>Search and replace in the &amp;project...</source>
         <translation>Najít a nahradit v &amp;projektu...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="333"/>
+        <location filename="../src/ui/MainWindow.cpp" line="398"/>
+        <source>&amp;Texts in the scripts...</source>
+        <translation>&amp;Texty ve skriptech...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="403"/>
+        <source>Import a &amp;game report...</source>
+        <translation>Importovat hlášení ze &amp;hry...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="405"/>
+        <source>&amp;Follow a game report file...</source>
+        <translation>&amp;Sledovat soubor s hlášením ze hry...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="408"/>
         <source>&amp;Quality report...</source>
         <translation>&amp;Zpráva o kvalitě...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="338"/>
+        <location filename="../src/ui/MainWindow.cpp" line="413"/>
         <source>&amp;Import an existing translation...</source>
         <translation>&amp;Importovat existující překlad...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="341"/>
+        <location filename="../src/ui/MainWindow.cpp" line="416"/>
         <source>Project &amp;settings...</source>
         <translation>Nastavení &amp;projektu...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="343"/>
+        <location filename="../src/ui/MainWindow.cpp" line="418"/>
         <source>&amp;Export to a DAT archive...</source>
         <translation>&amp;Exportovat do archivu DAT...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="345"/>
+        <location filename="../src/ui/MainWindow.cpp" line="420"/>
         <source>&amp;Update the output DAT archive now</source>
         <translation>&amp;Aktualizovat výstupní archiv DAT nyní</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="352"/>
+        <location filename="../src/ui/MainWindow.cpp" line="427"/>
         <source>Refresh &amp;statistics</source>
         <translation>Obnovit &amp;statistiky</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="355"/>
+        <location filename="../src/ui/MainWindow.cpp" line="430"/>
         <source>Rebuild the &amp;glossary</source>
         <translation>Znovu vytvořit &amp;glosář</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="357"/>
+        <location filename="../src/ui/MainWindow.cpp" line="432"/>
         <source>Close the pro&amp;ject</source>
         <translation>Zavřít pro&amp;jekt</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="363"/>
+        <location filename="../src/ui/MainWindow.cpp" line="438"/>
         <source>&amp;File</source>
         <translation>&amp;Soubor</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="364"/>
+        <location filename="../src/ui/MainWindow.cpp" line="439"/>
         <source>&amp;New project...</source>
         <translation>&amp;Nový projekt...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="365"/>
+        <location filename="../src/ui/MainWindow.cpp" line="440"/>
         <source>Open a game &amp;folder...</source>
         <translation>Otevřít &amp;složku hry...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="366"/>
+        <location filename="../src/ui/MainWindow.cpp" line="441"/>
         <source>Recent &amp;folders</source>
         <translation>&amp;Nedávné složky</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="367"/>
+        <location filename="../src/ui/MainWindow.cpp" line="442"/>
         <source>&amp;Saved projects</source>
         <translation>Uložené &amp;projekty</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="374"/>
-        <location filename="../src/ui/MainWindow.cpp" line="387"/>
+        <location filename="../src/ui/MainWindow.cpp" line="449"/>
+        <location filename="../src/ui/MainWindow.cpp" line="462"/>
         <source>(none)</source>
         <translation>(žádné)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="400"/>
+        <location filename="../src/ui/MainWindow.cpp" line="475"/>
         <source>&amp;Quit</source>
         <translation>&amp;Konec</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="402"/>
+        <location filename="../src/ui/MainWindow.cpp" line="477"/>
         <source>&amp;Edit</source>
         <translation>&amp;Úpravy</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="419"/>
+        <location filename="../src/ui/MainWindow.cpp" line="494"/>
         <source>&amp;Tools</source>
         <translation>&amp;Nástroje</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="429"/>
+        <location filename="../src/ui/MainWindow.cpp" line="507"/>
         <source>&amp;View</source>
         <translation>&amp;Zobrazení</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="433"/>
+        <location filename="../src/ui/MainWindow.cpp" line="511"/>
         <source>&amp;Theme</source>
         <translation>&amp;Motiv</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="436"/>
+        <location filename="../src/ui/MainWindow.cpp" line="514"/>
         <source>System</source>
         <translation>Systémový</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="436"/>
+        <location filename="../src/ui/MainWindow.cpp" line="514"/>
         <source>Light</source>
         <translation>Světlý</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="436"/>
+        <location filename="../src/ui/MainWindow.cpp" line="514"/>
         <source>Dark</source>
         <translation>Tmavý</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="450"/>
+        <location filename="../src/ui/MainWindow.cpp" line="528"/>
         <source>&amp;Language</source>
         <translation>&amp;Jazyk</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="453"/>
+        <location filename="../src/ui/MainWindow.cpp" line="531"/>
         <source>Automatic (system)</source>
         <translation>Automaticky (systém)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="459"/>
-        <location filename="../src/ui/MainWindow.cpp" line="475"/>
+        <location filename="../src/ui/MainWindow.cpp" line="537"/>
+        <location filename="../src/ui/MainWindow.cpp" line="553"/>
         <source>Language</source>
         <translation>Jazyk</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="459"/>
-        <location filename="../src/ui/MainWindow.cpp" line="475"/>
+        <location filename="../src/ui/MainWindow.cpp" line="537"/>
+        <location filename="../src/ui/MainWindow.cpp" line="553"/>
         <source>The language will change the next time the application starts.</source>
         <translation>Jazyk se změní při příštím spuštění aplikace.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="479"/>
+        <location filename="../src/ui/MainWindow.cpp" line="557"/>
         <source>&amp;Help</source>
         <translation>&amp;Nápověda</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="480"/>
+        <location filename="../src/ui/MainWindow.cpp" line="558"/>
         <source>&amp;About...</source>
         <translation>&amp;O programu...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="481"/>
+        <location filename="../src/ui/MainWindow.cpp" line="559"/>
         <source>About &amp;Qt...</source>
         <translation>O &amp;Qt...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="500"/>
+        <location filename="../src/ui/MainWindow.cpp" line="578"/>
         <source>Open a Fallout game or mod folder</source>
         <translation>Otevřít složku hry nebo módu Fallout</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="536"/>
-        <location filename="../src/ui/MainWindow.cpp" line="540"/>
+        <location filename="../src/ui/MainWindow.cpp" line="614"/>
+        <location filename="../src/ui/MainWindow.cpp" line="618"/>
         <source>Project</source>
         <translation>Projekt</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="536"/>
+        <location filename="../src/ui/MainWindow.cpp" line="614"/>
         <source>Some sources could not be read:
 
 %1</source>
@@ -773,78 +835,199 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="541"/>
+        <location filename="../src/ui/MainWindow.cpp" line="619"/>
         <source>No .msg file found under text/%1 or text/%2 in the sources of &quot;%3&quot;.</source>
         <translation>Ve zdrojích „%3“ nebyl v text/%1 ani text/%2 nalezen žádný soubor .msg.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="562"/>
+        <location filename="../src/ui/MainWindow.cpp" line="652"/>
         <source>Project settings</source>
         <translation>Nastavení projektu</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="563"/>
+        <location filename="../src/ui/MainWindow.cpp" line="653"/>
         <source>Save or close the modified files of this project first.</source>
         <translation>Nejprve uložte nebo zavřete změněné soubory tohoto projektu.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="750"/>
+        <location filename="../src/ui/MainWindow.cpp" line="850"/>
         <source>Analysing &quot;%1&quot;...</source>
         <translation>Analýza „%1“...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1253"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1035"/>
+        <source>The translation file %1 contains malformed records; the game ignores everything after the first one, so part of the translation is not read:
+
+%2
+
+Repair it automatically? A copy of the original is kept as .bak.</source>
+        <translation>Soubor překladu %1 obsahuje vadné záznamy; hra ignoruje vše za prvním z nich, takže část překladu se nečte:
+
+%2
+
+Opravit automaticky? Kopie originálu zůstane jako .bak.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1040"/>
+        <source>Repair</source>
+        <translation>Opravit</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1041"/>
+        <source>Open as is</source>
+        <translation>Otevřít beze změny</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1047"/>
+        <source>Cannot repair %1:
+%2</source>
+        <translation>Nelze opravit %1:
+%2</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1051"/>
+        <source>line %1 (%2): %3</source>
+        <translation>řádek %1 (%2): %3</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1053"/>
+        <source>%1 record(s) repaired, %2 left as they are.
+
+%3</source>
+        <translation>Opraveno záznamů: %1, ponecháno beze změny: %2.
+
+%3</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1442"/>
+        <source>%1 script(s) written: %2 text(s) in place, %3 lengthened.</source>
+        <translation>Zapsáno skriptů: %1; textů na místě: %2, prodloužených: %3.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1445"/>
+        <source>Not written:</source>
+        <translation>Nezapsáno:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1455"/>
+        <source>Import a game report</source>
+        <translation>Importovat hlášení ze hry</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1456"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1484"/>
+        <source>Text files (*.txt *.log);;All files (*)</source>
+        <translation>Textové soubory (*.txt *.log);;Všechny soubory (*)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1484"/>
+        <source>File the game writes its report to</source>
+        <translation>Soubor, do kterého hra zapisuje své hlášení</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1501"/>
+        <source>Following %1: lines written there are marked &quot;to review&quot;.</source>
+        <translation>Sleduje se %1: řádky tam zapsané se označí „ke kontrole“.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1522"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1539"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1549"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1591"/>
+        <source>Game report</source>
+        <translation>Hlášení ze hry</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1522"/>
+        <source>Cannot read %1.</source>
+        <translation>Nelze přečíst %1.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1539"/>
+        <source>The report is empty.</source>
+        <translation>Hlášení je prázdné.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1549"/>
+        <source>No remark found in this file.</source>
+        <translation>V tomto souboru nebyla nalezena žádná poznámka.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1581"/>
+        <source>Game report: %1 line(s) marked &quot;to review&quot;, %2 not found.</source>
+        <translation>Hlášení ze hry: označeno řádků „ke kontrole“: %1, nenalezeno: %2.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1585"/>
+        <source>%1 line(s) marked &quot;to review&quot;.</source>
+        <translation>Označeno řádků „ke kontrole“: %1.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1587"/>
+        <source>Not found:</source>
+        <translation>Nenalezeno:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1589"/>
+        <source>Too many matches (give the file and the id):</source>
+        <translation>Příliš mnoho shod (uveďte soubor a ID):</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/MainWindow.cpp" line="1616"/>
         <source>Updating the DAT archive...</source>
         <translation>Aktualizuje se archiv DAT...</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1264"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1627"/>
         <source>DAT archive updated: %1 translated file(s), %2 original(s).</source>
         <translation>Archiv DAT aktualizován: přeložených souborů: %1, originálů: %2.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1268"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1631"/>
         <source>DAT archive NOT updated: %1</source>
         <translation>Archiv DAT NEBYL aktualizován: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1289"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1652"/>
         <source>DAT archive</source>
         <translation>Archiv DAT</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1289"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1652"/>
         <source>The DAT archive could not be written:
 %1</source>
         <translation>Archiv DAT se nepodařilo zapsat:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="748"/>
+        <location filename="../src/ui/MainWindow.cpp" line="848"/>
         <source>Analysing &quot;%1&quot;: %2 / %3 files</source>
         <translation>Analýza „%1“: %2 / %3 souborů</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="870"/>
-        <location filename="../src/ui/MainWindow.cpp" line="874"/>
-        <location filename="../src/ui/MainWindow.cpp" line="878"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1025"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1029"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1034"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1047"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1052"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1061"/>
         <source>Open</source>
         <translation>Otevřít</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="870"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1025"/>
         <source>Cannot read %1:
 %2</source>
         <translation>Nelze přečíst %1:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="874"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1029"/>
         <source>%1 does not exist in the sources of this project.</source>
         <translation>%1 ve zdrojích tohoto projektu neexistuje.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="879"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1062"/>
         <source>%1 contains malformed records; everything after the first one is ignored by the game:
 
 %2</source>
@@ -853,12 +1036,12 @@
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="973"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1161"/>
         <source>Unsaved changes</source>
         <translation>Neuložené změny</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="974"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1162"/>
         <source>These files have unsaved changes:
 
 %1</source>
@@ -867,33 +1050,33 @@
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="976"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1164"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="977"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1165"/>
         <source>Discard</source>
         <translation>Zahodit</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1008"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1196"/>
         <source>Import an existing translation</source>
         <translation>Importovat existující překlad</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1009"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1197"/>
         <source>The files of this project that are open will be closed first. Continue?</source>
         <translation>Otevřené soubory tohoto projektu budou nejprve zavřeny. Pokračovat?</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1044"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1096"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1232"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1285"/>
         <source>Replace</source>
         <translation>Nahradit</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1045"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1233"/>
         <source>Replace &quot;%1&quot; by &quot;%2&quot; in the translation of %3 line(s) of %4 file(s)?
 
 Files that are not open are saved immediately.</source>
@@ -902,75 +1085,75 @@ Files that are not open are saved immediately.</source>
 Soubory, které nejsou otevřené, se uloží okamžitě.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1093"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1282"/>
         <source>%1 replacement(s) in %2 file(s).</source>
         <translation>Nahrazení: %1 v souborech: %2.</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1121"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1153"/>
-        <location filename="../src/ui/MainWindow.cpp" line="1155"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1310"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1342"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1344"/>
         <source>Export</source>
         <translation>Exportovat</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1122"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1311"/>
         <source>Nothing to export yet: save some translated files first.
 (%1 does not exist)</source>
         <translation>Zatím není co exportovat: nejprve uložte nějaké přeložené soubory.
 (%1 neexistuje)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1126"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1315"/>
         <source>Fallout 2 archive (zlib) (*.dat)</source>
         <translation>Archiv Fallout 2 (zlib) (*.dat)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1127"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1316"/>
         <source>Fallout 1 archive (*.dat)</source>
         <translation>Archiv Fallout 1 (*.dat)</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1130"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1319"/>
         <source>Export to a DAT archive</source>
         <translation>Exportovat do archivu DAT</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1153"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1342"/>
         <source>%1 files written to
 %2</source>
         <translation>Zapsáno %1 souborů do
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1155"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1344"/>
         <source>Cannot write the archive:
 %1</source>
         <translation>Archiv nelze zapsat:
 %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1180"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1369"/>
         <source>Undo the operation: %1</source>
         <translation>Vrátit operaci: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1182"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1371"/>
         <source>Redo the operation: %1</source>
         <translation>Opakovat operaci: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1197"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1395"/>
         <source>%1 → %2  ·  encoding %3 / %4</source>
         <translation>%1 → %2  ·  kódování %3 / %4</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1206"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1404"/>
         <source>About Fallout Babylon</source>
         <translation>O programu Fallout Babylon</translation>
     </message>
     <message>
-        <location filename="../src/ui/MainWindow.cpp" line="1207"/>
+        <location filename="../src/ui/MainWindow.cpp" line="1405"/>
         <source>&lt;h3&gt;Fallout Babylon %1&lt;/h3&gt;&lt;p&gt;Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods.&lt;/p&gt;&lt;p&gt;Built with Qt %2 and Scintilla.&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Fallout Babylon %1&lt;/h3&gt;&lt;p&gt;Překladatelský editor souborů dialogů a textů módů Falloutu 1 a Falloutu 2.&lt;/p&gt;&lt;p&gt;Vytvořeno pomocí Qt %2 a Scintilly.&lt;/p&gt;</translation>
     </message>
@@ -1317,7 +1500,7 @@ Soubory, které nejsou otevřené, se uloží okamžitě.</translation>
 <context>
     <name>Project</name>
     <message>
-        <location filename="../src/core/Project.cpp" line="519"/>
+        <location filename="../src/core/Project.cpp" line="566"/>
         <source>Custom</source>
         <translation>Vlastní</translation>
     </message>
@@ -1726,87 +1909,87 @@ Zbývá %5 slov / %6 znaků</translation>
 <context>
     <name>QualityCheck</name>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="49"/>
+        <location filename="../src/core/QualityCheck.cpp" line="57"/>
         <source>Tokens</source>
         <translation>Zástupné značky</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="50"/>
+        <location filename="../src/core/QualityCheck.cpp" line="58"/>
         <source>Spacing</source>
         <translation>Mezery</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="51"/>
+        <location filename="../src/core/QualityCheck.cpp" line="59"/>
         <source>Encoding</source>
         <translation>Kódování</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="52"/>
+        <location filename="../src/core/QualityCheck.cpp" line="60"/>
         <source>Length</source>
         <translation>Délka</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="53"/>
+        <location filename="../src/core/QualityCheck.cpp" line="61"/>
         <source>Inconsistent duplicate</source>
         <translation>Nekonzistentní duplicita</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="54"/>
+        <location filename="../src/core/QualityCheck.cpp" line="62"/>
         <source>Glossary</source>
         <translation>Glosář</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="79"/>
+        <location filename="../src/core/QualityCheck.cpp" line="87"/>
         <source>missing: %1</source>
         <translation>chybí: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="81"/>
+        <location filename="../src/core/QualityCheck.cpp" line="89"/>
         <source>unexpected: %1</source>
         <translation>neočekávané: %1</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="89"/>
+        <location filename="../src/core/QualityCheck.cpp" line="97"/>
         <source>the translation only contains spaces</source>
         <translation>překlad obsahuje jen mezery</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="92"/>
+        <location filename="../src/core/QualityCheck.cpp" line="100"/>
         <source>spaces at the start or the end</source>
         <translation>mezery na začátku nebo na konci</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="94"/>
+        <location filename="../src/core/QualityCheck.cpp" line="102"/>
         <source>the source has spaces at the start or the end</source>
         <translation>zdroj má mezery na začátku nebo na konci</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="96"/>
+        <location filename="../src/core/QualityCheck.cpp" line="104"/>
         <source>doubled spaces</source>
         <translation>dvojité mezery</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="107"/>
+        <location filename="../src/core/QualityCheck.cpp" line="115"/>
         <source>cannot be written as %1: %2</source>
         <translation>nelze zapsat v kódování %1: %2</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="113"/>
+        <location filename="../src/core/QualityCheck.cpp" line="121"/>
         <source>%1 characters (limit %2)</source>
         <translation>znaků: %1 (limit %2)</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="117"/>
+        <location filename="../src/core/QualityCheck.cpp" line="125"/>
         <source>short label of the interface: %1 characters for %2 in the source</source>
         <translation>krátký popisek rozhraní: znaků %1 oproti %2 ve zdroji</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="121"/>
+        <location filename="../src/core/QualityCheck.cpp" line="129"/>
         <source>%1 characters for %2 in the source</source>
         <translation>znaků: %1 oproti %2 ve zdroji</translation>
     </message>
     <message>
-        <location filename="../src/core/QualityCheck.cpp" line="186"/>
+        <location filename="../src/core/QualityCheck.cpp" line="379"/>
         <source>elsewhere (%1 times): %2</source>
         <translation>jinde (%1×): %2</translation>
     </message>
@@ -1814,154 +1997,159 @@ Zbývá %5 slov / %6 znaků</translation>
 <context>
     <name>QualityPanel</name>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="36"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="37"/>
         <source>Lost tokens (@Name@, %d, {field})</source>
         <translation>Ztracené zástupné značky (@Jméno@, %d, {pole})</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="37"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="38"/>
         <source>Spacing</source>
         <translation>Mezery</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="38"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="39"/>
         <source>Characters the encoding cannot hold</source>
         <translation>Znaky, které kódování neumí uložit</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="39"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="40"/>
         <source>Too long</source>
         <translation>Příliš dlouhé</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="40"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="41"/>
         <source>Inconsistent duplicates</source>
         <translation>Nekonzistentní duplicity</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="41"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="42"/>
         <source>Glossary</source>
         <translation>Glosář</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="53"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="54"/>
         <source>no limit</source>
         <translation>bez omezení</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="54"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="55"/>
         <source>Maximum number of characters of a translation (0: only report translations much longer than the source)</source>
         <translation>Nejvyšší počet znaků překladu (0: hlásit jen překlady mnohem delší než zdroj)</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="56"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="57"/>
         <source>Maximum length:</source>
         <translation>Maximální délka:</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="60"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="61"/>
         <source>Run the checks</source>
         <translation>Spustit kontroly</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="61"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="62"/>
         <source>The checks apply to the saved files: save your changes first.</source>
         <translation>Kontroly se týkají uložených souborů: nejprve uložte změny.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="62"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="63"/>
         <source>Export (CSV)...</source>
         <translation>Exportovat (CSV)...</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="65"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="66"/>
         <source>All problems</source>
         <translation>Všechny problémy</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="68"/>
-        <location filename="../src/ui/QualityPanel.cpp" line="142"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="69"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="143"/>
         <source>No project open.</source>
         <translation>Žádný otevřený projekt.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>Check</source>
         <translation>Kontrola</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>File</source>
         <translation>Soubor</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>Problem</source>
         <translation>Problém</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="72"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="73"/>
         <source>Translation</source>
         <translation>Překlad</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="142"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="143"/>
         <source>Press &quot;Run the checks&quot;.</source>
         <translation>Stiskněte „Spustit kontroly“.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="156"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="157"/>
         <source>Select at least one check.</source>
         <translation>Vyberte alespoň jednu kontrolu.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="164"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="165"/>
         <source>Checking...</source>
         <translation>Kontroluje se...</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="178"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="184"/>
         <source>Checking... %1 / %2 files</source>
         <translation>Kontroluje se... souborů: %1 / %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="229"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="237"/>
         <source>No problem found.</source>
         <translation>Nenalezen žádný problém.</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="229"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="237"/>
         <source>%1 problem(s)</source>
         <translation>Problémů: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="231"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="239"/>
         <source> — %1 shown</source>
         <translation> — zobrazeno: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="233"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="241"/>
         <source>only the first %1 are listed (use the export for all)</source>
         <translation>uvedeno je jen prvních %1 (pro všechny použijte export)</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="239"/>
-        <location filename="../src/ui/QualityPanel.cpp" line="245"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="243"/>
+        <source>%1 file(s) taken from the cache</source>
+        <translation>Souborů z mezipaměti: %1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/QualityPanel.cpp" line="249"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="255"/>
         <source>Export the report</source>
         <translation>Exportovat zprávu</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="240"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="250"/>
         <source>CSV files (*.csv)</source>
         <translation>Soubory CSV (*.csv)</translation>
     </message>
     <message>
-        <location filename="../src/ui/QualityPanel.cpp" line="245"/>
+        <location filename="../src/ui/QualityPanel.cpp" line="255"/>
         <source>Cannot write %1.</source>
         <translation>Nelze zapsat %1.</translation>
     </message>
@@ -1997,6 +2185,110 @@ Zbývá %5 slov / %6 znaků</translation>
         <location filename="../src/ui/SciEdit.cpp" line="203"/>
         <source>Select all</source>
         <translation>Vybrat vše</translation>
+    </message>
+</context>
+<context>
+    <name>ScriptStringsPanel</name>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="25"/>
+        <source>Scan the scripts</source>
+        <translation>Analyzovat skripty</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="26"/>
+        <source>Looks for the texts written in the code of the scripts (not in the .msg files).</source>
+        <translation>Hledá texty zapsané v kódu skriptů (ne v souborech .msg).</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="27"/>
+        <source>Write the translated scripts</source>
+        <translation>Zapsat přeložené skripty</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="28"/>
+        <source>Writes scripts/&lt;name&gt;.int with the translations into the output (folder or archive).</source>
+        <translation>Zapíše scripts/&lt;název&gt;.int s překlady do výstupu (složka nebo archiv).</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="29"/>
+        <source>Allow longer texts (experimental)</source>
+        <translation>Povolit delší texty (experimentální)</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="30"/>
+        <source>A text longer than the original is appended at the end of the script and the code is redirected to it. The game reads strings through their offset and does not check where it points, but this is not guaranteed: test it in the game. Without it, only translations that fit the room of the original are written.</source>
+        <translation>Text delší než originál se připojí na konec skriptu a kód se na něj přesměruje. Hra čte řetězce podle jejich pozice a nekontroluje, kam míří, ale není to zaručeno: vyzkoušejte ve hře. Bez této volby se zapisují jen překlady, které se vejdou do místa originálu.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="35"/>
+        <source>Filter the texts...</source>
+        <translation>Filtrovat texty...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="37"/>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="122"/>
+        <source>No project open.</source>
+        <translation>Žádný otevřený projekt.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Script</source>
+        <translation>Skript</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Original text</source>
+        <translation>Původní text</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Translation</source>
+        <translation>Překlad</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="41"/>
+        <source>Room</source>
+        <translation>Místo</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="119"/>
+        <source>The sources of this project contain no compiled script.</source>
+        <translation>Zdroje tohoto projektu neobsahují žádný zkompilovaný skript.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="120"/>
+        <source>Press &quot;Scan the scripts&quot;.</source>
+        <translation>Stiskněte „Analyzovat skripty“.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="143"/>
+        <source>Scanning the scripts...</source>
+        <translation>Analyzují se skripty...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="154"/>
+        <source>Scanning the scripts... %1 / %2</source>
+        <translation>Analyzují se skripty... %1 / %2</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="200"/>
+        <source>%1 text(s) in the scripts, %2 translated.</source>
+        <translation>Textů ve skriptech: %1, přeloženo: %2.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="212"/>
+        <source>%1 max</source>
+        <translation>max. %1</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="218"/>
+        <source>will be appended</source>
+        <translation>bude připojen na konec</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/ScriptStringsPanel.cpp" line="220"/>
+        <source>too long</source>
+        <translation>příliš dlouhý</translation>
     </message>
 </context>
 <context>
@@ -2314,6 +2606,64 @@ Zbývá %5 slov / %6 znaků</translation>
     </message>
 </context>
 <context>
+    <name>SuggestionPanel</name>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="33"/>
+        <source>Minimum similarity of the texts offered</source>
+        <translation>Minimální podobnost nabízených textů</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>%</source>
+        <translation>%</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>Translation</source>
+        <translation>Překlad</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>Similar text</source>
+        <translation>Podobný text</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="36"/>
+        <source>Origin</source>
+        <translation>Původ</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="49"/>
+        <source>Minimum:</source>
+        <translation>Minimum:</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="97"/>
+        <source>Select a line to see what was already translated for the same or a similar text.</source>
+        <translation>Vyberte řádek, abyste viděli, co už bylo přeloženo pro stejný nebo podobný text.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="101"/>
+        <source>Building the translation memory of the project...</source>
+        <translation>Sestavuje se překladová paměť projektu...</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="105"/>
+        <source>This line has nothing to translate.</source>
+        <translation>Tento řádek nemá co překládat.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="126"/>
+        <source>No similar translated text.</source>
+        <translation>Žádný podobný přeložený text.</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/SuggestionPanel.cpp" line="127"/>
+        <source>%1 suggestion(s): double-click to use one.</source>
+        <translation>Návrhů: %1 — dvojitým kliknutím jeden použijete.</translation>
+    </message>
+</context>
+<context>
     <name>Theme</name>
     <message>
         <location filename="../src/ui/Theme.cpp" line="162"/>
@@ -2507,45 +2857,50 @@ Zbývá %5 slov / %6 znaků</translation>
         <translation>Hromadný překlad</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="551"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="550"/>
+        <source>Suggestion used</source>
+        <translation>Návrh použit</translation>
+    </message>
+    <message>
+        <location filename="../src/ui/TranslationEditor.cpp" line="588"/>
         <source>Previous translation: %1</source>
         <translation>Předchozí překlad: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="566"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="603"/>
         <source>Glossary:</source>
         <translation>Glosář:</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="574"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="611"/>
         <source>&lt;i&gt;Not translated in the game files yet&lt;/i&gt;</source>
         <translation>&lt;i&gt;V souborech hry zatím nepřeloženo&lt;/i&gt;</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="583"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="620"/>
         <source>Inconsistent translations in the game files</source>
         <translation>Nejednotné překlady v souborech hry</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="618"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="655"/>
         <source>%1 / %2 lines</source>
         <translation>%1 / %2 řádků</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="641"/>
-        <location filename="../src/ui/TranslationEditor.cpp" line="645"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="678"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="682"/>
         <source>Save</source>
         <translation>Uložit</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="641"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="678"/>
         <source>Cannot save %1:
 %2</source>
         <translation>Nelze uložit %1:
 %2</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="646"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="683"/>
         <source>Some characters cannot be represented in the encoding of the target files (%1) and were replaced by &apos;?&apos;:
 
 %2
@@ -2558,22 +2913,23 @@ Choose another encoding in the project settings or reword the text.</source>
 Vyberte v nastavení projektu jiné kódování nebo text přeformulujte.</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="664"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="525"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="701"/>
         <source>Review mark</source>
         <translation>Označení „ke kontrole“</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="677"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="714"/>
         <source>Validation</source>
         <translation>Schválení</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="692"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="729"/>
         <source>Copy the source</source>
         <translation>Kopie zdroje</translation>
     </message>
     <message>
-        <location filename="../src/ui/TranslationEditor.cpp" line="706"/>
+        <location filename="../src/ui/TranslationEditor.cpp" line="743"/>
         <source>Accept as is</source>
         <translation>Přijmout beze změny</translation>
     </message>

@@ -62,6 +62,11 @@ public:
     // File-level undo / redo of coarse operations (see MsgTableModel); typing keeps the editor's own undo.
     bool undoOperation();
     bool redoOperation();
+    // Marks lines of this file "to review" with a comment (marks of other files are ignored). Returns how many changed.
+    int markForReview(const QVector<ReviewMark> &marks);
+    // Puts a translation suggested by the translation memory on the current line; below a perfect match the line
+    // is marked "to review".
+    void applySuggestion(const QString &translation, double score);
     // Search and replace in the translation of the listed records; returns the number of replacements.
     int replaceInTarget(const ProjectSearch::Options &options, const QString &replacement, const QSet<int> &ids);
     void translateCurrent();      // DeepL on the current line

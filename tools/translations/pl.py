@@ -448,4 +448,62 @@ VALUES = [
     'Tłumaczenie jest dostarczane w %1, odbudowywanym po każdym zapisie. Zawiera text/%2/ z przetłumaczonymi plikami',  # 444
     ' oraz teksty oryginalne w text/%1/.',  # 445
     'Wybierz archiwum wyjściowe.',  # 446
+    'Raport z gry',  # 447
+    'nieczytelny skrypt (%1)',  # 448
+    'tekst zawiera znak NUL',  # 449
+    '„%1”: %2 znaków przy %3 dostępnych',  # 450
+    '„%1”: używany przez kod startowy skryptu, tekstu nie można wydłużyć',  # 451
+    '„%1”: kodu nie da się bezpiecznie odczytać, tekstu nie można wydłużyć',  # 452
+    'Sugestie',  # 453
+    'Teksty w skryptach',  # 454
+    '&Teksty w skryptach...',  # 455
+    'Importuj raport z &gry...',  # 456
+    '&Śledź plik raportu z gry...',  # 457
+    'Plik tłumaczenia %1 zawiera błędnie zapisane rekordy; gra pomija wszystko po pierwszym z nich, więc część tłumaczenia nie jest odczytywana:\n\n%2\n\nNaprawić automatycznie? Kopia oryginału zostanie zachowana jako .bak.',  # 458
+    'Napraw',  # 459
+    'Otwórz bez zmian',  # 460
+    'Nie można naprawić %1:\n%2',  # 461
+    'wiersz %1 (%2): %3',  # 462
+    'Naprawiono rekordów: %1, pozostawiono bez zmian: %2.\n\n%3',  # 463
+    'Zapisano skryptów: %1; tekstów na miejscu: %2, wydłużonych: %3.',  # 464
+    'Nie zapisano:',  # 465
+    'Importuj raport z gry',  # 466
+    'Pliki tekstowe (*.txt *.log);;Wszystkie pliki (*)',  # 467
+    'Plik, do którego gra zapisuje raport',  # 468
+    'Śledzenie %1: zapisane tam wiersze są oznaczane jako „do sprawdzenia”.',  # 469
+    'Raport jest pusty.',  # 470
+    'W tym pliku nie znaleziono żadnej uwagi.',  # 471
+    'Raport z gry: oznaczono wierszy „do sprawdzenia”: %1, nie znaleziono: %2.',  # 472
+    'Oznaczono wierszy „do sprawdzenia”: %1.',  # 473
+    'Nie znaleziono:',  # 474
+    'Zbyt wiele dopasowań (podaj plik i identyfikator):',  # 475
+    'Plików z pamięci podręcznej: %1',  # 476
+    'Analizuj skrypty',  # 477
+    'Szuka tekstów zapisanych w kodzie skryptów (a nie w plikach .msg).',  # 478
+    'Zapisz przetłumaczone skrypty',  # 479
+    'Zapisuje scripts/<nazwa>.int z tłumaczeniami w wyniku (folder lub archiwum).',  # 480
+    'Zezwól na dłuższe teksty (eksperymentalne)',  # 481
+    'Tekst dłuższy od oryginału jest dopisywany na końcu skryptu, a kod jest do niego przekierowywany. Gra odczytuje ciągi po ich położeniu, nie sprawdzając, dokąd prowadzi, ale nie jest to gwarantowane: przetestuj w grze. Bez tej opcji zapisywane są tylko tłumaczenia mieszczące się w miejscu oryginału.',  # 482
+    'Filtruj teksty...',  # 483
+    'Skrypt',  # 484
+    'Tekst oryginalny',  # 485
+    'Miejsce',  # 486
+    'Źródła tego projektu nie zawierają skompilowanego skryptu.',  # 487
+    'Naciśnij „Analizuj skrypty”.',  # 488
+    'Analizowanie skryptów...',  # 489
+    'Analizowanie skryptów... %1 / %2',  # 490
+    'Tekstów w skryptach: %1, przetłumaczonych: %2.',  # 491
+    'maks. %1',  # 492
+    'zostanie dopisany na końcu',  # 493
+    'za długi',  # 494
+    'Minimalne podobieństwo proponowanych tekstów',  # 495
+    '%',  # 496
+    'Podobny tekst',  # 497
+    'Minimum:',  # 498
+    'Wybierz wiersz, aby zobaczyć, co już przetłumaczono dla tego samego lub podobnego tekstu.',  # 499
+    'Budowanie pamięci tłumaczeniowej projektu...',  # 500
+    'Ten wiersz nie ma nic do tłumaczenia.',  # 501
+    'Brak podobnego przetłumaczonego tekstu.',  # 502
+    'Sugestii: %1 — kliknij dwukrotnie, aby użyć.',  # 503
+    'Użyto sugestii',  # 504
 ]

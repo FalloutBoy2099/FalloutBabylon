@@ -4,6 +4,14 @@
 #include "TextCodec.h"
 
 #include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QSaveFile>
+#include <QSet>
 #include <algorithm>
 
 namespace QualityCheck {
@@ -129,16 +137,149 @@ QVector<Issue> checkDocument(const TranslationDoc &doc, const ProjectConfig &con
     return out;
 }
 
+namespace {
+
+quint64 hash64(const QString &text)
+{
+    quint64 h = 14695981039346656037ull;               // FNV-1a over the UTF-16 units
+    for (QChar c : text)
+        h = (h ^ c.unicode()) * 1099511628211ull;
+    return h ? h : 1ull;
+}
+
+QString hex(quint64 v)
+{
+    return QString::number(v, 16);
+}
+
+struct Where {
+    QString relPath;
+    int id = 0;
+};
+
+QJsonArray issueToJson(const Issue &i)
+{
+    return QJsonArray{i.id, int(i.kind), i.message, i.source, i.target};
+}
+
+}
+
+QString cacheKey(const Project &project, const ::Glossary *glossary, const Options &o)
+{
+    const ProjectConfig &c = project.config();
+    return QStringLiteral("v1|%1|%2|%3|%4|%5|%6|%7|%8|%9")
+        .arg(o.kinds & ~Duplicates)
+        .arg(o.maxRatio)
+        .arg(o.minLengthChars)
+        .arg(o.maxChars)
+        .arg(o.minDuplicateChars)
+        .arg(glossary ? glossary->signature() : QString())
+        .arg(c.targetEncoding, c.sourceLanguage, c.targetLanguage);
+}
+
+// ----------------------------------------------------------------------------- cache
+
+void Cache::open(const QString &path, const QString &key)
+{
+    m_path = path;
+    m_key = key;
+    m_files.clear();
+    m_dirty = false;
+    QFile f(path);
+    if (path.isEmpty() || !f.open(QIODevice::ReadOnly))
+        return;
+    const QJsonObject root = QJsonDocument::fromJson(f.readAll()).object();
+    if (root.value(QStringLiteral("key")).toString() != key)
+        return;
+    const QJsonObject files = root.value(QStringLiteral("files")).toObject();
+    for (auto it = files.begin(); it != files.end(); ++it) {
+        const QJsonObject o = it.value().toObject();
+        Entry e;
+        e.signature = o.value(QStringLiteral("sig")).toString();
+        const QString rel = it.key();
+        for (const QJsonValue &v : o.value(QStringLiteral("issues")).toArray()) {
+            const QJsonArray a = v.toArray();
+            if (a.size() < 5)
+                continue;
+            Issue i;
+            i.relPath = rel;
+            i.id = a.at(0).toInt();
+            i.kind = Kind(a.at(1).toInt());
+            i.message = a.at(2).toString();
+            i.source = a.at(3).toString();
+            i.target = a.at(4).toString();
+            e.issues.push_back(i);
+        }
+        for (const QJsonValue &v : o.value(QStringLiteral("dups")).toArray()) {
+            const QJsonArray a = v.toArray();
+            if (a.size() < 3)
+                continue;
+            e.dups.push_back({a.at(0).toInt(), a.at(1).toString().toULongLong(nullptr, 16),
+                              a.at(2).toString().toULongLong(nullptr, 16)});
+        }
+        m_files.insert(rel, e);
+    }
+}
+
+void Cache::save()
+{
+    if (m_path.isEmpty() || !m_dirty)
+        return;
+    QJsonObject files;
+    for (auto it = m_files.cbegin(); it != m_files.cend(); ++it) {
+        QJsonArray issues, dups;
+        for (const Issue &i : it->issues)
+            issues.append(issueToJson(i));
+        for (const DupRecord &d : it->dups)
+            dups.append(QJsonArray{d.id, hex(d.source), hex(d.target)});
+        files.insert(it.key(), QJsonObject{{QStringLiteral("sig"), it->signature},
+                                           {QStringLiteral("issues"), issues},
+                                           {QStringLiteral("dups"), dups}});
+    }
+    QDir().mkpath(QFileInfo(m_path).absolutePath());
+    QSaveFile f(m_path);
+    if (f.open(QIODevice::WriteOnly)) {
+        f.write(QJsonDocument(QJsonObject{{QStringLiteral("key"), m_key}, {QStringLiteral("files"), files}}).toJson(QJsonDocument::Compact));
+        if (f.commit())
+            m_dirty = false;
+    }
+}
+
+const Cache::Entry *Cache::find(const QString &rel, const QString &signature) const
+{
+    const auto it = m_files.constFind(rel);
+    return it != m_files.constEnd() && it->signature == signature ? &it.value() : nullptr;
+}
+
+void Cache::set(const QString &rel, const Entry &entry)
+{
+    m_files.insert(rel, entry);
+    m_dirty = true;
+}
+
+void Cache::keepOnly(const QStringList &files)
+{
+    const QSet<QString> keep(files.begin(), files.end());
+    for (auto it = m_files.begin(); it != m_files.end();) {
+        if (keep.contains(it.key())) {
+            ++it;
+        } else {
+            it = m_files.erase(it);
+            m_dirty = true;
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------- the run
+
 QVector<Issue> run(const Project &project, const ::Glossary *glossary, const Options &options, const ProgressFn &progress,
-                   const std::atomic_bool *cancel)
+                   const std::atomic_bool *cancel, Cache *cache, int *cacheHits)
 {
     QVector<Issue> issues;
-    struct Where {
-        QString relPath;
-        int id;
-    };
-    // source -> translation -> places (only for the duplicate check)
-    QHash<QString, QHash<QString, QVector<Where>>> seen;
+    if (cacheHits)
+        *cacheHits = 0;
+    // source hash -> translation hash -> where
+    QHash<quint64, QHash<quint64, QVector<Where>>> seen;
     const bool duplicates = options.kinds & Duplicates;
 
     const QStringList files = project.messageFiles();
@@ -147,48 +288,99 @@ QVector<Issue> run(const Project &project, const ::Glossary *glossary, const Opt
             break;
         if (progress && i % 10 == 0)
             progress(i, int(files.size()));
-        const TranslationDoc doc = project.loadDocument(files.at(i));
-        issues += checkDocument(doc, project.config(), glossary, options);
-        if (!duplicates)
-            continue;
-        for (const TranslationRow &row : doc.rows) {
-            if (!isChecked(row))
-                continue;
-            const QString key = row.source.simplified();
-            if (key.size() < options.minDuplicateChars)
-                continue;
-            seen[key][row.target.simplified()].push_back({doc.relPath, row.id});
+        const QString &rel = files.at(i);
+        const QString signature = cache ? project.contentSignature(rel) : QString();
+        const Cache::Entry *cached = cache ? cache->find(rel, signature) : nullptr;
+        Cache::Entry fresh;
+        if (cached) {
+            if (cacheHits)
+                ++*cacheHits;
+        } else {
+            const TranslationDoc doc = project.loadDocument(rel);
+            fresh.signature = signature;
+            fresh.issues = checkDocument(doc, project.config(), glossary, options);
+            for (const TranslationRow &row : doc.rows) {
+                if (!isChecked(row))
+                    continue;
+                const QString key = row.source.simplified();
+                if (key.size() < options.minDuplicateChars)
+                    continue;
+                fresh.dups.push_back({row.id, hash64(key), hash64(row.target.simplified())});
+            }
+            if (cache)
+                cache->set(rel, fresh);
+            cached = &fresh;
         }
+        issues += cached->issues;
+        if (duplicates)
+            for (const Cache::DupRecord &d : cached->dups)
+                seen[d.source][d.target].push_back({rel, d.id});
+    }
+    if (cache && !(cancel && cancel->load())) {
+        cache->keepOnly(files);
+        cache->save();
     }
 
     if (duplicates && !(cancel && cancel->load())) {
+        // Groups of the same source translated in several ways: the most used translation is the reference.
+        struct Conflict {
+            quint64 best = 0;
+            int bestCount = 0;
+        };
+        QHash<quint64, Conflict> conflicts;
+        QHash<QString, QVector<QPair<int, quint64>>> wanted;      // file -> (id, source hash) of the rows to report
+        QHash<quint64, Where> bestWhere;
         for (auto it = seen.cbegin(); it != seen.cend(); ++it) {
             if (it->size() < 2)
                 continue;
-            // The most used translation is the reference; the others are reported.
-            QString best;
-            int bestCount = -1;
+            Conflict c;
             for (auto t = it->cbegin(); t != it->cend(); ++t)
-                if (t->size() > bestCount || (t->size() == bestCount && t.key() < best)) {
-                    best = t.key();
-                    bestCount = int(t->size());
+                if (int(t->size()) > c.bestCount || (int(t->size()) == c.bestCount && t.key() < c.best)) {
+                    c.best = t.key();
+                    c.bestCount = int(t->size());
                 }
-            for (auto t = it->cbegin(); t != it->cend(); ++t) {
-                if (t.key() == best)
-                    continue;
-                for (const Where &w : *t) {
+            conflicts.insert(it.key(), c);
+            bestWhere.insert(it.key(), it->value(c.best).first());
+            for (auto t = it->cbegin(); t != it->cend(); ++t)
+                if (t.key() != c.best)
+                    for (const Where &w : *t)
+                        wanted[w.relPath].push_back({w.id, it.key()});
+        }
+        // The texts of the reference translations: one row of each group.
+        QHash<quint64, QString> bestText;
+        {
+            QHash<QString, QVector<QPair<int, quint64>>> need;
+            for (auto it = bestWhere.cbegin(); it != bestWhere.cend(); ++it)
+                need[it->relPath].push_back({it->id, it.key()});
+            for (auto it = need.cbegin(); it != need.cend(); ++it) {
+                if (cancel && cancel->load())
+                    break;
+                const TranslationDoc doc = project.loadDocument(it.key());
+                for (const auto &p : it.value())
+                    for (const TranslationRow &row : doc.rows)
+                        if (row.id == p.first)
+                            bestText.insert(p.second, row.target);
+            }
+        }
+        for (auto it = wanted.cbegin(); it != wanted.cend(); ++it) {
+            if (cancel && cancel->load())
+                break;
+            const TranslationDoc doc = project.loadDocument(it.key());
+            for (const auto &p : it.value())
+                for (const TranslationRow &row : doc.rows) {
+                    if (row.id != p.first)
+                        continue;
                     Issue issue;
-                    issue.relPath = w.relPath;
-                    issue.id = w.id;
+                    issue.relPath = it.key();
+                    issue.id = row.id;
                     issue.kind = Duplicates;
-                    issue.source = it.key();
-                    issue.target = t.key();
+                    issue.source = row.source;
+                    issue.target = row.target;
                     issue.message = QCoreApplication::translate("QualityCheck", "elsewhere (%1 times): %2")
-                                        .arg(bestCount)
-                                        .arg(shorten(best));
+                                        .arg(conflicts.value(p.second).bestCount)
+                                        .arg(shorten(bestText.value(p.second)));
                     issues.push_back(issue);
                 }
-            }
         }
     }
     if (progress)

@@ -42,6 +42,8 @@ public:
     void finalize(const QString &sourceLanguage, const QString &targetLanguage);
 
     const QVector<GlossaryTerm> &terms() const { return m_terms; }
+    // Stable identity of the content (terms and translations): caches of results that depend on the glossary use it.
+    const QString &signature() const { return m_signature; }
     bool isEmpty() const { return m_terms.isEmpty(); }
     int conflictCount() const;
 
@@ -57,6 +59,7 @@ private:
     };
     QVector<Raw> m_raw;
     QVector<GlossaryTerm> m_terms;
+    QString m_signature;
     std::unique_ptr<TermMatcher> m_sourceMatcher;
     std::unique_ptr<TermMatcher> m_targetMatcher;
 };

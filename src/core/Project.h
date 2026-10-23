@@ -3,6 +3,7 @@
 #include "CustomGlossary.h"
 #include "Glossary.h"
 #include "MsgFile.h"
+#include "MsgRepair.h"
 #include "Statistics.h"
 #include "VirtualFileSystem.h"
 
@@ -58,7 +59,8 @@ struct TranslationDoc {
     QString trailing;
     bool crlf = true;
     bool targetFileExists = false;
-    QStringList warnings;
+    QStringList warnings;           // malformed records of the source and of the translation
+    QStringList targetWarnings;     // the part of `warnings` that comes from the translation file
 };
 
 enum class FileKind { Game, Dialog, Other };
@@ -69,6 +71,21 @@ struct TodoItem {
     int id = 0;
     QString source;
     QString target;
+};
+
+// A text written in the code of a script (see ScriptStrings.h) and its translation.
+struct ScriptTranslation {
+    QString script;           // "abel" (scripts/abel.int)
+    quint32 operand = 0;
+    QString source;           // the original text, to recognise the string when the script changes
+    QString target;
+};
+
+// A line to put in "to review" with a comment.
+struct ReviewMark {
+    QString relPath;
+    int id = 0;
+    QString comment;
 };
 
 // A translation project: sources, languages, glossary and the per-segment state.
@@ -105,6 +122,11 @@ public:
     // Raw bytes of a message file of the source language (for the reference copies stored in an output archive).
     QByteArray readSourceText(const QString &rel, QString *error = nullptr) const;
 
+    // Fixes the malformed records of the translation file of `rel` (see MsgRepair) and writes the corrected file
+    // in the output folder (a loose file already there is kept as <name>.msg.bak). Nothing is written when the
+    // file needs no repair. The returned result lists the fixes.
+    MsgRepair::Result repairTargetFile(const QString &rel, QString *error = nullptr);
+
     TranslationDoc loadDocument(const QString &rel, QString *error = nullptr) const;
     // Returns false on error. `unencodable` receives characters the target encoding cannot hold.
     // `persistState` = false lets a bulk operation write the flags file once at the end (call saveState()).
@@ -123,6 +145,17 @@ public:
     Glossary buildGlossary(const std::atomic_bool *cancel = nullptr) const;
     void setGlossary(Glossary glossary) { m_glossary = std::make_shared<const Glossary>(std::move(glossary)); }
 
+    // --- texts written in the scripts (saved in the state file)
+    QVector<ScriptTranslation> scriptTranslations() const;
+    void setScriptTranslations(const QVector<ScriptTranslation> &translations);   // also writes the state file
+    // The compiled scripts of the sources, and the untouched original of one (even after a translated copy was
+    // written in the output folder).
+    QStringList scriptNames() const;
+    QByteArray readScriptOriginal(const QString &name, QString *error = nullptr) const;
+    QString pristineScriptsDir() const;              // empty without state file
+    void keepPristineScript(const QString &name, const QByteArray &original);
+    void registerScriptFile(const QString &name, const QString &absolutePath);
+
     // --- terms entered by hand (saved in the state file, added to the glossary by buildGlossary)
     QVector<CustomTerm> customTerms() const;
     void setCustomTerms(const QVector<CustomTerm> &terms);   // also writes the state file
@@ -135,9 +168,17 @@ public:
     // Segments marked "to review" in the saved state, skipping the files in `skip` (e.g. those open in an editor).
     QVector<TodoItem> reviewItems(const QSet<QString> &skip = {}) const;
 
+    // Identity of what a file's analysis depends on (source and translation files, languages, encodings, review
+    // and confirmation marks): equal signatures mean the same results. Used by the caches.
+    QString contentSignature(const QString &rel) const;
+
     // --- cache of the statistics of untouched files (so reopening a big project is quick)
     void setStatsCacheFile(const QString &file) { m_statsCacheFile = file; }
     int statsCacheHits() const { return m_cacheHits; }
+
+    // Marks lines "to review" in the saved state and adds the comment (never twice), without rewriting any .msg
+    // file. Returns the number of lines whose state changed. Files open in an editor must be refreshed by the caller.
+    int markForReview(const QVector<ReviewMark> &marks);
 
     // --- persisted per-segment flags
     void setStateFile(const QString &file) { m_stateFile = file; }
@@ -165,6 +206,7 @@ private:
     std::shared_ptr<const Glossary> m_glossary = std::make_shared<const Glossary>();
     QHash<QString, FileFlags> m_flags;
     QVector<CustomTerm> m_customTerms;
+    QVector<ScriptTranslation> m_scriptTranslations;
     QString m_stateFile;
     // Readers: loadDocument/messageFiles/statistics (any thread). Writer: saveDocument/reload (owner thread).
     mutable QReadWriteLock m_lock;

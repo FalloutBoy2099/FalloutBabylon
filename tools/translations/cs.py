@@ -448,4 +448,62 @@ VALUES = [
     'Překlad je dodáván v %1, přestavěném po každém uložení. Obsahuje text/%2/ s přeloženými soubory',  # 444
     ' a původní texty v text/%1/.',  # 445
     'Vyberte výstupní archiv.',  # 446
+    'Hlášení ze hry',  # 447
+    'nečitelný skript (%1)',  # 448
+    'text obsahuje znak NUL',  # 449
+    '„%1“: %2 znaků při %3 dostupných',  # 450
+    '„%1“: používá úvodní kód skriptu, text nelze prodloužit',  # 451
+    '„%1“: kód nelze bezpečně přečíst, text nelze prodloužit',  # 452
+    'Návrhy',  # 453
+    'Texty ve skriptech',  # 454
+    '&Texty ve skriptech...',  # 455
+    'Importovat hlášení ze &hry...',  # 456
+    '&Sledovat soubor s hlášením ze hry...',  # 457
+    'Soubor překladu %1 obsahuje vadné záznamy; hra ignoruje vše za prvním z nich, takže část překladu se nečte:\n\n%2\n\nOpravit automaticky? Kopie originálu zůstane jako .bak.',  # 458
+    'Opravit',  # 459
+    'Otevřít beze změny',  # 460
+    'Nelze opravit %1:\n%2',  # 461
+    'řádek %1 (%2): %3',  # 462
+    'Opraveno záznamů: %1, ponecháno beze změny: %2.\n\n%3',  # 463
+    'Zapsáno skriptů: %1; textů na místě: %2, prodloužených: %3.',  # 464
+    'Nezapsáno:',  # 465
+    'Importovat hlášení ze hry',  # 466
+    'Textové soubory (*.txt *.log);;Všechny soubory (*)',  # 467
+    'Soubor, do kterého hra zapisuje své hlášení',  # 468
+    'Sleduje se %1: řádky tam zapsané se označí „ke kontrole“.',  # 469
+    'Hlášení je prázdné.',  # 470
+    'V tomto souboru nebyla nalezena žádná poznámka.',  # 471
+    'Hlášení ze hry: označeno řádků „ke kontrole“: %1, nenalezeno: %2.',  # 472
+    'Označeno řádků „ke kontrole“: %1.',  # 473
+    'Nenalezeno:',  # 474
+    'Příliš mnoho shod (uveďte soubor a ID):',  # 475
+    'Souborů z mezipaměti: %1',  # 476
+    'Analyzovat skripty',  # 477
+    'Hledá texty zapsané v kódu skriptů (ne v souborech .msg).',  # 478
+    'Zapsat přeložené skripty',  # 479
+    'Zapíše scripts/<název>.int s překlady do výstupu (složka nebo archiv).',  # 480
+    'Povolit delší texty (experimentální)',  # 481
+    'Text delší než originál se připojí na konec skriptu a kód se na něj přesměruje. Hra čte řetězce podle jejich pozice a nekontroluje, kam míří, ale není to zaručeno: vyzkoušejte ve hře. Bez této volby se zapisují jen překlady, které se vejdou do místa originálu.',  # 482
+    'Filtrovat texty...',  # 483
+    'Skript',  # 484
+    'Původní text',  # 485
+    'Místo',  # 486
+    'Zdroje tohoto projektu neobsahují žádný zkompilovaný skript.',  # 487
+    'Stiskněte „Analyzovat skripty“.',  # 488
+    'Analyzují se skripty...',  # 489
+    'Analyzují se skripty... %1 / %2',  # 490
+    'Textů ve skriptech: %1, přeloženo: %2.',  # 491
+    'max. %1',  # 492
+    'bude připojen na konec',  # 493
+    'příliš dlouhý',  # 494
+    'Minimální podobnost nabízených textů',  # 495
+    '%',  # 496
+    'Podobný text',  # 497
+    'Minimum:',  # 498
+    'Vyberte řádek, abyste viděli, co už bylo přeloženo pro stejný nebo podobný text.',  # 499
+    'Sestavuje se překladová paměť projektu...',  # 500
+    'Tento řádek nemá co překládat.',  # 501
+    'Žádný podobný přeložený text.',  # 502
+    'Návrhů: %1 — dvojitým kliknutím jeden použijete.',  # 503
+    'Návrh použit',  # 504
 ]

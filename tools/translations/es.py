@@ -448,4 +448,62 @@ VALUES = [
     'La traducción se entrega en %1, reconstruido tras cada guardado. Contiene text/%2/ con los archivos traducidos',  # 444
     ', y los textos originales en text/%1/.',  # 445
     'Elige el archivo de salida.',  # 446
+    'Informe del juego',  # 447
+    'script ilegible (%1)',  # 448
+    'un texto contiene un carácter NUL',  # 449
+    '«%1»: %2 caracteres para %3 disponibles',  # 450
+    '«%1»: usado por el código de inicio del script, el texto no se puede alargar',  # 451
+    '«%1»: el código no se puede leer con seguridad, el texto no se puede alargar',  # 452
+    'Sugerencias',  # 453
+    'Textos de los scripts',  # 454
+    '&Textos de los scripts...',  # 455
+    'Importar un informe del &juego...',  # 456
+    '&Seguir un archivo de informe del juego...',  # 457
+    'El archivo de traducción %1 contiene registros mal formados; el juego ignora todo lo que sigue al primero, así que una parte de la traducción no se lee:\n\n%2\n\n¿Repararlo automáticamente? Se conserva una copia del original como .bak.',  # 458
+    'Reparar',  # 459
+    'Abrir tal cual',  # 460
+    'No se puede reparar %1:\n%2',  # 461
+    'línea %1 (%2): %3',  # 462
+    '%1 registro(s) reparado(s), %2 dejado(s) como estaban.\n\n%3',  # 463
+    '%1 script(s) escrito(s): %2 texto(s) en su sitio, %3 alargado(s).',  # 464
+    'No escritos:',  # 465
+    'Importar un informe del juego',  # 466
+    'Archivos de texto (*.txt *.log);;Todos los archivos (*)',  # 467
+    'Archivo en el que el juego escribe su informe',  # 468
+    'Siguiendo %1: las líneas escritas ahí se marcan «para revisar».',  # 469
+    'El informe está vacío.',  # 470
+    'No se ha encontrado ninguna observación en este archivo.',  # 471
+    'Informe del juego: %1 línea(s) marcada(s) «para revisar», %2 no encontrada(s).',  # 472
+    '%1 línea(s) marcada(s) «para revisar».',  # 473
+    'No encontradas:',  # 474
+    'Demasiadas coincidencias (indica el archivo y el id):',  # 475
+    '%1 archivo(s) tomado(s) de la caché',  # 476
+    'Analizar los scripts',  # 477
+    'Busca los textos escritos en el código de los scripts (no en los archivos .msg).',  # 478
+    'Escribir los scripts traducidos',  # 479
+    'Escribe scripts/<nombre>.int con las traducciones en la salida (carpeta o archivo).',  # 480
+    'Permitir textos más largos (experimental)',  # 481
+    'Un texto más largo que el original se añade al final del script y el código se redirige a él. El juego lee las cadenas por su posición sin comprobar adónde apunta, pero no está garantizado: pruébalo en el juego. Sin esta opción, solo se escriben las traducciones que caben en el espacio del original.',  # 482
+    'Filtrar los textos...',  # 483
+    'Script',  # 484
+    'Texto original',  # 485
+    'Espacio',  # 486
+    'Las fuentes de este proyecto no contienen ningún script compilado.',  # 487
+    'Pulsa «Analizar los scripts».',  # 488
+    'Analizando los scripts...',  # 489
+    'Analizando los scripts... %1 / %2',  # 490
+    '%1 texto(s) en los scripts, %2 traducido(s).',  # 491
+    '%1 máx.',  # 492
+    'se añadirá al final',  # 493
+    'demasiado largo',  # 494
+    'Similitud mínima de los textos propuestos',  # 495
+    '%',  # 496
+    'Texto similar',  # 497
+    'Mínimo:',  # 498
+    'Selecciona una línea para ver lo que ya se tradujo para el mismo texto o uno parecido.',  # 499
+    'Construyendo la memoria de traducción del proyecto...',  # 500
+    'Esta línea no tiene nada que traducir.',  # 501
+    'Ningún texto traducido similar.',  # 502
+    '%1 sugerencia(s): doble clic para usar una.',  # 503
+    'Sugerencia usada',  # 504
 ]

@@ -448,4 +448,62 @@ KEYS = [
     'The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files',  # 444
     ', and the original texts under text/%1/.',  # 445
     'Choose the output archive.',  # 446
+    'Game report',  # 447
+    'not a readable script (%1)',  # 448
+    'a text contains a NUL character',  # 449
+    '"%1": %2 characters for %3 available',  # 450
+    '"%1": used by the start-up code of the script, the text cannot be lengthened',  # 451
+    '"%1": the code cannot be read safely, the text cannot be lengthened',  # 452
+    'Suggestions',  # 453
+    'Texts in the scripts',  # 454
+    '&Texts in the scripts...',  # 455
+    'Import a &game report...',  # 456
+    '&Follow a game report file...',  # 457
+    'The translation file %1 contains malformed records; the game ignores everything after the first one, so part of the translation is not read:\n\n%2\n\nRepair it automatically? A copy of the original is kept as .bak.',  # 458
+    'Repair',  # 459
+    'Open as is',  # 460
+    'Cannot repair %1:\n%2',  # 461
+    'line %1 (%2): %3',  # 462
+    '%1 record(s) repaired, %2 left as they are.\n\n%3',  # 463
+    '%1 script(s) written: %2 text(s) in place, %3 lengthened.',  # 464
+    'Not written:',  # 465
+    'Import a game report',  # 466
+    'Text files (*.txt *.log);;All files (*)',  # 467
+    'File the game writes its report to',  # 468
+    'Following %1: lines written there are marked "to review".',  # 469
+    'The report is empty.',  # 470
+    'No remark found in this file.',  # 471
+    'Game report: %1 line(s) marked "to review", %2 not found.',  # 472
+    '%1 line(s) marked "to review".',  # 473
+    'Not found:',  # 474
+    'Too many matches (give the file and the id):',  # 475
+    '%1 file(s) taken from the cache',  # 476
+    'Scan the scripts',  # 477
+    'Looks for the texts written in the code of the scripts (not in the .msg files).',  # 478
+    'Write the translated scripts',  # 479
+    'Writes scripts/<name>.int with the translations into the output (folder or archive).',  # 480
+    'Allow longer texts (experimental)',  # 481
+    'A text longer than the original is appended at the end of the script and the code is redirected to it. The game reads strings through their offset and does not check where it points, but this is not guaranteed: test it in the game. Without it, only translations that fit the room of the original are written.',  # 482
+    'Filter the texts...',  # 483
+    'Script',  # 484
+    'Original text',  # 485
+    'Room',  # 486
+    'The sources of this project contain no compiled script.',  # 487
+    'Press "Scan the scripts".',  # 488
+    'Scanning the scripts...',  # 489
+    'Scanning the scripts... %1 / %2',  # 490
+    '%1 text(s) in the scripts, %2 translated.',  # 491
+    '%1 max',  # 492
+    'will be appended',  # 493
+    'too long',  # 494
+    'Minimum similarity of the texts offered',  # 495
+    '%',  # 496
+    'Similar text',  # 497
+    'Minimum:',  # 498
+    'Select a line to see what was already translated for the same or a similar text.',  # 499
+    'Building the translation memory of the project...',  # 500
+    'This line has nothing to translate.',  # 501
+    'No similar translated text.',  # 502
+    '%1 suggestion(s): double-click to use one.',  # 503
+    'Suggestion used',  # 504
 ]

@@ -8,13 +8,16 @@
 #include "core/ProjectStore.h"
 #include "ui/DialogTreePanel.h"
 #include "core/DatArchive.h"
+#include "core/IntStrings.h"
 #include "core/ProjectSearch.h"
 #include "core/QualityCheck.h"
 #include "ui/GlossaryPanel.h"
 #include "ui/ImportTranslationDialog.h"
 #include "ui/MassTranslateDialog.h"
 #include "ui/QualityPanel.h"
+#include "ui/ScriptStringsPanel.h"
 #include "ui/SearchPanel.h"
+#include "ui/SuggestionPanel.h"
 #include "ui/MsgTableModel.h"
 #include "ui/PipboyPanel.h"
 #include "ui/ProjectDialog.h"
@@ -29,7 +32,10 @@
 #include <QDir>
 #include <QDockWidget>
 #include <QLineEdit>
+#include <QMessageBox>
+#include <QPushButton>
 #include <QSettings>
+#include <QtEndian>
 #include <QFile>
 #include <QStandardPaths>
 #include <QTranslator>
@@ -336,6 +342,198 @@ private slots:
         importDialog.startNow();
         QTRY_VERIFY_WITH_TIMEOUT(importDialog.imported(), 8000);
         QCOMPARE(importDialog.report().exact, 1);
+    }
+
+    void scriptStringsWorkflow()
+    {
+        auto be32 = [](quint32 v) {
+            QByteArray b(4, '\0');
+            qToBigEndian<quint32>(v, reinterpret_cast<uchar *>(b.data()));
+            return b;
+        };
+        auto be16 = [](quint16 v) {
+            QByteArray b(2, '\0');
+            qToBigEndian<quint16>(v, reinterpret_cast<uchar *>(b.data()));
+            return b;
+        };
+        const QByteArray first = "You see Sammy.", second = "Hurt dude";
+        auto entry = [&](const QByteArray &text) {
+            const int allocated = (text.size() + 2) & ~1;
+            return be16(quint16(allocated)) + text + QByteArray(allocated - text.size(), '\0');
+        };
+        const QByteArray table = entry(first) + entry(second);
+        const quint32 bodyOffset = 42 + 4 + 24 + 4 + 4 + 4 + quint32(table.size()) + 4;
+        QByteArray script(42, '\0');
+        script += be32(1) + be32(0) + be32(0) + be32(0) + be32(0) + be32(bodyOffset) + be32(0);
+        script += be32(0) + be32(0xFFFFFFFFu) + be32(quint32(table.size())) + table + be32(0xFFFFFFFFu);
+        script += be16(0x9001) + be32(6) + be16(0x9001) + be32(4 + quint32(entry(first).size()) + 2) + be16(0x8019);
+
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString mod = dir.path() + "/mod";
+        write(mod + "/text/english/dialog/sammy.msg", "{100}{}{Hello.}\r\n");
+        write(mod + "/scripts/sammy.int", script);
+        ProjectConfig cfg;
+        cfg.id = "scripts1";
+        cfg.name = "Scripts";
+        cfg.sources = {mod};
+        cfg.outputDir = dir.path() + "/out";
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+        QDir(QFileInfo(ProjectStore::stateFile(cfg.id)).absolutePath() + "/scripts1.scripts").removeRecursively();
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);
+        auto *panel = window.findChild<ScriptStringsPanel *>();
+        QVERIFY(panel);
+        panel->scanNow();
+        QTRY_VERIFY_WITH_TIMEOUT(!panel->scanning() && panel->texts().size() == 2, 5000);
+        QCOMPARE(panel->texts()[0].source, QString("You see Sammy."));
+
+        // translations are kept in the project; one fits, one is too long
+        panel->setTranslation(0, "C'est Sammy.");
+        panel->setTranslation(1, "Il s'est fait mal, le pauvre.");
+        QCOMPARE(panel->translations().size(), 2);
+
+        // writing the scripts shows a report: close it automatically
+        QTimer closer;
+        closer.setInterval(100);
+        QObject::connect(&closer, &QTimer::timeout, [] {
+            for (QWidget *w : QApplication::topLevelWidgets())
+                if (auto *box = qobject_cast<QMessageBox *>(w))
+                    box->accept();
+        });
+        closer.start();
+        QPushButton *apply = nullptr;
+        for (auto *b : panel->findChildren<QPushButton *>())
+            if (b->text() == panel->tr("Write the translated scripts"))
+                apply = b;
+        QVERIFY(apply);
+        apply->click();
+        closer.stop();
+        QVERIFY(QFileInfo::exists(cfg.outputDir + "/scripts/sammy.int"));
+        QFile f(cfg.outputDir + "/scripts/sammy.int");
+        QVERIFY(f.open(QIODevice::ReadOnly));
+        const IntStrings::Table t = IntStrings::parse(f.readAll());
+        QCOMPARE(t.entries[0].text, QByteArray("C'est Sammy."));
+        QCOMPARE(t.entries[1].text, QByteArray("Hurt dude"));          // the long one was refused
+    }
+
+    void gameReportWorkflow()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString mod = dir.path() + "/mod";
+        write(mod + "/text/english/dialog/abel.msg", "{100}{}{Hello there.}\r\n{101}{}{You are not welcome.}\r\n");
+        write(mod + "/text/french/dialog/abel.msg", "{100}{}{Bonjour.}\r\n{101}{}{Vous n'etes pas le bienvenu.}\r\n");
+        ProjectConfig cfg;
+        cfg.id = "report1";
+        cfg.name = "Report";
+        cfg.sources = {mod};
+        cfg.outputDir = dir.path() + "/out";
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+        QSettings().remove(QStringLiteral("gameReport/report1"));
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);
+        auto *todo = window.findChild<TodoPanel *>();
+        QVERIFY(todo);
+        QCOMPARE(todo->itemCount(), 0);
+
+        // the game starts writing its report: the file is followed, only new lines count
+        const QString report = dir.path() + "/babylon-report.txt";
+        write(report, "dialog/abel.msg 100 old remark, written before the project followed the file\r\n");
+        window.followReport(cfg.id, report);
+        {
+            QFile f(report);
+            QVERIFY(f.open(QIODevice::Append));
+            f.write("dialog/abel.msg 101 too rude\r\n");
+            f.flush();
+        }
+        QTRY_COMPARE_WITH_TIMEOUT(todo->itemCount(), 1, 8000);
+        QSettings().remove(QStringLiteral("gameReport/report1"));
+
+        // nothing was written to the game files, and the line carries the remark
+        QVERIFY(!QFileInfo::exists(cfg.outputDir + "/text/french/dialog/abel.msg"));
+        window.openFile(cfg.id, "dialog/abel.msg");
+        auto *editor = window.findChild<TranslationEditor *>();
+        QVERIFY(editor);
+        const int row = editor->model()->rowForId(101);
+        QVERIFY(editor->model()->row(row).review);
+        QVERIFY(editor->model()->row(row).comment.contains("too rude"));
+        QVERIFY(!editor->model()->row(editor->model()->rowForId(100)).review);   // the old line was not read
+    }
+
+    void suggestionsWorkflow()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+        const QString mod = dir.path() + "/mod";
+        write(mod + "/text/english/dialog/abel.msg",
+              "{100}{}{You need a Stimpak to heal your wounds.}\r\n{101}{}{Goodbye.}\r\n");
+        write(mod + "/text/french/dialog/abel.msg", "{100}{}{Il vous faut un Stimpak pour soigner vos blessures.}\r\n");
+        write(mod + "/text/english/dialog/cass.msg",
+              "{100}{}{You need a Stimpak to heal your wounds, stranger.}\r\n{101}{}{Goodbye.}\r\n");
+        write(mod + "/text/french/dialog/cass.msg", "{101}{}{Au revoir.}\r\n");
+        ProjectConfig cfg;
+        cfg.id = "suggest1";
+        cfg.name = "Suggest";
+        cfg.sources = {mod};
+        cfg.outputDir = dir.path() + "/out";
+        cfg.sourceLanguage = "english";
+        cfg.targetLanguage = "french";
+        QFile::remove(ProjectStore::stateFile(cfg.id));
+
+        Theme::apply(Theme::Mode::Light);
+        MainWindow window;
+        window.resize(1500, 900);
+        window.show();
+        QVERIFY(window.openProject(cfg));
+        QTRY_VERIFY_WITH_TIMEOUT(!window.analysisRunning(), 15000);   // includes the translation memory
+        window.openFile(cfg.id, "dialog/cass.msg");
+        auto *editor = window.findChild<TranslationEditor *>();
+        auto *panel = window.findChild<SuggestionPanel *>();
+        QVERIFY(editor && panel);
+        editor->selectId(100);
+        QTRY_VERIFY_WITH_TIMEOUT(panel->suggestionCount() > 0, 3000);
+        QVERIFY(panel->suggestions().first().score < 1.0);
+        QCOMPARE(panel->suggestions().first().target, QString("Il vous faut un Stimpak pour soigner vos blessures."));
+
+        // using it fills the line and marks it for review, one undoable step
+        panel->useRow(0);
+        const int row = editor->model()->rowForId(100);
+        QCOMPARE(editor->model()->row(row).target, QString("Il vous faut un Stimpak pour soigner vos blessures."));
+        QVERIFY(editor->model()->row(row).review);
+        QVERIFY(editor->undoOperation());
+        QVERIFY(editor->model()->row(row).target.isEmpty());
+
+        // the "Goodbye." line is translated the same way elsewhere... only once, so exactly that text is offered
+        editor->selectId(101);
+        QTest::qWait(400);
+        QVERIFY(panel->suggestionCount() == 0);       // the only "Goodbye." translation is the line itself
+        window.openFile(cfg.id, "dialog/abel.msg");
+        auto editors = window.findChildren<TranslationEditor *>();
+        TranslationEditor *abel = nullptr;
+        for (auto *e : editors)
+            if (e->relPath() == "dialog/abel.msg")
+                abel = e;
+        QVERIFY(abel);
+        abel->selectId(101);
+        QTRY_VERIFY_WITH_TIMEOUT(panel->suggestionCount() > 0, 3000);
+        QCOMPARE(panel->suggestions().first().score, 1.0);
+        panel->useRow(0);
+        QVERIFY(!abel->model()->row(abel->model()->rowForId(101)).review);   // a perfect match needs no review
     }
 
     void archiveOutputWorkflow()

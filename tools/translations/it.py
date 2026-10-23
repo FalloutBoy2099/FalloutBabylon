@@ -448,4 +448,62 @@ VALUES = [
     'La traduzione viene consegnata in %1, ricostruito dopo ogni salvataggio. Contiene text/%2/ con i file tradotti',  # 444
     ', e i testi originali in text/%1/.',  # 445
     "Scegli l'archivio di output.",  # 446
+    'Rapporto del gioco',  # 447
+    'script illeggibile (%1)',  # 448
+    'un testo contiene un carattere NUL',  # 449
+    '«%1»: %2 caratteri per %3 disponibili',  # 450
+    '«%1»: usato dal codice di avvio dello script, il testo non può essere allungato',  # 451
+    '«%1»: il codice non può essere letto in sicurezza, il testo non può essere allungato',  # 452
+    'Suggerimenti',  # 453
+    'Testi negli script',  # 454
+    '&Testi negli script...',  # 455
+    'Importa un rapporto del &gioco...',  # 456
+    '&Segui un file di rapporto del gioco...',  # 457
+    "Il file di traduzione %1 contiene record malformati; il gioco ignora tutto ciò che segue il primo, quindi una parte della traduzione non viene letta:\n\n%2\n\nRiparare automaticamente? Una copia dell'originale resta come .bak.",  # 458
+    'Ripara',  # 459
+    "Apri così com'è",  # 460
+    'Impossibile riparare %1:\n%2',  # 461
+    'riga %1 (%2): %3',  # 462
+    "%1 record riparato/i, %2 lasciato/i com'era/no.\n\n%3",  # 463
+    '%1 script scritto/i: %2 testo/i sul posto, %3 allungato/i.',  # 464
+    'Non scritti:',  # 465
+    'Importa un rapporto del gioco',  # 466
+    'File di testo (*.txt *.log);;Tutti i file (*)',  # 467
+    'File in cui il gioco scrive il suo rapporto',  # 468
+    'Seguo %1: le righe scritte lì vengono contrassegnate «da rivedere».',  # 469
+    'Il rapporto è vuoto.',  # 470
+    'Nessuna segnalazione trovata in questo file.',  # 471
+    'Rapporto del gioco: %1 riga/righe contrassegnata/e «da rivedere», %2 non trovata/e.',  # 472
+    '%1 riga/righe contrassegnata/e «da rivedere».',  # 473
+    'Non trovate:',  # 474
+    "Troppe corrispondenze (indica il file e l'id):",  # 475
+    '%1 file presi dalla cache',  # 476
+    'Analizza gli script',  # 477
+    'Cerca i testi scritti nel codice degli script (non nei file .msg).',  # 478
+    'Scrivi gli script tradotti',  # 479
+    "Scrive scripts/<nome>.int con le traduzioni nell'output (cartella o archivio).",  # 480
+    'Consenti testi più lunghi (sperimentale)',  # 481
+    "Un testo più lungo dell'originale viene aggiunto alla fine dello script e il codice viene reindirizzato. Il gioco legge le stringhe tramite la loro posizione senza controllare dove punta, ma non è garantito: prova nel gioco. Senza questa opzione vengono scritte solo le traduzioni che entrano nello spazio dell'originale.",  # 482
+    'Filtra i testi...',  # 483
+    'Script',  # 484
+    'Testo originale',  # 485
+    'Spazio',  # 486
+    'Le sorgenti di questo progetto non contengono alcuno script compilato.',  # 487
+    'Premi «Analizza gli script».',  # 488
+    'Analisi degli script...',  # 489
+    'Analisi degli script... %1 / %2',  # 490
+    '%1 testo/i negli script, %2 tradotto/i.',  # 491
+    '%1 max',  # 492
+    'verrà aggiunto in fondo',  # 493
+    'troppo lungo',  # 494
+    'Somiglianza minima dei testi proposti',  # 495
+    '%',  # 496
+    'Testo simile',  # 497
+    'Minimo:',  # 498
+    'Seleziona una riga per vedere cosa è già stato tradotto per lo stesso testo o uno simile.',  # 499
+    'Costruzione della memoria di traduzione del progetto...',  # 500
+    'Questa riga non ha nulla da tradurre.',  # 501
+    'Nessun testo tradotto simile.',  # 502
+    '%1 suggerimento/i: doppio clic per usarne uno.',  # 503
+    'Suggerimento usato',  # 504
 ]

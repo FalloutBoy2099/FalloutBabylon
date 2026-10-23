@@ -1,9 +1,13 @@
 #pragma once
 
+#include "core/GameReport.h"
 #include "core/OutputArchive.h"
 #include "core/Project.h"
 #include "core/ProjectSearch.h"
+#include "core/ScriptStrings.h"
+#include "core/TranslationIndex.h"
 
+#include <QFileSystemWatcher>
 #include <QHash>
 #include <QSet>
 #include <QMainWindow>
@@ -23,8 +27,10 @@ class QProgressBar;
 class QStackedWidget;
 class QualityPanel;
 class QTabWidget;
+class ScriptStringsPanel;
 class SearchPanel;
 class StatsPanel;
+class SuggestionPanel;
 class TodoPanel;
 class TranslationService;
 class TranslationEditor;
@@ -43,6 +49,8 @@ public:
     bool openProject(const ProjectConfig &config);
     void openFile(const QString &id, const QString &relPath);
     bool analysisRunning() const;
+    // Follows a game report file: what the game appends to it is marked "to review" in the project.
+    void followReport(const QString &id, const QString &path);
     void applyThemeToAll();
 
 signals:
@@ -63,12 +71,14 @@ private:
     struct Session {
         std::shared_ptr<Project> project;
         QHash<QString, FileStats> stats;
-        Job glossaryJob, statsJob;
+        Job glossaryJob, statsJob, indexJob;
+        std::shared_ptr<TranslationIndex> index;      // translation memory of the project (suggestions)
         int statsDone = 0, statsTotal = 0;
         void cancelAll()
         {
             glossaryJob.cancel->store(true);
             statsJob.cancel->store(true);
+            indexJob.cancel->store(true);
         }
     };
 
@@ -90,6 +100,9 @@ private:
     void onGlossaryReady(const QString &id, int generation, const std::shared_ptr<Glossary> &glossary);
     void onStatsBatch(const QString &id, int generation, const QVector<FileStats> &batch, int done, int total);
     void scheduleGlossaryRebuild(const QString &id);
+    void startIndex(const QString &id);
+    void onIndexReady(const QString &id, int generation, const std::shared_ptr<TranslationIndex> &index);
+    void showSuggestions();
     void updateProgress();
     void refreshTodo();
     void refreshDialogTree();
@@ -104,6 +117,16 @@ private:
     bool saveAll();
     bool confirmClose(const QList<TranslationEditor *> &list);
     void onEditorStats(TranslationEditor *editor, const FileStats &stats);
+
+    // Texts written in the code of the scripts: the translated scripts are written into the output.
+    void applyScriptStrings(const QString &id, const QVector<ScriptTranslation> &translations, bool enlarge);
+
+    // Remarks noticed in the game (see core/GameReport.h): imported once or followed while the game runs.
+    void importGameReport(const QString &id);
+    void toggleReportWatch(bool on);
+    void armReportWatch(const QString &id, const QString &path);
+    void processReport(const QString &id, const QString &path, bool whole);
+    void onReportResolved(const QString &id, const GameReport::Outcome &outcome, bool silent);
 
     // Output as a .dat archive: rebuilt shortly after the files were saved.
     void scheduleArchive(const QString &id);
@@ -135,6 +158,10 @@ private:
     DialogTreePanel *m_dialogPanel = nullptr;
     PipboyPanel *m_pipboyPanel = nullptr;
     SearchPanel *m_searchPanel = nullptr;
+    SuggestionPanel *m_suggestPanel = nullptr;
+    ScriptStringsPanel *m_scriptPanel = nullptr;
+    QDockWidget *m_scriptDock = nullptr;
+    QTimer m_suggestTimer;
     QDockWidget *m_searchDock = nullptr;
     QualityPanel *m_qualityPanel = nullptr;
     QDockWidget *m_qualityDock = nullptr;
@@ -143,6 +170,12 @@ private:
     QTimer m_todoTimer;
     QTimer m_glossaryTimer;
     QStringList m_glossaryPending;
+    QFileSystemWatcher m_reportWatcher;
+    QTimer m_reportTimer;
+    QHash<QString, QString> m_reportProject;        // watched report file -> project id
+    QSet<QString> m_reportPending;                  // report files that changed
+    QHash<QString, qint64> m_reportOffset;          // bytes of each report already processed
+    QAction *m_actGameReport = nullptr, *m_actWatchReport = nullptr, *m_actScripts = nullptr;
     QTimer m_archiveTimer;
     QSet<QString> m_archivePending, m_archiveRunning, m_archiveFailed;
 

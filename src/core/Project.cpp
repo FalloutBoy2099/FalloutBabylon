@@ -229,6 +229,46 @@ QByteArray Project::readInterfaceFont(int index) const
     return {};
 }
 
+MsgRepair::Result Project::repairTargetFile(const QString &rel, QString *error)
+{
+    MsgRepair::Result result;
+    QByteArray bytes;
+    QString existing;                    // loose file that currently provides the translation
+    {
+        QReadLocker locker(&m_lock);
+        const VirtualFileSystem::File *f = m_vfs.find(targetPath(rel));
+        if (!f) {
+            if (error)
+                *error = QStringLiteral("%1 does not exist in the translation").arg(rel);
+            return result;
+        }
+        bytes = m_vfs.read(targetPath(rel), error);
+        existing = f->absolutePath;
+    }
+    result = MsgRepair::repair(TextCodec::decode(bytes, m_config.targetEncoding));
+    if (!result.changed())
+        return result;
+
+    const QString path = targetDiskPath(rel);
+    if (!existing.isEmpty() && QFileInfo(existing).absoluteFilePath().compare(QFileInfo(path).absoluteFilePath(), Qt::CaseInsensitive) == 0) {
+        const QString backup = path + QStringLiteral(".bak");
+        if (!QFileInfo::exists(backup))
+            QFile::copy(path, backup);
+    }
+    const QByteArray fixed = TextCodec::encode(result.text, m_config.targetEncoding);
+    QDir().mkpath(QFileInfo(path).absolutePath());
+    QSaveFile out(path);
+    if (!out.open(QIODevice::WriteOnly) || out.write(fixed) != fixed.size() || !out.commit()) {
+        if (error)
+            *error = out.errorString();
+        result.text = result.original;      // nothing was written
+        return result;
+    }
+    QWriteLocker locker(&m_lock);
+    m_vfs.addLooseFile(targetPath(rel), path);
+    return result;
+}
+
 TranslationDoc Project::loadDocument(const QString &rel, QString *error) const
 {
     QReadLocker locker(&m_lock);
@@ -248,6 +288,7 @@ TranslationDoc Project::loadDocument(const QString &rel, QString *error) const
         doc.targetFileExists = true;
     }
     doc.warnings = source.warnings + target.warnings;
+    doc.targetWarnings = target.warnings;
     doc.crlf = haveSource ? source.crlf : target.crlf;
     doc.trailing = haveSource ? source.trailing : target.trailing;
 
@@ -386,6 +427,12 @@ QString Project::statsSignature(const QString &rel) const
     return sig;
 }
 
+QString Project::contentSignature(const QString &rel) const
+{
+    QReadLocker locker(&m_lock);
+    return statsSignature(rel);
+}
+
 void Project::loadStatsCache() const
 {
     if (m_cacheLoaded)
@@ -521,6 +568,77 @@ Glossary Project::buildGlossary(const std::atomic_bool *cancel) const
     return glossary;
 }
 
+QVector<ScriptTranslation> Project::scriptTranslations() const
+{
+    QReadLocker locker(&m_lock);
+    return m_scriptTranslations;
+}
+
+void Project::setScriptTranslations(const QVector<ScriptTranslation> &translations)
+{
+    QWriteLocker locker(&m_lock);
+    m_scriptTranslations = translations;
+    saveStateLocked();
+}
+
+QStringList Project::scriptNames() const
+{
+    QReadLocker locker(&m_lock);
+    QStringList names;
+    for (const QString &path : m_vfs.list(QStringLiteral("scripts/"), QStringLiteral(".int"))) {
+        QString name = path.mid(path.lastIndexOf(QLatin1Char('/')) + 1);
+        name.chop(4);
+        names << name;
+    }
+    names.sort();
+    return names;
+}
+
+QString Project::pristineScriptsDir() const
+{
+    if (m_stateFile.isEmpty())
+        return {};
+    return QFileInfo(m_stateFile).absolutePath() + QLatin1Char('/') + m_config.id + QStringLiteral(".scripts");
+}
+
+void Project::keepPristineScript(const QString &name, const QByteArray &original)
+{
+    const QString dir = pristineScriptsDir();
+    if (dir.isEmpty())
+        return;
+    const QString path = QDir(dir).filePath(name + QStringLiteral(".int"));
+    if (QFileInfo::exists(path))
+        return;
+    QDir().mkpath(dir);
+    QSaveFile f(path);
+    if (f.open(QIODevice::WriteOnly) && f.write(original) == original.size())
+        f.commit();
+}
+
+QByteArray Project::readScriptOriginal(const QString &name, QString *error) const
+{
+    const QString dir = pristineScriptsDir();
+    if (!dir.isEmpty()) {
+        QFile f(QDir(dir).filePath(name + QStringLiteral(".int")));
+        if (f.open(QIODevice::ReadOnly))
+            return f.readAll();
+    }
+    QReadLocker locker(&m_lock);
+    const QString path = QStringLiteral("scripts/%1.int").arg(name.toLower());
+    if (!m_vfs.exists(path)) {
+        if (error)
+            *error = QStringLiteral("%1 not found in the sources").arg(path);
+        return {};
+    }
+    return m_vfs.read(path, error);
+}
+
+void Project::registerScriptFile(const QString &name, const QString &absolutePath)
+{
+    QWriteLocker locker(&m_lock);
+    m_vfs.addLooseFile(QStringLiteral("scripts/%1.int").arg(name.toLower()), absolutePath);
+}
+
 QVector<CustomTerm> Project::customTerms() const
 {
     QReadLocker locker(&m_lock);
@@ -532,6 +650,31 @@ void Project::setCustomTerms(const QVector<CustomTerm> &terms)
     QWriteLocker locker(&m_lock);
     m_customTerms = terms;
     saveStateLocked();
+}
+
+int Project::markForReview(const QVector<ReviewMark> &marks)
+{
+    int changed = 0;
+    QWriteLocker locker(&m_lock);
+    for (const ReviewMark &mark : marks) {
+        FileFlags &flags = m_flags[mark.relPath];
+        bool touched = false;
+        if (!flags.review.contains(mark.id)) {
+            flags.review.insert(mark.id);
+            touched = true;
+        }
+        if (!mark.comment.isEmpty()) {
+            QString &comment = flags.comments[mark.id];
+            if (!comment.contains(mark.comment)) {
+                comment += (comment.isEmpty() ? QString() : QStringLiteral(" | ")) + mark.comment;
+                touched = true;
+            }
+        }
+        changed += touched ? 1 : 0;
+    }
+    if (changed)
+        saveStateLocked();
+    return changed;
 }
 
 QVector<TodoItem> Project::reviewItems(const QSet<QString> &skip) const
@@ -567,12 +710,23 @@ void Project::loadStateLocked()
 {
     m_flags.clear();
     m_customTerms.clear();
+    m_scriptTranslations.clear();
     if (m_stateFile.isEmpty())
         return;
     QFile f(m_stateFile);
     if (!f.open(QIODevice::ReadOnly))
         return;
     const QJsonObject root = QJsonDocument::fromJson(f.readAll()).object();
+    for (const QJsonValue &v : root.value(QStringLiteral("scriptStrings")).toArray()) {
+        const QJsonObject o = v.toObject();
+        ScriptTranslation t;
+        t.script = o.value(QStringLiteral("script")).toString();
+        t.operand = quint32(o.value(QStringLiteral("operand")).toDouble());
+        t.source = o.value(QStringLiteral("source")).toString();
+        t.target = o.value(QStringLiteral("target")).toString();
+        if (!t.script.isEmpty())
+            m_scriptTranslations.push_back(t);
+    }
     for (const QJsonValue &v : root.value(QStringLiteral("customTerms")).toArray()) {
         const QJsonObject o = v.toObject();
         CustomTerm t;
@@ -651,6 +805,15 @@ void Project::saveStateLocked() const
                                          {QStringLiteral("target"), t.target},
                                          {QStringLiteral("keep"), t.keep}});
             root.insert(QStringLiteral("customTerms"), terms);
+        }
+        if (!m_scriptTranslations.isEmpty()) {
+            QJsonArray scripts;
+            for (const ScriptTranslation &t : m_scriptTranslations)
+                scripts.append(QJsonObject{{QStringLiteral("script"), t.script},
+                                           {QStringLiteral("operand"), double(t.operand)},
+                                           {QStringLiteral("source"), t.source},
+                                           {QStringLiteral("target"), t.target}});
+            root.insert(QStringLiteral("scriptStrings"), scripts);
         }
         f.write(QJsonDocument(root).toJson(QJsonDocument::Compact));
         f.commit();

@@ -144,6 +144,31 @@ Le même panneau prévisualise **`game/quests.msg`** : le moteur coupe chaque de
   (`%APPDATA%/FalloutBabylon/projects/<id>.stats.json`, clé : taille et date des fichiers) ; seuls les fichiers modifiés
   sont relus.
 
+* **Suggestions de la mémoire de traduction** (onglet « Suggestions », en bas) : pour la ligne sélectionnée, les lignes déjà
+  traduites du projet dont la source est identique ou proche (similarité réglable, 70 % par défaut). Double-clic : la
+  traduction est reprise ; en dessous de 100 % la ligne est marquée « à revoir ». L'index (50 000 lignes en environ 1 s sur
+  le RPU) est construit après l'analyse et mis à jour à chaque enregistrement.
+* **Fichiers `.msg` abîmés** : à l'ouverture, si le fichier de traduction contient des enregistrements mal formés (deux
+  champs au lieu de trois, `}` ou `{` manquant, enregistrement qui avale le suivant, identifiant non numérique), le moteur
+  ignore tout ce qui suit le premier ; l'éditeur propose de **réparer** (copie `.bak` de l'original, enregistrement
+  invalide mis en commentaire) puis relit le fichier.
+* **Rapport du jeu** (Outils > Importer un rapport du jeu / Suivre un fichier de rapport) : un fichier texte où le jeu, un
+  script ou vous-même notez des remarques, une par ligne : `dialog/abel.msg 102 remarque`, `abel.msg#102`,
+  `text/french/game/pro_item.msg:200 trop long`, ou simplement un texte vu à l'écran (recherché dans les traductions, puis les
+  sources). Les lignes trouvées passent « à revoir » avec la remarque en commentaire, sans réécrire les `.msg`. En mode
+  « suivre », ce qui est ajouté au fichier est traité au fur et à mesure (seules les nouvelles lignes comptent). Le côté
+  « jeu » (un script sfall qui écrit ce fichier) n'est pas fourni : tout outil capable d'ajouter une ligne au fichier convient.
+* **Textes des scripts** (Outils > Textes des scripts) : certains textes (`display_msg("Vous voyez Sammy.")`, messages d'erreur)
+  sont écrits en dur dans le code des `.int` et n'apparaissent dans aucun `.msg`. Le panneau les liste (table des chaînes du
+  `.int`, lue sans décompiler : 952 scripts de Fallout 1 lus sans erreur), reçoit une traduction par texte et écrit
+  `scripts/<nom>.int` dans la sortie (aussi dans l'archive `.dat`). Une traduction qui tient dans la place de l'original
+  est écrite sur place ; une traduction plus longue est refusée, sauf option « Autoriser les textes plus longs
+  (expérimental) » qui l'ajoute à la fin du script et redirige le code : le jeu lit les chaînes par leur position sans
+  vérifier où elle mène, mais c'est à tester en jeu (et int2ssl ne sait pas relire ces scripts allongés).
+  L'original du script est conservé à côté de l'état du projet. L'heuristique « texte destiné au joueur » est large (le RPU
+  en donne environ 3 900) : ne traduisez que ce que vous voyez réellement.
+* **Rapport qualité plus rapide** : les résultats sont mis en cache par fichier (`<id>.qa.json`, clé : fichiers, marques,
+  glossaire, réglages) ; sur l'ancien RPU traduit (853 fichiers) la deuxième exécution prend ~1 s au lieu de ~25 s.
 * **Sortie dans une archive `.dat`** (Paramètres du projet > Sortie > « Archive DAT ») : au lieu d'un dossier de fichiers
   libres, la traduction est livrée dans un `.dat` (Fallout 2 zlib ou Fallout 1, proposé d'après les sources). Les fichiers
   enregistrés restent dans un dossier de travail de l'application (`%APPDATA%/FalloutBabylon/projects/<id>.output`) et

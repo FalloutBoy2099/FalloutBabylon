@@ -28,6 +28,7 @@ public:
     void runNow();
     int resultCount() const;      // rows currently shown
     int totalCount() const { return int(m_issues.size()); }
+    int cacheHits() const { return m_cacheHits; }       // files of the last run answered from the cache
     bool running() const { return m_running; }
     QVector<QualityCheck::Issue> issues() const { return m_issues; }
     void setKinds(int kinds);
@@ -36,7 +37,7 @@ signals:
     void openRequested(const QString &relPath, int id);
 
 private:
-    void showResults(int generation, const QVector<QualityCheck::Issue> &issues);
+    void showResults(int generation, const QVector<QualityCheck::Issue> &issues, int cacheHits);
     void applyFilter();
     void exportCsv();
     QualityCheck::Options options() const;
@@ -53,5 +54,6 @@ private:
     QVector<QualityCheck::Issue> m_issues;
     std::shared_ptr<std::atomic_bool> m_cancel = std::make_shared<std::atomic_bool>(false);
     int m_generation = 0;
+    int m_cacheHits = 0;
     bool m_running = false;
 };

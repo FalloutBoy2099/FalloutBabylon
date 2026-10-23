@@ -1,5 +1,6 @@
 #include "Glossary.h"
 
+#include <QCryptographicHash>
 #include <QHash>
 #include <QSet>
 #include <algorithm>
@@ -8,6 +9,7 @@ void Glossary::clear()
 {
     m_raw.clear();
     m_terms.clear();
+    m_signature.clear();
     m_sourceMatcher.reset();
     m_targetMatcher.reset();
 }
@@ -90,6 +92,18 @@ void Glossary::finalize(const QString &sourceLanguage, const QString &targetLang
     std::sort(m_terms.begin(), m_terms.end(), [](const GlossaryTerm &a, const GlossaryTerm &b) {
         return a.source.compare(b.source, Qt::CaseInsensitive) < 0;
     });
+
+    {
+        QCryptographicHash hash(QCryptographicHash::Sha1);
+        hash.addData(sourceLanguage.toUtf8());
+        hash.addData(targetLanguage.toUtf8());
+        for (const GlossaryTerm &t : std::as_const(m_terms)) {
+            hash.addData(t.source.toUtf8());
+            hash.addData(t.targets.join(QLatin1Char('\t')).toUtf8());
+            hash.addData(t.custom ? "c" : "g", 1);
+        }
+        m_signature = QString::fromLatin1(hash.result().toHex());
+    }
 
     m_sourceMatcher = std::make_unique<TermMatcher>(sourceLanguage);
     m_targetMatcher = std::make_unique<TermMatcher>(targetLanguage);

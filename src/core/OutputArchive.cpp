@@ -122,6 +122,22 @@ Result build(const Project &project)
         }
     }
 
+    // translated scripts (texts written in their code), if any
+    const QString scriptsRoot = work.filePath(QStringLiteral("scripts"));
+    if (QDir(scriptsRoot).exists()) {
+        QDirIterator scripts(scriptsRoot, {QStringLiteral("*.int")}, QDir::Files);
+        while (scripts.hasNext()) {
+            QFile f(scripts.next());
+            if (!f.open(QIODevice::ReadOnly))
+                continue;
+            DatWriteItem item;
+            item.path = QStringLiteral("scripts/") + QFileInfo(f.fileName()).fileName();
+            item.data = f.readAll();
+            items.push_back(item);
+            ++result.scripts;
+        }
+    }
+
     if (config.archiveWithSource) {
         const QString sourcePrefix = languagePrefix(config.sourceLanguage);
         for (const QString &rel : std::as_const(relatives)) {

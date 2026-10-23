@@ -39,7 +39,12 @@ add_library(babylon_core STATIC
     src/core/ProjectSearch.cpp
     src/core/QualityCheck.cpp
     src/core/CustomGlossary.cpp
-    src/core/OutputArchive.cpp)
+    src/core/OutputArchive.cpp
+    src/core/MsgRepair.cpp
+    src/core/TranslationIndex.cpp
+    src/core/GameReport.cpp
+    src/core/IntStrings.cpp
+    src/core/ScriptStrings.cpp)
 target_include_directories(babylon_core PUBLIC src)
 target_link_libraries(babylon_core PUBLIC Qt6::Core Qt6::Network)
 
@@ -79,6 +84,8 @@ set(UI_SOURCES
     src/ui/ImportTranslationDialog.cpp
     src/ui/SearchPanel.cpp
     src/ui/QualityPanel.cpp
+    src/ui/SuggestionPanel.cpp
+    src/ui/ScriptStringsPanel.cpp
     src/ui/TranslationService.cpp
     src/ui/SettingsDialog.cpp
     src/ui/MassTranslateDialog.cpp

@@ -36,6 +36,11 @@ QString stateFile(const QString &id)
     return QDir(projectsDir()).filePath(id + QStringLiteral(".state.json"));
 }
 
+QString qaCacheFile(const QString &id)
+{
+    return QDir(projectsDir()).filePath(id + QStringLiteral(".qa.json"));
+}
+
 QString stagingDir(const QString &id)
 {
     return QDir(projectsDir()).filePath(id + QStringLiteral(".output"));
@@ -102,6 +107,7 @@ void remove(const QString &id)
     QFile::remove(QDir(projectsDir()).filePath(id + QStringLiteral(".fbproj")));
     QFile::remove(stateFile(id));
     QFile::remove(statsCacheFile(id));
+    QFile::remove(qaCacheFile(id));
 }
 
 QStringList openProjectIds()

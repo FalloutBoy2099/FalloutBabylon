@@ -519,6 +519,43 @@ void TranslationEditor::massTranslate()
     refreshCurrent();
 }
 
+int TranslationEditor::markForReview(const QVector<ReviewMark> &marks)
+{
+    int changed = 0;
+    MsgTableModel::Operation op(m_model, tr("Review mark"));
+    for (const ReviewMark &mark : marks) {
+        if (mark.relPath != m_doc.relPath)
+            continue;
+        const int row = m_model->rowForId(mark.id);
+        if (row < 0)
+            continue;
+        const TranslationRow &r = m_model->row(row);
+        bool touched = !r.review;
+        m_model->setReview(row, true);
+        if (!mark.comment.isEmpty() && !r.comment.contains(mark.comment)) {
+            m_model->setComment(row, r.comment.isEmpty() ? mark.comment : r.comment + QStringLiteral(" | ") + mark.comment);
+            touched = true;
+        }
+        changed += touched ? 1 : 0;
+    }
+    updateIssueLabel();
+    return changed;
+}
+
+void TranslationEditor::applySuggestion(const QString &translation, double score)
+{
+    if (m_currentRow < 0)
+        return;
+    {
+        MsgTableModel::Operation op(m_model, tr("Suggestion used"));
+        m_model->setTarget(m_currentRow, translation);
+        if (score < 1.0)
+            m_model->setReview(m_currentRow, true);
+    }
+    refreshCurrent();
+    m_target->setFocus();
+}
+
 bool TranslationEditor::undoOperation()
 {
     if (!m_model->undo())

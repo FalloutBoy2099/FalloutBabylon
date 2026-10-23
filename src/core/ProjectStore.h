@@ -14,6 +14,7 @@ bool save(const ProjectConfig &config);
 void remove(const QString &id);
 QString stateFile(const QString &id);
 QString statsCacheFile(const QString &id);
+QString qaCacheFile(const QString &id);
 // Working folder of a project whose output is a .dat archive (see OutputArchive).
 QString stagingDir(const QString &id);
 

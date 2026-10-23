@@ -26,6 +26,7 @@ struct Result {
     bool ok = false;
     int translated = 0;      // files text/<target>/...
     int originals = 0;       // files text/<source>/...
+    int scripts = 0;         // translated scripts/<name>.int
     QString error;
 };
 
