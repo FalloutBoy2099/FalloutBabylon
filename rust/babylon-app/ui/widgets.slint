@@ -1,0 +1,290 @@
+import { Palette, ListView } from "std-widgets.slint";
+
+export global Colors {
+    out property <bool> dark: Palette.color-scheme == ColorScheme.dark;
+    out property <color> back: dark ? #1e1f22 : #ffffff;
+    out property <color> fore: dark ? #dfe1e5 : #202226;
+    out property <color> window: dark ? #2b2d31 : #f0f0f0;
+    out property <color> line: dark ? #3d3f44 : #d0d0d0;
+    out property <color> muted: dark ? #8a8d93 : #707378;
+    out property <color> selection: dark ? #2f4f7f : #b7d5ff;
+    out property <color> untranslated: dark ? #c0505037 : #e060602d;
+    out property <color> translated: dark ? #50a06028 : #40a05023;
+    out property <color> review: dark ? #d0a03046 : #e0a02046;
+    out property <color> accent: dark ? #5cb0ff : #0b57d0;
+    out property <color> issue: dark ? #ffa83d : #d97706;
+    out property <color> good: dark ? #5cc070 : #2f8f3f;
+}
+
+/// Colour scheme chosen by the user: 0 system, 1 light, 2 dark.
+export global ThemeMode {
+    in-out property <int> mode: 0;
+}
+
+export component Pane inherits Rectangle {
+    background: Colors.back;
+    border-width: 1px;
+    border-color: Colors.line;
+    clip: true;
+}
+
+/// A small flat button with a text label.
+export component FlatButton inherits Rectangle {
+    in property <string> text;
+    in property <bool> enabled: true;
+    in property <bool> checked: false;
+    in property <length> row-height: 26px;
+    callback clicked();
+    min-width: label.preferred-width + 16px;
+    height: root.row-height;
+    border-radius: 3px;
+    background: !enabled ? transparent
+        : checked ? Colors.selection
+        : touch.pressed ? Colors.line
+        : touch.has-hover ? Colors.window : transparent;
+    border-width: 1px;
+    border-color: enabled ? Colors.line : transparent;
+    label := Text {
+        text: root.text;
+        color: root.enabled ? Colors.fore : Colors.muted;
+        vertical-alignment: center;
+        horizontal-alignment: center;
+    }
+    touch := TouchArea {
+        enabled: root.enabled;
+        clicked => { root.clicked(); }
+    }
+}
+
+/// A text editor whose text can be underlined / coloured by the application through `overlay`
+/// (a transparent-text layer with the same metrics sits below the input: the text keeps its colour and gets a
+/// coloured underline).
+export component OverlayEditor inherits Pane {
+    in-out property <string> text;
+    in property <styled-text> overlay;
+    in property <bool> read-only: false;
+    in property <bool> enabled: true;
+    in property <styled-text> tip;
+    in property <bool> has-tip: false;
+    out property <int> caret: ti.cursor-position-byte-offset;
+    callback edited(string);
+    callback caret-moved(int);
+
+    public function set-caret(offset: int) {
+        ti.set-selection-offsets(offset, offset);
+    }
+    public function focus-editor() {
+        ti.focus();
+    }
+
+    if root.has-tip: Tooltip { text: root.tip; }
+    StyledText {
+        x: 8px;
+        y: 6px;
+        width: parent.width - 16px;
+        height: parent.height - 12px;
+        default-color: #00000001;
+        default-font-size: 13px;
+        text: root.overlay;
+    }
+    ti := TextInput {
+        x: 8px;
+        y: 6px;
+        width: parent.width - 16px;
+        height: parent.height - 12px;
+        text <=> root.text;
+        read-only: root.read-only;
+        enabled: root.enabled;
+        wrap: word-wrap;
+        single-line: false;
+        font-size: 13px;
+        color: Colors.fore;
+        selection-background-color: Colors.selection;
+        selection-foreground-color: Colors.fore;
+        edited => { root.edited(self.text); }
+        cursor-position-changed(p) => { root.caret-moved(self.cursor-position-byte-offset); }
+    }
+}
+
+export struct TableRow {
+    cells: [string],
+    /// 0 none, 1 red (untranslated), 2 green (translated), 3 amber (to review)
+    tint: int,
+    bold: bool,
+    muted: bool,
+    warn: bool,
+    /// The first cell is a check box.
+    checkable: bool,
+    checked: bool,
+}
+
+/// A table with a header, fixed column widths (the last column takes the rest), sorting by header and an
+/// optional context menu.
+export component DataTable inherits Pane {
+    in property <[string]> headers;
+    in property <[length]> widths;
+    in property <[TableRow]> rows;
+    in property <int> current: -1;
+    in property <int> sort-column: -1;
+    in property <bool> sort-ascending: true;
+    in property <[string]> menu-actions;
+    in property <length> row-height: 24px;
+    callback clicked(int);
+    callback double-clicked(int);
+    callback header-clicked(int);
+    callback menu-activated(int, int);
+    callback toggled(int);
+
+    VerticalLayout {
+        Rectangle {
+            height: 24px;
+            background: Colors.window;
+            HorizontalLayout {
+                for h[c] in root.headers: Rectangle {
+                    min-width: c == root.headers.length - 1 ? 40px : root.widths[c];
+                    max-width: c == root.headers.length - 1 ? 100000px : root.widths[c];
+                    horizontal-stretch: c == root.headers.length - 1 ? 1 : 0;
+                    Text {
+                        x: 6px;
+                        width: parent.width - 12px;
+                        text: h + (c == root.sort-column ? (root.sort-ascending ? " ▲" : " ▼") : "");
+                        color: Colors.fore;
+                        font-weight: 700;
+                        overflow: elide;
+                        vertical-alignment: center;
+                    }
+                    TouchArea { clicked => { root.header-clicked(c); } }
+                }
+            }
+            Rectangle { y: parent.height - 1px; height: 1px; background: Colors.line; }
+        }
+        ListView {
+            for row[i] in root.rows: Rectangle {
+                height: root.row-height;
+                background: i == root.current ? Colors.selection
+                    : row.tint == 1 ? Colors.untranslated
+                    : row.tint == 2 ? Colors.translated
+                    : row.tint == 3 ? Colors.review
+                    : transparent;
+                HorizontalLayout {
+                    for cell[c] in row.cells: Rectangle {
+                        min-width: c == root.headers.length - 1 ? 40px : root.widths[c];
+                        max-width: c == root.headers.length - 1 ? 100000px : root.widths[c];
+                        horizontal-stretch: c == root.headers.length - 1 ? 1 : 0;
+                        if c == 0 && row.checkable: Rectangle {
+                            x: 7px;
+                            width: 14px;
+                            height: 14px;
+                            border-width: 1px;
+                            border-color: Colors.muted;
+                            border-radius: 2px;
+                            background: row.checked ? Colors.accent : transparent;
+                            Text { text: row.checked ? "x" : ""; color: Colors.back; font-size: 11px; horizontal-alignment: center; vertical-alignment: center; }
+                            TouchArea { clicked => { root.toggled(i); } }
+                        }
+                        if !(c == 0 && row.checkable): Text {
+                            x: 6px;
+                            width: parent.width - 12px;
+                            text: cell;
+                            color: row.warn && c > 0 ? Colors.issue : row.muted ? Colors.muted : Colors.fore;
+                            font-weight: row.bold ? 700 : 400;
+                            overflow: elide;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+                TouchArea {
+                    clicked => { root.clicked(i); }
+                    double-clicked => { root.double-clicked(i); }
+                }
+                if root.menu-actions.length > 0: ContextMenuArea {
+                    Menu {
+                        for action[k] in root.menu-actions: MenuItem {
+                            title: action;
+                            activated => { root.menu-activated(i, k); }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export struct DlgButton {
+    text: string,
+    primary: bool,
+    enabled: bool,
+}
+
+/// Frame of a dialog window: the content fills the window, the buttons sit at the bottom right with a fixed
+/// height (the window can be resized without stretching them).
+export component DialogShell inherits VerticalLayout {
+    in property <[DlgButton]> buttons;
+    callback clicked(int);
+    spacing: 0px;
+    Rectangle {
+        vertical-stretch: 1;
+        @children
+    }
+    HorizontalLayout {
+        padding: 12px;
+        padding-top: 4px;
+        spacing: 8px;
+        alignment: end;
+        height: 48px;
+        for b[i] in root.buttons: Rectangle {
+            min-width: max(88px, label.preferred-width + 28px);
+            height: 32px;
+            border-radius: 4px;
+            border-width: 1px;
+            border-color: b.primary ? Colors.accent : Colors.line;
+            background: !b.enabled ? transparent
+                : b.primary ? (btn-touch.pressed ? Colors.accent.darker(0.2) : Colors.accent)
+                : btn-touch.pressed ? Colors.line : btn-touch.has-hover ? Colors.window : transparent;
+            label := Text {
+                text: b.text;
+                color: !b.enabled ? Colors.muted : b.primary ? (Colors.dark ? #101010 : #ffffff) : Colors.fore;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            btn-touch := TouchArea {
+                enabled: b.enabled;
+                clicked => { root.clicked(i); }
+            }
+        }
+    }
+}
+
+/// A strip of tabs; the selected one is `current`.
+export component TabStrip inherits Rectangle {
+    in property <[string]> names;
+    in-out property <int> current: 0;
+    callback changed(int);
+    height: 34px;
+    HorizontalLayout {
+        alignment: start;
+        spacing: 2px;
+        for name[i] in root.names: Rectangle {
+            min-width: max(80px, label.preferred-width + 28px);
+            background: i == root.current ? Colors.back : tab-touch.has-hover ? Colors.window : transparent;
+            border-width: 1px;
+            border-color: i == root.current ? Colors.line : transparent;
+            label := Text {
+                text: name;
+                color: Colors.fore;
+                font-weight: i == root.current ? 700 : 400;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+            }
+            Rectangle {
+                y: parent.height - 3px;
+                height: 3px;
+                background: i == root.current ? Colors.accent : transparent;
+            }
+            tab-touch := TouchArea {
+                clicked => { root.current = i; root.changed(i); }
+            }
+        }
+    }
+    Rectangle { y: parent.height - 1px; height: 1px; background: Colors.line; }
+}

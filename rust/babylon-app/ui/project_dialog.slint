@@ -1,0 +1,177 @@
+import { ComboBox, CheckBox, LineEdit, Button, ListView } from "std-widgets.slint";
+import { Colors, Pane, FlatButton, DialogShell, TabStrip } from "widgets.slint";
+
+/// New project / project settings.
+export component ProjectDialog inherits Window {
+    title: root.new-project ? @tr("New translation project") : @tr("Project settings");
+    preferred-width: 700px;
+    preferred-height: 520px;
+    min-width: 600px;
+    min-height: 440px;
+    in-out property <int> tab: 0;
+    in property <bool> new-project: true;
+    in-out property <string> project-name;
+    in property <[string]> sources;
+    in property <int> source-index: -1;
+    in-out property <int> source-language-index: 0;
+    in-out property <int> target-language-index: 0;
+    in-out property <string> source-language;
+    in-out property <string> target-language;
+    in property <[string]> language-choices;
+    in property <[string]> encoding-names;
+    in-out property <int> source-encoding;
+    in-out property <int> target-encoding;
+    in-out property <int> output-mode: 0;
+    in-out property <string> output-folder;
+    in-out property <string> output-archive;
+    in-out property <int> archive-format: 0;
+    in-out property <bool> archive-with-source: true;
+    in property <[string]> recent-folders;
+    in property <string> hint;
+    in property <string> output-hint;
+    in property <string> error;
+    callback confirmed();
+    callback dismissed();
+    callback add-install();
+    callback add-folder();
+    callback add-dat();
+    callback add-recent(int);
+    callback move-source(int);
+    callback remove-source();
+    callback select-source(int);
+    callback browse-output();
+    callback browse-archive();
+    callback name-edited();
+    callback languages-edited();
+    callback output-edited();
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("OK"), primary: true, enabled: true }, { text: @tr("Cancel"), primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.confirmed(); } else if i == 1 { root.dismissed(); } }
+        VerticalLayout {
+            padding: 12px;
+            spacing: 8px;
+            TabStrip {
+                names: [@tr("General"), @tr("Languages"), @tr("Output")];
+                current <=> root.tab;
+            }
+            Rectangle {
+                vertical-stretch: 1;
+
+                if root.tab == 0: VerticalLayout {
+                    spacing: 6px;
+                    Text { text: @tr("Name"); color: Colors.fore; }
+                    LineEdit {
+                        placeholder-text: @tr("e.g. RPU — French");
+                        text <=> root.project-name;
+                        edited(t) => { root.name-edited(); }
+                    }
+                    Text { text: @tr("Sources"); color: Colors.fore; }
+                    HorizontalLayout {
+                        spacing: 6px;
+                        vertical-stretch: 1;
+                        Pane {
+                            min-height: 100px;
+                            horizontal-stretch: 1;
+                            ListView {
+                                for s[i] in root.sources: Rectangle {
+                                    height: 22px;
+                                    background: i == root.source-index ? Colors.selection : transparent;
+                                    Text { x: 6px; width: parent.width - 12px; text: s; overflow: elide; vertical-alignment: center; color: Colors.fore; }
+                                    TouchArea { clicked => { root.select-source(i); } }
+                                }
+                            }
+                        }
+                        VerticalLayout {
+                            spacing: 3px;
+                            width: 150px;
+                            alignment: start;
+                            FlatButton { text: @tr("Game folder..."); clicked => { root.add-install(); } }
+                            FlatButton { text: @tr("Mod folder..."); clicked => { root.add-folder(); } }
+                            FlatButton { text: @tr("DAT archive..."); clicked => { root.add-dat(); } }
+                            FlatButton { text: @tr("Up"); clicked => { root.move-source(-1); } }
+                            FlatButton { text: @tr("Down"); clicked => { root.move-source(1); } }
+                            FlatButton { text: @tr("Remove"); clicked => { root.remove-source(); } }
+                        }
+                    }
+                    if root.recent-folders.length > 0: HorizontalLayout {
+                        spacing: 6px;
+                        Text { text: @tr("Recent"); color: Colors.muted; vertical-alignment: center; }
+                        ComboBox {
+                            model: root.recent-folders;
+                            current-index: -1;
+                            selected(v) => { root.add-recent(self.current-index); }
+                            horizontal-stretch: 1;
+                        }
+                    }
+                    Text { text: root.hint; color: Colors.muted; wrap: word-wrap; }
+                }
+
+                if root.tab == 1: VerticalLayout {
+                    spacing: 6px;
+                    alignment: start;
+                    Text { text: root.hint; color: Colors.muted; wrap: word-wrap; }
+                    Text { text: @tr("Source language"); color: Colors.fore; }
+                    HorizontalLayout {
+                        spacing: 4px;
+                        LineEdit { text <=> root.source-language; edited(t) => { root.languages-edited(); } horizontal-stretch: 1; }
+                        ComboBox {
+                            model: root.language-choices;
+                            current-index <=> root.source-language-index;
+                            selected(v) => { root.source-language = v; root.languages-edited(); }
+                            width: 64px;
+                        }
+                    }
+                    Text { text: @tr("Source encoding"); color: Colors.fore; }
+                    ComboBox { model: root.encoding-names; current-index <=> root.source-encoding; }
+                    Text { text: @tr("Target language"); color: Colors.fore; }
+                    HorizontalLayout {
+                        spacing: 4px;
+                        LineEdit { text <=> root.target-language; edited(t) => { root.languages-edited(); } horizontal-stretch: 1; }
+                        ComboBox {
+                            model: root.language-choices;
+                            current-index <=> root.target-language-index;
+                            selected(v) => { root.target-language = v; root.languages-edited(); }
+                            width: 64px;
+                        }
+                    }
+                    Text { text: @tr("Target encoding"); color: Colors.fore; }
+                    ComboBox { model: root.encoding-names; current-index <=> root.target-encoding; }
+                }
+
+                if root.tab == 2: VerticalLayout {
+                    spacing: 6px;
+                    alignment: start;
+                    Text { text: @tr("Output"); color: Colors.fore; }
+                    ComboBox {
+                        model: [@tr("Folder of loose files"), @tr("DAT archive")];
+                        current-index <=> root.output-mode;
+                        selected(v) => { root.output-edited(); }
+                    }
+                    if root.output-mode == 0: HorizontalLayout {
+                        spacing: 6px;
+                        LineEdit { text <=> root.output-folder; placeholder-text: @tr("Output folder"); edited(t) => { root.output-edited(); } horizontal-stretch: 1; }
+                        Button { text: @tr("Browse..."); clicked => { root.browse-output(); } }
+                    }
+                    if root.output-mode == 1: VerticalLayout {
+                        spacing: 6px;
+                        HorizontalLayout {
+                            spacing: 6px;
+                            LineEdit { text <=> root.output-archive; placeholder-text: @tr("e.g. french.dat"); edited(t) => { root.output-edited(); } horizontal-stretch: 1; }
+                            Button { text: @tr("Browse..."); clicked => { root.browse-archive(); } }
+                        }
+                        HorizontalLayout {
+                            spacing: 6px;
+                            Text { text: @tr("Format:"); color: Colors.fore; vertical-alignment: center; }
+                            ComboBox { model: [@tr("Fallout 2 (zlib)"), @tr("Fallout 1")]; current-index <=> root.archive-format; }
+                        }
+                        CheckBox { text: @tr("Also store the original texts (reference files)"); checked <=> root.archive-with-source; toggled => { root.output-edited(); } }
+                    }
+                    Text { text: root.output-hint; color: Colors.muted; wrap: word-wrap; }
+                }
+            }
+            if root.error != "": Text { text: root.error; color: Colors.issue; wrap: word-wrap; }
+        }
+    }
+}

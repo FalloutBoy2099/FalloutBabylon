@@ -1,0 +1,57 @@
+import { ComboBox, CheckBox, LineEdit, Button, ProgressIndicator } from "std-widgets.slint";
+import { Colors, DialogShell } from "widgets.slint";
+
+/// Reuse the translation of another version of the mod.
+export component ImportDialog inherits Window {
+    title: @tr("Import an existing translation");
+    preferred-width: 680px;
+    min-width: 560px;
+    in property <string> intro;
+    in-out property <string> folder;
+    in property <string> found;
+    in property <[string]> languages;
+    in-out property <int> source-language: 0;
+    in-out property <int> target-language: 0;
+    in-out property <bool> by-text: true;
+    in-out property <bool> changed-as-review: true;
+    in-out property <bool> overwrite;
+    in property <bool> running;
+    in property <bool> can-start;
+    in property <string> result;
+    callback browse();
+    callback scan();
+    callback start();
+    callback closed();
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("Import"), primary: true, enabled: root.can-start && !root.running }, { text: root.running ? @tr("Cancel") : @tr("Close"), primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.start(); } else if i == 1 { root.closed(); } }
+        VerticalLayout {
+            spacing: 6px;
+            padding: 12px;
+            Text { text: root.intro; color: Colors.fore; wrap: word-wrap; }
+            Text { text: @tr("Folder"); color: Colors.fore; }
+            HorizontalLayout {
+                spacing: 6px;
+                LineEdit {
+                    placeholder-text: @tr("Game or mod folder holding the translation");
+                    text <=> root.folder;
+                    accepted(t) => { root.scan(); }
+                    horizontal-stretch: 1;
+                }
+                Button { text: @tr("Browse..."); clicked => { root.browse(); } }
+            }
+            Text { text: root.found; color: Colors.muted; wrap: word-wrap; }
+            Text { text: @tr("Language of its source texts"); color: Colors.fore; }
+            ComboBox { model: root.languages; current-index <=> root.source-language; }
+            Text { text: @tr("Language of its translation"); color: Colors.fore; }
+            ComboBox { model: root.languages; current-index <=> root.target-language; }
+            CheckBox { text: @tr("Also reuse translations of identical texts found under another id"); checked <=> root.by-text; }
+            CheckBox { text: @tr("When the source text changed, import the old translation marked \"to review\""); checked <=> root.changed-as-review; }
+            CheckBox { text: @tr("Replace translations the project already has"); checked <=> root.overwrite; }
+            if root.running: ProgressIndicator { indeterminate: true; }
+            Text { text: root.result; color: Colors.muted; wrap: word-wrap; }
+        }
+    }
+}

@@ -1,0 +1,122 @@
+import { LineEdit, CheckBox, ListView } from "std-widgets.slint";
+import { Colors, DataTable, TableRow, FlatButton } from "../widgets.slint";
+
+export struct TypeOption {
+    name: string,
+    checked: bool,
+}
+
+export global GlossaryData {
+    in property <[TypeOption]> types;
+    in property <string> types-label;
+    callback type-toggled(int);
+    callback types-all(bool);
+    in property <[TableRow]> rows;
+    in property <string> summary;
+    in property <bool> editable;
+    in property <int> sort-column: 0;
+    in property <bool> sort-ascending: true;
+    in-out property <string> filter;
+    in-out property <int> current: -1;
+    in property <[string]> menu-actions;
+    callback filter-changed();
+    callback header-clicked(int);
+    /// double click: insert the translation
+    callback activated(int);
+    callback add();
+    callback edit();
+    callback remove();
+    callback import-terms();
+    callback export-terms();
+    callback menu-activated(int, int);
+}
+
+export component GlossaryPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    HorizontalLayout {
+        spacing: 6px;
+        height: 32px;
+        LineEdit {
+            placeholder-text: @tr("Search the glossary...");
+            text <=> GlossaryData.filter;
+            edited(t) => { GlossaryData.filter-changed(); }
+            horizontal-stretch: 1;
+        }
+        FlatButton {
+            row-height: 32px;
+            text: GlossaryData.types-label + "  \u{25bc}";
+            clicked => { types-popup.show(); }
+            types-popup := PopupWindow {
+                x: 0px;
+                y: parent.height + 2px;
+                width: 240px;
+                height: min(360px, 40px + GlossaryData.types.length * 28px);
+                close-policy: close-on-click-outside;
+                Rectangle {
+                    background: Colors.back;
+                    border-width: 1px;
+                    border-color: Colors.line;
+                    VerticalLayout {
+                        padding: 6px;
+                        spacing: 2px;
+                        HorizontalLayout {
+                            spacing: 6px;
+                            height: 28px;
+                            FlatButton { text: @tr("All"); clicked => { GlossaryData.types-all(true); } }
+                            FlatButton { text: @tr("None"); clicked => { GlossaryData.types-all(false); } }
+                        }
+                        ListView {
+                            for t[i] in GlossaryData.types: Rectangle {
+                                height: 28px;
+                                background: ta.has-hover ? Colors.window : transparent;
+                                HorizontalLayout {
+                                    padding-left: 6px;
+                                    spacing: 8px;
+                                    Rectangle {
+                                        width: 14px;
+                                        height: 14px;
+                                        y: (parent.height - self.height) / 2;
+                                        border-width: 1px;
+                                        border-color: Colors.muted;
+                                        border-radius: 2px;
+                                        background: t.checked ? Colors.accent : transparent;
+                                    }
+                                    Text { text: t.name; color: Colors.fore; vertical-alignment: center; }
+                                }
+                                ta := TouchArea { clicked => { GlossaryData.type-toggled(i); } }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    HorizontalLayout {
+        spacing: 4px;
+        alignment: start;
+        FlatButton { text: @tr("Add..."); enabled: GlossaryData.editable; clicked => { GlossaryData.add(); } }
+        FlatButton { text: @tr("Edit..."); enabled: GlossaryData.editable; clicked => { GlossaryData.edit(); } }
+        FlatButton { text: @tr("Delete"); enabled: GlossaryData.editable; clicked => { GlossaryData.remove(); } }
+        FlatButton { text: @tr("Import..."); enabled: GlossaryData.editable; clicked => { GlossaryData.import-terms(); } }
+        FlatButton { text: @tr("Export..."); enabled: GlossaryData.editable; clicked => { GlossaryData.export-terms(); } }
+    }
+    Text {
+        text: GlossaryData.summary;
+        color: Colors.muted;
+        wrap: word-wrap;
+    }
+    DataTable {
+        headers: [@tr("Term"), @tr("Translation"), @tr("Type"), @tr("Origin")];
+        widths: [150px, 160px, 70px, 100px];
+        rows: GlossaryData.rows;
+        current: GlossaryData.current;
+        sort-column: GlossaryData.sort-column;
+        sort-ascending: GlossaryData.sort-ascending;
+        menu-actions: GlossaryData.menu-actions;
+        clicked(i) => { GlossaryData.current = i; }
+        double-clicked(i) => { GlossaryData.activated(i); }
+        header-clicked(c) => { GlossaryData.header-clicked(c); }
+        menu-activated(i, k) => { GlossaryData.current = i; GlossaryData.menu-activated(i, k); }
+    }
+}

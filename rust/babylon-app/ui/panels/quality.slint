@@ -1,0 +1,58 @@
+import { CheckBox, ComboBox, SpinBox } from "std-widgets.slint";
+import { Colors, DataTable, TableRow, FlatButton } from "../widgets.slint";
+
+export global QualityData {
+    /// one flag per check, in the order of `QualityCheck::Kind`
+    in-out property <bool> tokens: true;
+    in-out property <bool> spacing: true;
+    in-out property <bool> encoding: true;
+    in-out property <bool> length: true;
+    in-out property <bool> duplicates: true;
+    in-out property <bool> glossary: true;
+    in-out property <int> max-chars: 0;
+    in property <[string]> filter-names;
+    in-out property <int> filter: 0;
+    in property <[TableRow]> rows;
+    in property <string> status;
+    in property <bool> can-run: true;
+    in property <bool> can-export;
+    callback run();
+    callback filter-changed();
+    callback export-report();
+    callback activated(int);
+}
+
+export component QualityPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    CheckBox { text: @tr("Lost tokens (@Name@, %d, {{field}})"); checked <=> QualityData.tokens; }
+    CheckBox { text: @tr("Spacing"); checked <=> QualityData.spacing; }
+    CheckBox { text: @tr("Characters the encoding cannot hold"); checked <=> QualityData.encoding; }
+    CheckBox { text: @tr("Too long"); checked <=> QualityData.length; }
+    CheckBox { text: @tr("Inconsistent duplicates"); checked <=> QualityData.duplicates; }
+    CheckBox { text: @tr("Glossary"); checked <=> QualityData.glossary; }
+    HorizontalLayout {
+        spacing: 6px;
+        Text { text: @tr("Maximum length:"); color: Colors.fore; vertical-alignment: center; }
+        SpinBox { minimum: 0; maximum: 5000; value <=> QualityData.max-chars; width: 110px; }
+        Text { text: QualityData.max-chars == 0 ? @tr("no limit") : ""; color: Colors.muted; vertical-alignment: center; }
+    }
+    HorizontalLayout {
+        spacing: 4px;
+        FlatButton { text: @tr("Run the checks"); enabled: QualityData.can-run; clicked => { QualityData.run(); } }
+        ComboBox {
+            model: QualityData.filter-names;
+            current-index <=> QualityData.filter;
+            selected(v) => { QualityData.filter-changed(); }
+            horizontal-stretch: 1;
+        }
+        FlatButton { text: @tr("Export (CSV)..."); enabled: QualityData.can-export; clicked => { QualityData.export-report(); } }
+    }
+    Text { text: QualityData.status; color: Colors.muted; wrap: word-wrap; }
+    DataTable {
+        headers: [@tr("Check"), @tr("File"), @tr("ID"), @tr("Problem"), @tr("Translation")];
+        widths: [110px, 110px, 50px, 220px, 200px];
+        rows: QualityData.rows;
+        double-clicked(i) => { QualityData.activated(i); }
+    }
+}

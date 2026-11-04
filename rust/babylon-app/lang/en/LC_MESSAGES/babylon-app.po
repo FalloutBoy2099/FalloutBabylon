@@ -1,0 +1,1616 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+
+msgid " (IQ %1+)"
+msgstr ""
+
+msgid " (low IQ)"
+msgstr ""
+
+msgid " (source)"
+msgstr ""
+
+msgid " Remaining quota: %L1 characters."
+msgstr ""
+
+msgid " px"
+msgstr ""
+
+msgid " — %1 shown"
+msgstr ""
+
+msgid "\"%1\": %2 characters for %3 available"
+msgstr ""
+
+msgid "\"%1\": not translated in the game files yet"
+msgstr ""
+
+msgid "\"%1\": the code cannot be read safely, the text cannot be lengthened"
+msgstr ""
+
+msgid "\"%1\": used by the start-up code of the script, the text cannot be lengthened"
+msgstr ""
+
+msgid "%"
+msgstr ""
+
+msgid "%1\n%2 lines, %3 untranslated, %4 to review\n%5 words / %6 characters left"
+msgstr ""
+
+msgid "%1 / %2 lines"
+msgstr ""
+
+msgid "%1 characters (limit %2)"
+msgstr ""
+
+msgid "%1 characters for %2 in the source"
+msgstr ""
+
+msgid "%1 contains malformed records; everything after the first one is ignored by the game:\n\n%2"
+msgstr ""
+
+msgid "%1 does not exist in the sources of this project."
+msgstr ""
+
+msgid "%1 entries, %2 page(s) in the Pip-Boy"
+msgstr ""
+
+msgid "%1 file(s) examined, %2 written.\n%3 line(s) with the same text, %4 with a changed source (to review), %5 found under another id; %6 already translated and kept."
+msgstr ""
+
+msgid "%1 file(s) taken from the cache"
+msgstr ""
+
+msgid "%1 files written to\n%2"
+msgstr ""
+
+msgid "%1 files — %2 lines, %3 untranslated, %4 to review (%5%)"
+msgstr ""
+
+msgid "%1 line(s) in the translation, %2 in the source"
+msgstr ""
+
+msgid "%1 line(s) marked \"to review\"."
+msgstr ""
+
+msgid "%1 line(s) to review — double-click to open"
+msgstr ""
+
+msgid "%1 line(s) wider than the screen"
+msgstr ""
+
+msgid "%1 line(s), %2 occurrence(s)"
+msgstr ""
+
+msgid "%1 line(s), about %2 characters to send to DeepL."
+msgstr ""
+
+msgid "%1 lines"
+msgstr ""
+
+msgid "%1 max"
+msgstr ""
+
+msgid "%1 nodes · %2 line(s) of the file are not part of the tree"
+msgstr ""
+
+msgid "%1 problem(s)"
+msgstr ""
+
+msgid "%1 record(s) repaired, %2 left as they are.\n\n%3"
+msgstr ""
+
+msgid "%1 replacement(s) in %2 file(s)."
+msgstr ""
+
+msgid "%1 script(s) written: %2 text(s) in place, %3 lengthened."
+msgstr ""
+
+msgid "%1 source(s) found; languages: %2."
+msgstr ""
+
+msgid "%1 suggestion(s): double-click to use one."
+msgstr ""
+
+msgid "%1 term(s) exported."
+msgstr ""
+
+msgid "%1 term(s) imported, %2 line(s) ignored."
+msgstr ""
+
+msgid "%1 terms · %2 without translation · %3 inconsistent"
+msgstr ""
+
+msgid "%1 text(s) in the scripts, %2 translated."
+msgstr ""
+
+msgid "%1 translation(s) applied. Save the file to keep them."
+msgstr ""
+
+msgid "%1 — %2 done\n%3 lines (%4 untranslated, %5 to review)\n%6 words and %7 characters left (of %8 words)"
+msgstr ""
+
+msgid "%1 — computing..."
+msgstr ""
+
+msgid "%1 → %2  ·  encoding %3 / %4"
+msgstr ""
+
+msgid "(line %1 not found in this file)"
+msgstr ""
+
+msgid "(none)"
+msgstr ""
+
+msgid ", and the original texts under text/%1/."
+msgstr ""
+
+msgid "1 · Game files — do first"
+msgstr ""
+
+msgid "2 · Dialogues"
+msgstr ""
+
+msgid "3 · Other files"
+msgstr ""
+
+msgid "<b>%1</b>"
+msgstr ""
+
+msgid "<b>%1</b> — %2 done<br>%3 lines (%4 untranslated, %5 to review)<br>%6 words and %7 characters left (of %8 words)"
+msgstr ""
+
+msgid "<b>%1</b> — computing..."
+msgstr ""
+
+msgid "<h2>Fallout Babylon</h2><p>Translation editor for Fallout 1 and Fallout 2 mods.</p>"
+msgstr ""
+
+msgid "<h3>Fallout Babylon %1</h3><p>Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods.</p><p>Built with Qt %2 and Scintilla.</p>"
+msgstr ""
+
+msgid "<i>Not translated in the game files yet</i>"
+msgstr ""
+
+msgid "A placeholder (@...@, %s...) was altered: check this line."
+msgstr ""
+
+msgid "A text longer than the original is appended at the end of the script and the code is redirected to it. The game reads strings through their offset and does not check where it points, but this is not guaranteed: test it in the game. Without it, only translations that fit the room of the original are written."
+msgstr ""
+
+msgid "API key"
+msgstr ""
+
+msgid "About Fallout Babylon"
+msgstr ""
+
+msgid "About Qt..."
+msgstr ""
+
+msgid "About..."
+msgstr ""
+
+msgid "Accept as is"
+msgstr ""
+
+msgid "Add a term of your own (a name to keep, a word with a fixed translation...)"
+msgstr ""
+
+msgid "Add at least one source."
+msgstr ""
+
+msgid "Add the game folder or the archives of the mod to translate."
+msgstr ""
+
+msgid "Add..."
+msgstr ""
+
+msgid "Adds a Fallout folder: its DAT archives and its data folder are detected."
+msgstr ""
+
+msgid "Adds text/<source language>/ copies of the translated files, so that the reference of each translation is in the archive. Turn it off if a later mod must keep providing the original texts."
+msgstr ""
+
+msgid "After replacement"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "All files"
+msgstr ""
+
+msgid "All lines"
+msgstr ""
+
+msgid "All lines (%1)"
+msgstr ""
+
+msgid "All problems"
+msgstr ""
+
+msgid "All types"
+msgstr ""
+
+msgid "Allow longer texts (experimental)"
+msgstr ""
+
+msgid "Also reuse translations of identical texts found under another id"
+msgstr ""
+
+msgid "Also store the original texts (reference files)"
+msgstr ""
+
+msgid "Analysing \"%1\"..."
+msgstr ""
+
+msgid "Analysing \"%1\": %2 / %3 files"
+msgstr ""
+
+msgid "Analysing %1 / %2"
+msgstr ""
+
+msgid "Apply"
+msgstr ""
+
+msgid "Apply the checked proposals"
+msgstr ""
+
+msgid "Automatic (system)"
+msgstr ""
+
+msgid "Both the term and its translation are required."
+msgstr ""
+
+msgid "Browse..."
+msgstr ""
+
+msgid "Building the glossary..."
+msgstr ""
+
+msgid "Building the translation memory of the project..."
+msgstr ""
+
+msgid "Built with Rust and Slint."
+msgstr ""
+
+msgid "CSV files"
+msgstr ""
+
+msgid "CSV files (*.csv)"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Cancelling..."
+msgstr ""
+
+msgid "Cannot read %1."
+msgstr ""
+
+msgid "Cannot read %1:\n%2"
+msgstr ""
+
+msgid "Cannot repair %1:\n%2"
+msgstr ""
+
+msgid "Cannot save %1:\n%2"
+msgstr ""
+
+msgid "Cannot write %1."
+msgstr ""
+
+msgid "Cannot write the archive:\n%1"
+msgstr ""
+
+msgid "Changed since it was validated"
+msgstr ""
+
+msgid "Changed since validation"
+msgstr ""
+
+msgid "Characters (fallback):"
+msgstr ""
+
+msgid "Characters per line, used when the game font cannot be read."
+msgstr ""
+
+msgid "Characters the encoding cannot hold"
+msgstr ""
+
+msgid "Chars left"
+msgstr ""
+
+msgid "Check"
+msgstr ""
+
+msgid "Checking..."
+msgstr ""
+
+msgid "Checking... %1 / %2 files"
+msgstr ""
+
+msgid "Choose an output folder."
+msgstr ""
+
+msgid "Choose the output archive."
+msgstr ""
+
+msgid "Choose the source and the target language."
+msgstr ""
+
+msgid "Click to jump to the first occurrence"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Close all"
+msgstr ""
+
+msgid "Close all but this one"
+msgstr ""
+
+msgid "Close file"
+msgstr ""
+
+msgid "Close project"
+msgstr ""
+
+msgid "Close the project"
+msgstr ""
+
+msgid "Close the tabs to the left"
+msgstr ""
+
+msgid "Close the tabs to the right"
+msgstr ""
+
+msgid "Comment on this line (kept in the project, not in the game files)..."
+msgstr ""
+
+msgid "Comment: %1"
+msgstr ""
+
+msgid "Complete"
+msgstr ""
+
+msgid "Contacting DeepL..."
+msgstr ""
+
+msgid "Contacting the server..."
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy the source"
+msgstr ""
+
+msgid "Copy the term"
+msgstr ""
+
+msgid "Copy the translation"
+msgstr ""
+
+msgid "Correction"
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "DAT archive"
+msgstr ""
+
+msgid "DAT archive NOT updated: %1"
+msgstr ""
+
+msgid "DAT archive updated: %1 translated file(s), %2 original(s)."
+msgstr ""
+
+msgid "DAT archive..."
+msgstr ""
+
+msgid "DAT archives"
+msgstr ""
+
+msgid "DAT archives (*.dat)"
+msgstr ""
+
+msgid "DAT archives (*.dat);;All files (*)"
+msgstr ""
+
+msgid "Dark"
+msgstr ""
+
+msgid "Decompilation failed: %1"
+msgstr ""
+
+msgid "DeepL"
+msgstr ""
+
+msgid "DeepL API key (free keys end with :fx)"
+msgstr ""
+
+msgid "DeepL does not support %1."
+msgstr ""
+
+msgid "DeepL error %1"
+msgstr ""
+
+msgid "DeepL glossary"
+msgstr ""
+
+msgid "DeepL glossary not used: %1"
+msgstr ""
+
+msgid "DeepL proposal (editable)"
+msgstr ""
+
+msgid "DeepL refused the glossary: the free plan allows a single glossary (delete the existing one in your DeepL account to use the project glossary)."
+msgstr ""
+
+msgid "DeepL rejected the API key."
+msgstr ""
+
+msgid "DeepL translation"
+msgstr ""
+
+msgid "Default"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Delete this term"
+msgstr ""
+
+msgid "Detach into a window"
+msgstr ""
+
+msgid "Dialogue tree"
+msgstr ""
+
+msgid "Dialogues"
+msgstr ""
+
+msgid "Discard"
+msgstr ""
+
+msgid "Do not translate (keep the term as is)"
+msgstr ""
+
+msgid "Do not translate: this term must stay unchanged."
+msgstr ""
+
+msgid "Dock"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Done: %1 line(s) translated, %2 failed. Check the proposals, then apply."
+msgstr ""
+
+msgid "Down"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit / override this term..."
+msgstr ""
+
+msgid "Edit the glossary term"
+msgstr ""
+
+msgid "Edit this term..."
+msgstr ""
+
+msgid "Edit..."
+msgstr ""
+
+msgid "Editing..."
+msgstr ""
+
+msgid "Empty answer from DeepL."
+msgstr ""
+
+msgid "Encoding"
+msgstr ""
+
+msgid "Enter the server address first."
+msgstr ""
+
+msgid "Enter your DeepL API key in Tools > Settings first."
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Export (CSV)..."
+msgstr ""
+
+msgid "Export glossary terms"
+msgstr ""
+
+msgid "Export the report"
+msgstr ""
+
+msgid "Export to a DAT archive"
+msgstr ""
+
+msgid "Export to a DAT archive..."
+msgstr ""
+
+msgid "Export your own terms to a CSV file"
+msgstr ""
+
+msgid "Export..."
+msgstr ""
+
+msgid "Fallout 1"
+msgstr ""
+
+msgid "Fallout 1 archive (*.dat)"
+msgstr ""
+
+msgid "Fallout 2 (zlib)"
+msgstr ""
+
+msgid "Fallout 2 archive (zlib) (*.dat)"
+msgstr ""
+
+msgid "Fallout folder"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "File / character"
+msgstr ""
+
+msgid "File the game writes its report to"
+msgstr ""
+
+msgid "Filter files..."
+msgstr ""
+
+msgid "Filter the texts..."
+msgstr ""
+
+msgid "Find in this file"
+msgstr ""
+
+msgid "Folder"
+msgstr ""
+
+msgid "Folder holding the translation"
+msgstr ""
+
+msgid "Folder of loose files"
+msgstr ""
+
+msgid "Follow a game report file..."
+msgstr ""
+
+msgid "Following %1: lines written there are marked \"to review\"."
+msgstr ""
+
+msgid "Formality"
+msgstr ""
+
+msgid "Format:"
+msgstr ""
+
+msgid "Game files"
+msgstr ""
+
+msgid "Game folder..."
+msgstr ""
+
+msgid "Game font not available (or multi-byte encoding): approximate measure."
+msgstr ""
+
+msgid "Game font not available (or multi-byte encoding): lines are cut at about %1 characters."
+msgstr ""
+
+msgid "Game or mod folder holding the translation"
+msgstr ""
+
+msgid "Game report"
+msgstr ""
+
+msgid "Game report: %1 line(s) marked \"to review\", %2 not found."
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Give the project a name."
+msgstr ""
+
+msgid "Glossaries"
+msgstr ""
+
+msgid "Glossaries (*.csv *.tsv *.txt);;All files (*)"
+msgstr ""
+
+msgid "Glossary"
+msgstr ""
+
+msgid "Glossary alerts"
+msgstr ""
+
+msgid "Glossary:"
+msgstr ""
+
+msgid "Glossary: %1 terms"
+msgstr ""
+
+msgid "Glossary: %1 → %2"
+msgstr ""
+
+msgid "Grammalecte server (French)"
+msgstr ""
+
+msgid "Help"
+msgstr ""
+
+msgid "Holodisk: records %1 to %2 (%3 entries, %4 page(s) in the Pip-Boy)."
+msgstr ""
+
+msgid "ID"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import a game report"
+msgstr ""
+
+msgid "Import a game report..."
+msgstr ""
+
+msgid "Import an existing translation"
+msgstr ""
+
+msgid "Import an existing translation..."
+msgstr ""
+
+msgid "Import glossary terms"
+msgstr ""
+
+msgid "Import terms from a CSV / TSV file (term; translation; keep)"
+msgstr ""
+
+msgid "Import..."
+msgstr ""
+
+msgid "Importing..."
+msgstr ""
+
+msgid "In both"
+msgstr ""
+
+msgid "In the source"
+msgstr ""
+
+msgid "In the translation"
+msgstr ""
+
+msgid "Inconsistent duplicate"
+msgstr ""
+
+msgid "Inconsistent duplicates"
+msgstr ""
+
+msgid "Inconsistent translations in the game files"
+msgstr ""
+
+msgid "Insert \"%1\""
+msgstr ""
+
+msgid "Insert \"%1\" in the translation"
+msgstr ""
+
+msgid "Insert the translation"
+msgstr ""
+
+msgid "Invalid regular expression: %1"
+msgstr ""
+
+msgid "Keep this term as is (do not translate)"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Language of its source texts"
+msgstr ""
+
+msgid "Language of its translation"
+msgstr ""
+
+msgid "LanguageTool does not support %1."
+msgstr ""
+
+msgid "LanguageTool server (other languages)"
+msgstr ""
+
+msgid "Languages"
+msgstr ""
+
+msgid "Languages found: %1."
+msgstr ""
+
+msgid "Length"
+msgstr ""
+
+msgid "Less formal"
+msgstr ""
+
+msgid "Light"
+msgstr ""
+
+msgid "Lines"
+msgstr ""
+
+msgid "Lines left"
+msgstr ""
+
+msgid "Lines written to the file"
+msgstr ""
+
+msgid "List"
+msgstr ""
+
+msgid "Looks for the texts written in the code of the scripts (not in the .msg files)."
+msgstr ""
+
+msgid "Lost tokens (@Name@, %d, {field})"
+msgstr ""
+
+msgid "Lowest priority first: a later source overrides an earlier one, like in the game."
+msgstr ""
+
+msgid "Mark as to review"
+msgstr ""
+
+msgid "Mark machine translations as \"to review\""
+msgstr ""
+
+msgid "Mass translation"
+msgstr ""
+
+msgid "Mass translation with DeepL"
+msgstr ""
+
+msgid "Mass translation with DeepL..."
+msgstr ""
+
+msgid "Match case"
+msgstr ""
+
+msgid "Maximum length:"
+msgstr ""
+
+msgid "Maximum number of characters of a translation (0: only report translations much longer than the source)"
+msgstr ""
+
+msgid "Measured with the game font (font1.aaf)."
+msgstr ""
+
+msgid "Measured with the game font (font1.aaf): lines are cut at %1 px."
+msgstr ""
+
+msgid "Minimum similarity of the texts offered"
+msgstr ""
+
+msgid "Minimum:"
+msgstr ""
+
+msgid "Mod folder (containing text/ or data/)"
+msgstr ""
+
+msgid "Mod folder..."
+msgstr ""
+
+msgid "More formal"
+msgstr ""
+
+msgid "Move to the bottom"
+msgstr ""
+
+msgid "Move to the right"
+msgstr ""
+
+msgid "NPC"
+msgstr ""
+
+msgid "NPC (no answer)"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "New glossary term"
+msgstr ""
+
+msgid "New project..."
+msgstr ""
+
+msgid "New translation project"
+msgstr ""
+
+msgid "Next line"
+msgstr ""
+
+msgid "Next untranslated line"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "No .msg file found under text/%1 or text/%2 in the sources of \"%3\"."
+msgstr ""
+
+msgid "No DeepL API key. Enter it in Tools > Settings."
+msgstr ""
+
+msgid "No DeepL API key: enter it in Tools > Settings."
+msgstr ""
+
+msgid "No glossary can be created for this language pair."
+msgstr ""
+
+msgid "No problem found."
+msgstr ""
+
+msgid "No project open."
+msgstr ""
+
+msgid "No remark found in this file."
+msgstr ""
+
+msgid "No result."
+msgstr ""
+
+msgid "No script found for this dialogue."
+msgstr ""
+
+msgid "No similar translated text."
+msgstr ""
+
+msgid "No term found in this file."
+msgstr ""
+
+msgid "No term yet. The glossary is built from the /game message files."
+msgstr ""
+
+msgid "No text/<language>/ folder found here."
+msgstr ""
+
+msgid "No text/<language>/ folder found in these sources."
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Not enough quota for everything."
+msgstr ""
+
+msgid "Not found:"
+msgstr ""
+
+msgid "Not translated"
+msgstr ""
+
+msgid "Not translated in the game files yet"
+msgstr ""
+
+msgid "Not translated yet: translate the matching /game file first."
+msgstr ""
+
+msgid "Not validated"
+msgstr ""
+
+msgid "Not written:"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "Nothing to export yet: save some translated files first.\n(%1 does not exist)"
+msgstr ""
+
+msgid "Nothing to review. Mark lines with Ctrl+R."
+msgstr ""
+
+msgid "Nothing to translate with this choice."
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Only the terms you added (in bold) can be deleted."
+msgstr ""
+
+msgid "Only unfinished files"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Open a Fallout game or mod folder"
+msgstr ""
+
+msgid "Open a dialogue file to see its tree."
+msgstr ""
+
+msgid "Open a game folder..."
+msgstr ""
+
+msgid "Open as is"
+msgstr ""
+
+msgid "Open game/pipboy.msg and select a holodisk line."
+msgstr ""
+
+msgid "Open the output folder"
+msgstr ""
+
+msgid "Origin"
+msgstr ""
+
+msgid "Original text"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Output"
+msgstr ""
+
+msgid "Output archive"
+msgstr ""
+
+msgid "Output folder"
+msgstr ""
+
+msgid "Override with my own translation..."
+msgstr ""
+
+msgid "Partially translated"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Pip-Boy holodisk"
+msgstr ""
+
+msgid "Pip-Boy holodisks"
+msgstr ""
+
+msgid "Preparing the glossary..."
+msgstr ""
+
+msgid "Press \"Run the checks\"."
+msgstr ""
+
+msgid "Press \"Scan the scripts\"."
+msgstr ""
+
+msgid "Previous line"
+msgstr ""
+
+msgid "Previous translation restored"
+msgstr ""
+
+msgid "Previous translation: %1"
+msgstr ""
+
+msgid "Previous untranslated line"
+msgstr ""
+
+msgid "Problem"
+msgstr ""
+
+msgid "Progress"
+msgstr ""
+
+msgid "Project"
+msgstr ""
+
+msgid "Project settings"
+msgstr ""
+
+msgid "Project settings..."
+msgstr ""
+
+msgid "Projects"
+msgstr ""
+
+msgid "Put the previous translation back"
+msgstr ""
+
+msgid "Quality report"
+msgstr ""
+
+msgid "Quality report..."
+msgstr ""
+
+msgid "Quest %1: the Pip-Boy wraps the text (after the number) at %2 px."
+msgstr ""
+
+msgid "Quit"
+msgstr ""
+
+msgid "Reading the game files..."
+msgstr ""
+
+msgid "Reading the script..."
+msgstr ""
+
+msgid "Rebuild glossary"
+msgstr ""
+
+msgid "Rebuild the glossary"
+msgstr ""
+
+msgid "Rebuild the text of the translation from the records of the file."
+msgstr ""
+
+msgid "Recent"
+msgstr ""
+
+msgid "Recent folders"
+msgstr ""
+
+msgid "Recommended: translate the /game files before the /dialog files. They hold the names of items, creatures, skills and places, which feed the glossary."
+msgstr ""
+
+msgid "Redo"
+msgstr ""
+
+msgid "Redo the operation"
+msgstr ""
+
+msgid "Redo the operation: %1"
+msgstr ""
+
+msgid "Refresh statistics"
+msgstr ""
+
+msgid "Regular expression"
+msgstr ""
+
+msgid "Reload from the lines"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Repair"
+msgstr ""
+
+msgid "Replace"
+msgstr ""
+
+msgid "Replace \"%1\" by \"%2\" in the translation of %3 line(s) of %4 file(s)?\n\nFiles that are not open are saved immediately."
+msgstr ""
+
+msgid "Replace all"
+msgstr ""
+
+msgid "Replace existing translations"
+msgstr ""
+
+msgid "Replace the checked lines"
+msgstr ""
+
+msgid "Replace the translations the project already has? This rewrites the files of the output folder."
+msgstr ""
+
+msgid "Replace translations the project already has"
+msgstr ""
+
+msgid "Replace with \"%1\""
+msgstr ""
+
+msgid "Replace with (in the translation)..."
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "Reuse the translation of another version of the mod (for instance an older installation translated into %1). Only untranslated lines are filled in unless you ask to replace."
+msgstr ""
+
+msgid "Review mark"
+msgstr ""
+
+msgid "Room"
+msgstr ""
+
+msgid "Run the checks"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save all"
+msgstr ""
+
+msgid "Save failed"
+msgstr ""
+
+msgid "Save or close the modified files of this project first."
+msgstr ""
+
+msgid "Saved projects"
+msgstr ""
+
+msgid "Saved, but these characters cannot be written in the target encoding: %1"
+msgstr ""
+
+msgid "Saved."
+msgstr ""
+
+msgid "Scan the scripts"
+msgstr ""
+
+msgid "Scanning the scripts..."
+msgstr ""
+
+msgid "Scanning the scripts... %1 / %2"
+msgstr ""
+
+msgid "Script"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search (text or ID)..."
+msgstr ""
+
+msgid "Search and replace"
+msgstr ""
+
+msgid "Search and replace in the project..."
+msgstr ""
+
+msgid "Search in the whole project..."
+msgstr ""
+
+msgid "Search in this file (text or ID)..."
+msgstr ""
+
+msgid "Search the glossary..."
+msgstr ""
+
+msgid "Searching..."
+msgstr ""
+
+msgid "Select a line to see what was already translated for the same or a similar text."
+msgstr ""
+
+msgid "Select a quest line to see how the Pip-Boy wraps it."
+msgstr ""
+
+msgid "Select a term first."
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+msgid "Select at least one check."
+msgstr ""
+
+msgid "Selected lines (%1)"
+msgstr ""
+
+msgid "Send %1 line(s) (about %2 characters) to DeepL?"
+msgstr ""
+
+msgid "Send the neighbouring lines as context (not translated, not billed)"
+msgstr ""
+
+msgid "Server error %1"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Settings..."
+msgstr ""
+
+msgid "Similar text"
+msgstr ""
+
+msgid "Some characters cannot be represented in the encoding of the target files (%1) and were replaced by '?':\n\n%2\n\nChoose another encoding in the project settings or reword the text."
+msgstr ""
+
+msgid "Some sources could not be read:"
+msgstr ""
+
+msgid "Some sources could not be read:\n\n%1"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Source (%1)"
+msgstr ""
+
+msgid "Source (paragraphs)"
+msgstr ""
+
+msgid "Source encoding"
+msgstr ""
+
+msgid "Source language"
+msgstr ""
+
+msgid "Sources"
+msgstr ""
+
+msgid "Spacing"
+msgstr ""
+
+msgid "St."
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stop following the game report"
+msgstr ""
+
+msgid "Stopped: %1 of %2 line(s) translated, %3 failed."
+msgstr ""
+
+msgid "Stopping..."
+msgstr ""
+
+msgid "Suggestion used"
+msgstr ""
+
+msgid "Suggestions"
+msgstr ""
+
+msgid "System"
+msgstr ""
+
+msgid "Target encoding"
+msgstr ""
+
+msgid "Target language"
+msgstr ""
+
+msgid "Term"
+msgstr ""
+
+msgid "Term (source language):"
+msgstr ""
+
+msgid "Test"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Text files"
+msgstr ""
+
+msgid "Text files (*.txt *.log);;All files (*)"
+msgstr ""
+
+msgid "Texts in the scripts"
+msgstr ""
+
+msgid "Texts in the scripts..."
+msgstr ""
+
+msgid "The DAT archive could not be written:"
+msgstr ""
+
+msgid "The DAT archive could not be written:\n%1"
+msgstr ""
+
+msgid "The DeepL quota is exhausted."
+msgstr ""
+
+msgid "The checks apply to the saved files: save your changes first."
+msgstr ""
+
+msgid "The dialogue tree is available for files of the /dialog folder."
+msgstr ""
+
+msgid "The files of this project that are open will be closed first. Continue?"
+msgstr ""
+
+msgid "The holodisk editor works on game/pipboy.msg."
+msgstr ""
+
+msgid "The language will change the next time the application starts."
+msgstr ""
+
+msgid "The output archive cannot be one of the sources of the project."
+msgstr ""
+
+msgid "The output archive must be a .dat file."
+msgstr ""
+
+msgid "The report is empty."
+msgstr ""
+
+msgid "The source and target languages must differ."
+msgstr ""
+
+msgid "The sources of this project contain no compiled script."
+msgstr ""
+
+msgid "The text of the line being edited is sent to these servers: use servers you trust."
+msgstr ""
+
+msgid "The translation file %1 contains malformed records; the game ignores everything after the first one, so part of the translation is not read:\n\n%2\n\nRepair it automatically? A copy of the original is kept as .bak."
+msgstr ""
+
+msgid "The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files"
+msgstr ""
+
+msgid "The translation needs %1 entries but only %2 ids are free before record %3. Shorten it."
+msgstr ""
+
+msgid "Theme"
+msgstr ""
+
+msgid "There is no term of your own to export yet."
+msgstr ""
+
+msgid "These files have unsaved changes:\n\n%1"
+msgstr ""
+
+msgid "This line has nothing to translate."
+msgstr ""
+
+msgid "This line is not part of a holodisk body (a holodisk body ends with **END-DISK**)."
+msgstr ""
+
+msgid "This script contains no dialogue structure."
+msgstr ""
+
+msgid "To review"
+msgstr ""
+
+msgid "Tokens"
+msgstr ""
+
+msgid "Too long"
+msgstr ""
+
+msgid "Too many matches (give the file and the id):"
+msgstr ""
+
+msgid "Tools"
+msgstr ""
+
+msgid "Total"
+msgstr ""
+
+msgid "Translate"
+msgstr ""
+
+msgid "Translate this line with DeepL"
+msgstr ""
+
+msgid "Translated"
+msgstr ""
+
+msgid "Translated files are written to %1 (this folder overrides the sources)."
+msgstr ""
+
+msgid "Translating with DeepL..."
+msgstr ""
+
+msgid "Translating..."
+msgstr ""
+
+msgid "Translation"
+msgstr ""
+
+msgid "Translation (%1)"
+msgstr ""
+
+msgid "Translation (write freely: a blank line starts a paragraph)"
+msgstr ""
+
+msgid "Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods."
+msgstr ""
+
+msgid "Translation:"
+msgstr ""
+
+msgid "Tree"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Type a text and press Enter."
+msgstr ""
+
+msgid "Type a text to search."
+msgstr ""
+
+msgid "Types (%1/%2)"
+msgstr ""
+
+msgid "Underline spelling and grammar errors in the translation"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Undo the last operation"
+msgstr ""
+
+msgid "Undo the operation: %1"
+msgstr ""
+
+msgid "Unknown word: %1"
+msgstr ""
+
+msgid "Unsaved changes"
+msgstr ""
+
+msgid "Untranslated"
+msgstr ""
+
+msgid "Untranslated lines (%1)"
+msgstr ""
+
+msgid "Up"
+msgstr ""
+
+msgid "Update the output DAT archive now"
+msgstr ""
+
+msgid "Updating the DAT archive..."
+msgstr ""
+
+msgid "Use the project glossary (terms of the /game files; the free plan allows one glossary)"
+msgstr ""
+
+msgid "Validate (or remove the validation)"
+msgstr ""
+
+msgid "Validated"
+msgstr ""
+
+msgid "Validation"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "When the source text changed, import the old translation marked \"to review\""
+msgstr ""
+
+msgid "Whole words"
+msgstr ""
+
+msgid "Width of the Pip-Boy text area (374 px in the game)."
+msgstr ""
+
+msgid "Width:"
+msgstr ""
+
+msgid "With a comment"
+msgstr ""
+
+msgid "Words left"
+msgstr ""
+
+msgid "Write the translated scripts"
+msgstr ""
+
+msgid "Writes scripts/<name>.int with the translations into the output (folder or archive)."
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Your DeepL account already contains a glossary:\n\n%1\n\nThe free plan allows a single glossary. Delete it and replace it with the glossary of this project?\n\nThis cannot be undone."
+msgstr ""
+
+msgid "a text contains a NUL character"
+msgstr ""
+
+msgid "cannot be written as %1: %2"
+msgstr ""
+
+msgid "doubled spaces"
+msgstr ""
+
+msgid "e.g. RPU — French"
+msgstr ""
+
+msgid "e.g. french.dat"
+msgstr ""
+
+msgid "elsewhere (%1 times): %2"
+msgstr ""
+
+msgid "int2ssl was not found next to the application."
+msgstr ""
+
+msgid "line %1 (%2): %3"
+msgstr ""
+
+msgid "missing: %1"
+msgstr ""
+
+msgid "no limit"
+msgstr ""
+
+msgid "not a readable script (%1)"
+msgstr ""
+
+msgid "only the first %1 are listed (use the export for all)"
+msgstr ""
+
+msgid "only the first results are shown"
+msgstr ""
+
+msgid "short label of the interface: %1 characters for %2 in the source"
+msgstr ""
+
+msgid "spaces at the start or the end"
+msgstr ""
+
+msgid "the game only reads 500 entries per holodisk"
+msgstr ""
+
+msgid "the source has spaces at the start or the end"
+msgstr ""
+
+msgid "the translation only contains spaces"
+msgstr ""
+
+msgid "too long"
+msgstr ""
+
+msgid "unexpected: %1"
+msgstr ""
+
+msgid "will be appended"
+msgstr ""
+
+msgid "written to the file"
+msgstr ""
+
+msgid "⚠ Several different translations exist in the game files."
+msgstr ""
+
+msgid "✔ Key accepted. Usage: %L1 / %L2 characters this period."
+msgstr ""
+
+msgid "✔ The server answers (%1 issue(s) found in the test sentence)."
+msgstr ""
+
+msgid "⤴ %1 (see above)"
+msgstr ""

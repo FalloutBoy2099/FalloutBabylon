@@ -1,0 +1,84 @@
+import { SpinBox } from "std-widgets.slint";
+import { Colors, Pane, FlatButton } from "../widgets.slint";
+
+export global PipboyData {
+    in property <string> info;
+    in property <string> mode;
+    in property <string> status;
+    in-out property <string> source-text;
+    in-out property <string> target-text;
+    in property <string> preview;
+    in-out property <int> width: 374;
+    in-out property <int> chars: 53;
+    in property <bool> editing;
+    callback target-edited(string);
+    callback settings-changed();
+    callback reload();
+}
+
+component TextBox inherits Pane {
+    in-out property <string> text;
+    in property <bool> read-only: false;
+    in property <bool> enabled: true;
+    in property <string> family: "";
+    callback edited(string);
+    TextInput {
+        x: 6px;
+        y: 4px;
+        width: parent.width - 12px;
+        height: parent.height - 8px;
+        text <=> root.text;
+        read-only: root.read-only;
+        enabled: root.enabled;
+        wrap: root.family == "" ? word-wrap : no-wrap;
+        single-line: false;
+        font-size: 14px;
+        font-family: root.family;
+        color: Colors.fore;
+        selection-background-color: Colors.selection;
+        selection-foreground-color: Colors.fore;
+        edited => { root.edited(self.text); }
+    }
+}
+
+export component PipboyPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    Text { text: PipboyData.info; color: Colors.fore; wrap: word-wrap; }
+    Text { text: PipboyData.mode; color: Colors.muted; wrap: word-wrap; }
+    HorizontalLayout {
+        spacing: 6px;
+        Text { text: @tr("Width:"); color: Colors.fore; vertical-alignment: center; }
+        SpinBox {
+            minimum: 100;
+            maximum: 1000;
+            value <=> PipboyData.width;
+            edited(v) => { PipboyData.settings-changed(); }
+            width: 100px;
+        }
+        Text { text: @tr("Characters (fallback):"); color: Colors.fore; vertical-alignment: center; }
+        SpinBox {
+            minimum: 20;
+            maximum: 200;
+            value <=> PipboyData.chars;
+            edited(v) => { PipboyData.settings-changed(); }
+            width: 90px;
+        }
+    }
+    HorizontalLayout {
+        alignment: start;
+        FlatButton { text: @tr("Reload from the lines"); enabled: PipboyData.editing; clicked => { PipboyData.reload(); } }
+    }
+    Text { text: @tr("Source (paragraphs)"); font-weight: 700; color: Colors.fore; }
+    TextBox { text <=> PipboyData.source-text; read-only: true; vertical-stretch: 1; }
+    Text { text: @tr("Translation (write freely: a blank line starts a paragraph)"); font-weight: 700; color: Colors.fore; wrap: word-wrap; }
+    TextBox {
+        text <=> PipboyData.target-text;
+        enabled: PipboyData.editing;
+        vertical-stretch: 1;
+        edited(t) => { PipboyData.target-edited(t); }
+    }
+    Text { text: @tr("Lines written to the file"); font-weight: 700; color: Colors.fore; }
+    TextBox { text: PipboyData.preview; read-only: true; family: "Consolas"; vertical-stretch: 1; }
+    Text { text: PipboyData.status; color: Colors.muted; wrap: word-wrap; }
+}

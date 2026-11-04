@@ -1,0 +1,1616 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh\n"
+
+msgid " (IQ %1+)"
+msgstr "（智力 %1+）"
+
+msgid " (low IQ)"
+msgstr "（低智力）"
+
+msgid " (source)"
+msgstr "（源文）"
+
+msgid " Remaining quota: %L1 characters."
+msgstr " 剩余配额：%L1 个字符。"
+
+msgid " px"
+msgstr " px"
+
+msgid " — %1 shown"
+msgstr " — 显示 %1 个"
+
+msgid "\"%1\": %2 characters for %3 available"
+msgstr "“%1”：%2 个字符，可用 %3 个"
+
+msgid "\"%1\": not translated in the game files yet"
+msgstr "“%1”：游戏文件中尚未翻译"
+
+msgid "\"%1\": the code cannot be read safely, the text cannot be lengthened"
+msgstr "“%1”：代码无法被安全读取，文本无法加长"
+
+msgid "\"%1\": used by the start-up code of the script, the text cannot be lengthened"
+msgstr "“%1”：被脚本的启动代码使用，文本无法加长"
+
+msgid "%"
+msgstr "%"
+
+msgid "%1\n%2 lines, %3 untranslated, %4 to review\n%5 words / %6 characters left"
+msgstr "%1\n%2 行，%3 行未翻译，%4 行待复查\n剩余 %5 个词 / %6 个字符"
+
+msgid "%1 / %2 lines"
+msgstr "%1 / %2 行"
+
+msgid "%1 characters (limit %2)"
+msgstr "%1 个字符（上限 %2）"
+
+msgid "%1 characters for %2 in the source"
+msgstr "%1 个字符，源文为 %2 个"
+
+msgid "%1 contains malformed records; everything after the first one is ignored by the game:\n\n%2"
+msgstr "%1 含有格式错误的记录；游戏会忽略第一条之后的所有内容：\n\n%2"
+
+msgid "%1 does not exist in the sources of this project."
+msgstr "此项目的来源中不存在 %1。"
+
+msgid "%1 entries, %2 page(s) in the Pip-Boy"
+msgstr "%1 条，Pip-Boy 中共 %2 页"
+
+msgid "%1 file(s) examined, %2 written.\n%3 line(s) with the same text, %4 with a changed source (to review), %5 found under another id; %6 already translated and kept."
+msgstr "已检查 %1 个文件，写入 %2 个。\n文本相同的行：%3；源文本已更改的行（待审阅）：%4；在其他 ID 下找到的行：%5；已翻译并保留的行：%6。"
+
+msgid "%1 file(s) taken from the cache"
+msgstr "%1 个文件来自缓存"
+
+msgid "%1 files written to\n%2"
+msgstr "已写入 %1 个文件到\n%2"
+
+msgid "%1 files — %2 lines, %3 untranslated, %4 to review (%5%)"
+msgstr "%1 个文件 — %2 行，%3 未翻译，%4 待审阅（%5%）"
+
+msgid "%1 line(s) in the translation, %2 in the source"
+msgstr "译文 %1 行，源文 %2 行"
+
+msgid "%1 line(s) marked \"to review\"."
+msgstr "%1 行已标记为“待审阅”。"
+
+msgid "%1 line(s) to review — double-click to open"
+msgstr "%1 行待复查 — 双击打开"
+
+msgid "%1 line(s) wider than the screen"
+msgstr "%1 行宽于屏幕"
+
+msgid "%1 line(s), %2 occurrence(s)"
+msgstr "%1 行，%2 处匹配"
+
+msgid "%1 line(s), about %2 characters to send to DeepL."
+msgstr "%1 行，约 %2 个字符将发送到 DeepL。"
+
+msgid "%1 lines"
+msgstr "%1 行"
+
+msgid "%1 max"
+msgstr "最多 %1"
+
+msgid "%1 nodes · %2 line(s) of the file are not part of the tree"
+msgstr "%1 个节点 · 文件中有 %2 行不属于该树"
+
+msgid "%1 problem(s)"
+msgstr "%1 个问题"
+
+msgid "%1 record(s) repaired, %2 left as they are.\n\n%3"
+msgstr "已修复 %1 条记录，%2 条保持原样。\n\n%3"
+
+msgid "%1 replacement(s) in %2 file(s)."
+msgstr "在 %2 个文件中替换了 %1 处。"
+
+msgid "%1 script(s) written: %2 text(s) in place, %3 lengthened."
+msgstr "已写入 %1 个脚本：%2 条原位替换，%3 条已加长。"
+
+msgid "%1 source(s) found; languages: %2."
+msgstr "找到 %1 个来源；语言：%2。"
+
+msgid "%1 suggestion(s): double-click to use one."
+msgstr "%1 条建议：双击即可使用。"
+
+msgid "%1 term(s) exported."
+msgstr "已导出 %1 个术语。"
+
+msgid "%1 term(s) imported, %2 line(s) ignored."
+msgstr "已导入 %1 个术语，忽略 %2 行。"
+
+msgid "%1 terms · %2 without translation · %3 inconsistent"
+msgstr "%1 个术语 · %2 个无译文 · %3 个不一致"
+
+msgid "%1 text(s) in the scripts, %2 translated."
+msgstr "脚本中有 %1 条文本，已翻译 %2 条。"
+
+msgid "%1 translation(s) applied. Save the file to keep them."
+msgstr "已应用 %1 条译文。请保存文件以保留它们。"
+
+msgid "%1 — %2 done\n%3 lines (%4 untranslated, %5 to review)\n%6 words and %7 characters left (of %8 words)"
+msgstr "%1 — 已完成 %2\n%3 行（%4 未翻译，%5 待审阅）\n剩余 %6 个词和 %7 个字符（共 %8 个词）"
+
+msgid "%1 — computing..."
+msgstr "%1 — 正在计算..."
+
+msgid "%1 → %2  ·  encoding %3 / %4"
+msgstr "%1 → %2  ·  编码 %3 / %4"
+
+msgid "(line %1 not found in this file)"
+msgstr "（在此文件中找不到第 %1 行）"
+
+msgid "(none)"
+msgstr "（无）"
+
+msgid ", and the original texts under text/%1/."
+msgstr "，原文位于 text/%1/。"
+
+msgid "1 · Game files — do first"
+msgstr "1 · 游戏文件 — 先做"
+
+msgid "2 · Dialogues"
+msgstr "2 · 对话"
+
+msgid "3 · Other files"
+msgstr "3 · 其他文件"
+
+msgid "<b>%1</b>"
+msgstr "<b>%1</b>"
+
+msgid "<b>%1</b> — %2 done<br>%3 lines (%4 untranslated, %5 to review)<br>%6 words and %7 characters left (of %8 words)"
+msgstr "<b>%1</b> — 已完成 %2<br>%3 行（%4 行未翻译，%5 行待复查）<br>剩余 %6 个词和 %7 个字符（共 %8 个词）"
+
+msgid "<b>%1</b> — computing..."
+msgstr "<b>%1</b> — 正在计算..."
+
+msgid "<h2>Fallout Babylon</h2><p>Translation editor for Fallout 1 and Fallout 2 mods.</p>"
+msgstr "<h2>Fallout Babylon</h2><p>适用于 Fallout 1 和 Fallout 2 模组的翻译编辑器。</p>"
+
+msgid "<h3>Fallout Babylon %1</h3><p>Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods.</p><p>Built with Qt %2 and Scintilla.</p>"
+msgstr "<h3>Fallout Babylon %1</h3><p>适用于 Fallout 1 和 Fallout 2 模组对话与文本文件的翻译编辑器。</p><p>使用 Qt %2 和 Scintilla 构建。</p>"
+
+msgid "<i>Not translated in the game files yet</i>"
+msgstr "<i>游戏文件中尚未翻译</i>"
+
+msgid "A placeholder (@...@, %s...) was altered: check this line."
+msgstr "占位符（@...@、%s...）被改动：请检查此行。"
+
+msgid "A text longer than the original is appended at the end of the script and the code is redirected to it. The game reads strings through their offset and does not check where it points, but this is not guaranteed: test it in the game. Without it, only translations that fit the room of the original are written."
+msgstr "比原文更长的文本会被追加到脚本末尾，代码随之重定向。游戏按位置读取字符串且不检查其指向何处，但这并无保证：请在游戏中测试。不启用此项时，只写入能放进原文空间的译文。"
+
+msgid "API key"
+msgstr "API 密钥"
+
+msgid "About Fallout Babylon"
+msgstr "关于 Fallout Babylon"
+
+msgid "About Qt..."
+msgstr "关于 Qt(Q)..."
+
+msgid "About..."
+msgstr "关于(A)..."
+
+msgid "Accept as is"
+msgstr "按原样接受(A)"
+
+msgid "Add a term of your own (a name to keep, a word with a fixed translation...)"
+msgstr "添加自己的术语（需保留的名称、翻译固定的词语等）"
+
+msgid "Add at least one source."
+msgstr "请至少添加一个来源。"
+
+msgid "Add the game folder or the archives of the mod to translate."
+msgstr "请添加要翻译的游戏文件夹或模组压缩包。"
+
+msgid "Add..."
+msgstr "添加..."
+
+msgid "Adds a Fallout folder: its DAT archives and its data folder are detected."
+msgstr "添加 Fallout 文件夹：会检测其中的 DAT 压缩包和 data 文件夹。"
+
+msgid "Adds text/<source language>/ copies of the translated files, so that the reference of each translation is in the archive. Turn it off if a later mod must keep providing the original texts."
+msgstr "为已翻译的文件添加 text/<源语言>/ 副本，使每份译文的参照都在归档中。如果之后加载的模组仍需提供原文，请关闭此项。"
+
+msgid "After replacement"
+msgstr "替换后"
+
+msgid "All"
+msgstr "全部"
+
+msgid "All files"
+msgstr "所有文件"
+
+msgid "All lines"
+msgstr "所有行"
+
+msgid "All lines (%1)"
+msgstr "所有行 (%1)"
+
+msgid "All problems"
+msgstr "所有问题"
+
+msgid "All types"
+msgstr "所有类型"
+
+msgid "Allow longer texts (experimental)"
+msgstr "允许更长的文本（实验性）"
+
+msgid "Also reuse translations of identical texts found under another id"
+msgstr "同时重用在其他 ID 下找到的相同文本的翻译"
+
+msgid "Also store the original texts (reference files)"
+msgstr "同时保存原文（参考文件）"
+
+msgid "Analysing \"%1\"..."
+msgstr "正在分析“%1”..."
+
+msgid "Analysing \"%1\": %2 / %3 files"
+msgstr "正在分析“%1”：%2 / %3 个文件"
+
+msgid "Analysing %1 / %2"
+msgstr "正在分析 %1 / %2"
+
+msgid "Apply"
+msgstr "应用"
+
+msgid "Apply the checked proposals"
+msgstr "应用已勾选的建议"
+
+msgid "Automatic (system)"
+msgstr "自动（跟随系统）"
+
+msgid "Both the term and its translation are required."
+msgstr "术语及其译文都是必填的。"
+
+msgid "Browse..."
+msgstr "浏览..."
+
+msgid "Building the glossary..."
+msgstr "正在创建术语表..."
+
+msgid "Building the translation memory of the project..."
+msgstr "正在建立项目的翻译记忆库..."
+
+msgid "Built with Rust and Slint."
+msgstr "使用 Rust 和 Slint 构建。"
+
+msgid "CSV files"
+msgstr "CSV 文件"
+
+msgid "CSV files (*.csv)"
+msgstr "CSV 文件 (*.csv)"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Cancelling..."
+msgstr "正在取消..."
+
+msgid "Cannot read %1."
+msgstr "无法读取 %1。"
+
+msgid "Cannot read %1:\n%2"
+msgstr "无法读取 %1：\n%2"
+
+msgid "Cannot repair %1:\n%2"
+msgstr "无法修复 %1：\n%2"
+
+msgid "Cannot save %1:\n%2"
+msgstr "无法保存 %1：\n%2"
+
+msgid "Cannot write %1."
+msgstr "无法写入 %1。"
+
+msgid "Cannot write the archive:\n%1"
+msgstr "无法写入压缩包：\n%1"
+
+msgid "Changed since it was validated"
+msgstr "验证后已更改"
+
+msgid "Changed since validation"
+msgstr "验证后已更改"
+
+msgid "Characters (fallback):"
+msgstr "字符数（备用）："
+
+msgid "Characters per line, used when the game font cannot be read."
+msgstr "无法读取游戏字体时，每行使用的字符数。"
+
+msgid "Characters the encoding cannot hold"
+msgstr "编码无法容纳的字符"
+
+msgid "Chars left"
+msgstr "剩余字符"
+
+msgid "Check"
+msgstr "检查项"
+
+msgid "Checking..."
+msgstr "正在检查..."
+
+msgid "Checking... %1 / %2 files"
+msgstr "正在检查... %1 / %2 个文件"
+
+msgid "Choose an output folder."
+msgstr "请选择输出文件夹。"
+
+msgid "Choose the output archive."
+msgstr "请选择输出归档。"
+
+msgid "Choose the source and the target language."
+msgstr "请选择源语言和目标语言。"
+
+msgid "Click to jump to the first occurrence"
+msgstr "点击跳转到第一次出现的位置"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Close all"
+msgstr "全部关闭"
+
+msgid "Close all but this one"
+msgstr "关闭其他"
+
+msgid "Close file"
+msgstr "关闭文件(C)"
+
+msgid "Close project"
+msgstr "关闭项目"
+
+msgid "Close the project"
+msgstr "关闭项目(J)"
+
+msgid "Close the tabs to the left"
+msgstr "关闭左侧标签页"
+
+msgid "Close the tabs to the right"
+msgstr "关闭右侧标签页"
+
+msgid "Comment on this line (kept in the project, not in the game files)..."
+msgstr "对此行的注释（保存在项目中，不写入游戏文件）..."
+
+msgid "Comment: %1"
+msgstr "注释：%1"
+
+msgid "Complete"
+msgstr "已完成"
+
+msgid "Contacting DeepL..."
+msgstr "正在连接 DeepL..."
+
+msgid "Contacting the server..."
+msgstr "正在连接服务器..."
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Copy the source"
+msgstr "复制原文(S)"
+
+msgid "Copy the term"
+msgstr "复制术语"
+
+msgid "Copy the translation"
+msgstr "复制译文"
+
+msgid "Correction"
+msgstr "校对"
+
+msgid "Custom"
+msgstr "自定义"
+
+msgid "Cut"
+msgstr "剪切"
+
+msgid "DAT archive"
+msgstr "DAT 归档"
+
+msgid "DAT archive NOT updated: %1"
+msgstr "DAT 归档未更新：%1"
+
+msgid "DAT archive updated: %1 translated file(s), %2 original(s)."
+msgstr "DAT 归档已更新：%1 个译文文件，%2 个原文文件。"
+
+msgid "DAT archive..."
+msgstr "DAT 压缩包..."
+
+msgid "DAT archives"
+msgstr "DAT 压缩包"
+
+msgid "DAT archives (*.dat)"
+msgstr "DAT 归档 (*.dat)"
+
+msgid "DAT archives (*.dat);;All files (*)"
+msgstr "DAT 压缩包 (*.dat);;所有文件 (*)"
+
+msgid "Dark"
+msgstr "深色"
+
+msgid "Decompilation failed: %1"
+msgstr "反编译失败：%1"
+
+msgid "DeepL"
+msgstr "DeepL"
+
+msgid "DeepL API key (free keys end with :fx)"
+msgstr "DeepL API 密钥（免费密钥以 :fx 结尾）"
+
+msgid "DeepL does not support %1."
+msgstr "DeepL 不支持“%1”。"
+
+msgid "DeepL error %1"
+msgstr "DeepL 错误 %1"
+
+msgid "DeepL glossary"
+msgstr "DeepL 术语表"
+
+msgid "DeepL glossary not used: %1"
+msgstr "未使用 DeepL 术语表：%1"
+
+msgid "DeepL proposal (editable)"
+msgstr "DeepL 建议（可编辑）"
+
+msgid "DeepL refused the glossary: the free plan allows a single glossary (delete the existing one in your DeepL account to use the project glossary)."
+msgstr "DeepL 拒绝了术语表：免费套餐只允许一个术语表（请在 DeepL 账户中删除现有的，以使用项目术语表）。"
+
+msgid "DeepL rejected the API key."
+msgstr "DeepL 拒绝了该 API 密钥。"
+
+msgid "DeepL translation"
+msgstr "DeepL 翻译"
+
+msgid "Default"
+msgstr "默认"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Delete this term"
+msgstr "删除此术语"
+
+msgid "Detach into a window"
+msgstr "分离到窗口"
+
+msgid "Dialogue tree"
+msgstr "对话树"
+
+msgid "Dialogues"
+msgstr "对话"
+
+msgid "Discard"
+msgstr "放弃"
+
+msgid "Do not translate (keep the term as is)"
+msgstr "不要翻译（保持术语原样）"
+
+msgid "Do not translate: this term must stay unchanged."
+msgstr "不要翻译：此术语必须保持原样。"
+
+msgid "Dock"
+msgstr "停靠"
+
+msgid "Done"
+msgstr "完成"
+
+msgid "Done: %1 line(s) translated, %2 failed. Check the proposals, then apply."
+msgstr "完成：已翻译 %1 行，%2 行失败。请检查建议，然后应用。"
+
+msgid "Down"
+msgstr "下移"
+
+msgid "Edit"
+msgstr "编辑(E)"
+
+msgid "Edit / override this term..."
+msgstr "编辑 / 覆盖此术语..."
+
+msgid "Edit the glossary term"
+msgstr "编辑词汇表术语"
+
+msgid "Edit this term..."
+msgstr "编辑此术语..."
+
+msgid "Edit..."
+msgstr "编辑..."
+
+msgid "Editing..."
+msgstr "正在编辑..."
+
+msgid "Empty answer from DeepL."
+msgstr "DeepL 返回了空结果。"
+
+msgid "Encoding"
+msgstr "编码"
+
+msgid "Enter the server address first."
+msgstr "请先输入服务器地址。"
+
+msgid "Enter your DeepL API key in Tools > Settings first."
+msgstr "请先在“工具 > 设置”中输入 DeepL API 密钥。"
+
+msgid "Export"
+msgstr "导出"
+
+msgid "Export (CSV)..."
+msgstr "导出 (CSV)..."
+
+msgid "Export glossary terms"
+msgstr "导出词汇表术语"
+
+msgid "Export the report"
+msgstr "导出报告"
+
+msgid "Export to a DAT archive"
+msgstr "导出到 DAT 压缩包"
+
+msgid "Export to a DAT archive..."
+msgstr "导出到 DAT 压缩包(E)..."
+
+msgid "Export your own terms to a CSV file"
+msgstr "将自己的术语导出为 CSV 文件"
+
+msgid "Export..."
+msgstr "导出..."
+
+msgid "Fallout 1"
+msgstr "Fallout 1"
+
+msgid "Fallout 1 archive (*.dat)"
+msgstr "Fallout 1 压缩包 (*.dat)"
+
+msgid "Fallout 2 (zlib)"
+msgstr "Fallout 2 (zlib)"
+
+msgid "Fallout 2 archive (zlib) (*.dat)"
+msgstr "Fallout 2 压缩包 (zlib) (*.dat)"
+
+msgid "Fallout folder"
+msgstr "Fallout 文件夹"
+
+msgid "File"
+msgstr "文件(F)"
+
+msgid "File / character"
+msgstr "文件 / 角色"
+
+msgid "File the game writes its report to"
+msgstr "游戏写入报告的文件"
+
+msgid "Filter files..."
+msgstr "筛选文件..."
+
+msgid "Filter the texts..."
+msgstr "筛选文本..."
+
+msgid "Find in this file"
+msgstr "在此文件中查找(F)"
+
+msgid "Folder"
+msgstr "文件夹"
+
+msgid "Folder holding the translation"
+msgstr "包含翻译的文件夹"
+
+msgid "Folder of loose files"
+msgstr "散文件文件夹"
+
+msgid "Follow a game report file..."
+msgstr "跟踪游戏报告文件(F)..."
+
+msgid "Following %1: lines written there are marked \"to review\"."
+msgstr "正在跟踪 %1：写入其中的行将被标记为“待审阅”。"
+
+msgid "Formality"
+msgstr "语气正式程度"
+
+msgid "Format:"
+msgstr "格式："
+
+msgid "Game files"
+msgstr "游戏文件"
+
+msgid "Game folder..."
+msgstr "游戏文件夹..."
+
+msgid "Game font not available (or multi-byte encoding): approximate measure."
+msgstr "游戏字体不可用（或为多字节编码）：近似测量。"
+
+msgid "Game font not available (or multi-byte encoding): lines are cut at about %1 characters."
+msgstr "游戏字体不可用（或为多字节编码）：行大约在 %1 个字符处断开。"
+
+msgid "Game or mod folder holding the translation"
+msgstr "包含翻译的游戏或模组文件夹"
+
+msgid "Game report"
+msgstr "游戏报告"
+
+msgid "Game report: %1 line(s) marked \"to review\", %2 not found."
+msgstr "游戏报告：%1 行已标记为“待审阅”，%2 行未找到。"
+
+msgid "General"
+msgstr "常规"
+
+msgid "Give the project a name."
+msgstr "请为项目命名。"
+
+msgid "Glossaries"
+msgstr "术语表"
+
+msgid "Glossaries (*.csv *.tsv *.txt);;All files (*)"
+msgstr "词汇表 (*.csv *.tsv *.txt);;所有文件 (*)"
+
+msgid "Glossary"
+msgstr "术语表"
+
+msgid "Glossary alerts"
+msgstr "术语表提示"
+
+msgid "Glossary:"
+msgstr "术语表："
+
+msgid "Glossary: %1 terms"
+msgstr "术语表：%1 个术语"
+
+msgid "Glossary: %1 → %2"
+msgstr "术语表：%1 → %2"
+
+msgid "Grammalecte server (French)"
+msgstr "Grammalecte 服务器（法语）"
+
+msgid "Help"
+msgstr "帮助(H)"
+
+msgid "Holodisk: records %1 to %2 (%3 entries, %4 page(s) in the Pip-Boy)."
+msgstr "全息磁盘：记录 %1 至 %2（%3 条，Pip-Boy 中共 %4 页）。"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Import"
+msgstr "导入"
+
+msgid "Import a game report"
+msgstr "导入游戏报告"
+
+msgid "Import a game report..."
+msgstr "导入游戏报告(G)..."
+
+msgid "Import an existing translation"
+msgstr "导入现有翻译"
+
+msgid "Import an existing translation..."
+msgstr "导入现有翻译(I)..."
+
+msgid "Import glossary terms"
+msgstr "导入词汇表术语"
+
+msgid "Import terms from a CSV / TSV file (term; translation; keep)"
+msgstr "从 CSV / TSV 文件导入术语（术语；译文；保留）"
+
+msgid "Import..."
+msgstr "导入..."
+
+msgid "Importing..."
+msgstr "正在导入..."
+
+msgid "In both"
+msgstr "两者皆查"
+
+msgid "In the source"
+msgstr "在源文中"
+
+msgid "In the translation"
+msgstr "在译文中"
+
+msgid "Inconsistent duplicate"
+msgstr "不一致的重复项"
+
+msgid "Inconsistent duplicates"
+msgstr "不一致的重复项"
+
+msgid "Inconsistent translations in the game files"
+msgstr "游戏文件中的译法不一致"
+
+msgid "Insert \"%1\""
+msgstr "插入“%1”"
+
+msgid "Insert \"%1\" in the translation"
+msgstr "将“%1”插入译文"
+
+msgid "Insert the translation"
+msgstr "插入译文"
+
+msgid "Invalid regular expression: %1"
+msgstr "无效的正则表达式：%1"
+
+msgid "Keep this term as is (do not translate)"
+msgstr "保持此术语原样（不翻译）"
+
+msgid "Language"
+msgstr "语言(L)"
+
+msgid "Language of its source texts"
+msgstr "其源文本的语言"
+
+msgid "Language of its translation"
+msgstr "其译文的语言"
+
+msgid "LanguageTool does not support %1."
+msgstr "LanguageTool 不支持“%1”。"
+
+msgid "LanguageTool server (other languages)"
+msgstr "LanguageTool 服务器（其他语言）"
+
+msgid "Languages"
+msgstr "语言"
+
+msgid "Languages found: %1."
+msgstr "找到的语言：%1。"
+
+msgid "Length"
+msgstr "长度"
+
+msgid "Less formal"
+msgstr "不那么正式"
+
+msgid "Light"
+msgstr "浅色"
+
+msgid "Lines"
+msgstr "行数"
+
+msgid "Lines left"
+msgstr "剩余行数"
+
+msgid "Lines written to the file"
+msgstr "写入文件的行"
+
+msgid "List"
+msgstr "列表"
+
+msgid "Looks for the texts written in the code of the scripts (not in the .msg files)."
+msgstr "查找写在脚本代码中的文本（不在 .msg 文件中）。"
+
+msgid "Lost tokens (@Name@, %d, {field})"
+msgstr "丢失的占位符（@Name@、%d、{field}）"
+
+msgid "Lowest priority first: a later source overrides an earlier one, like in the game."
+msgstr "优先级最低的在前：靠后的来源会覆盖前面的，与游戏一致。"
+
+msgid "Mark as to review"
+msgstr "标记为待复查(T)"
+
+msgid "Mark machine translations as \"to review\""
+msgstr "将机器翻译标记为“待复查”"
+
+msgid "Mass translation"
+msgstr "批量翻译"
+
+msgid "Mass translation with DeepL"
+msgstr "用 DeepL 批量翻译"
+
+msgid "Mass translation with DeepL..."
+msgstr "用 DeepL 批量翻译(M)..."
+
+msgid "Match case"
+msgstr "区分大小写"
+
+msgid "Maximum length:"
+msgstr "最大长度："
+
+msgid "Maximum number of characters of a translation (0: only report translations much longer than the source)"
+msgstr "译文的最大字符数（0：仅报告比源文长得多的译文）"
+
+msgid "Measured with the game font (font1.aaf)."
+msgstr "已用游戏字体 (font1.aaf) 测量。"
+
+msgid "Measured with the game font (font1.aaf): lines are cut at %1 px."
+msgstr "已用游戏字体 (font1.aaf) 测量：行在 %1 px 处断开。"
+
+msgid "Minimum similarity of the texts offered"
+msgstr "所提供文本的最低相似度"
+
+msgid "Minimum:"
+msgstr "最低："
+
+msgid "Mod folder (containing text/ or data/)"
+msgstr "模组文件夹（包含 text/ 或 data/）"
+
+msgid "Mod folder..."
+msgstr "模组文件夹..."
+
+msgid "More formal"
+msgstr "更正式"
+
+msgid "Move to the bottom"
+msgstr "移到底部"
+
+msgid "Move to the right"
+msgstr "移到右侧"
+
+msgid "NPC"
+msgstr "NPC"
+
+msgid "NPC (no answer)"
+msgstr "NPC（无回应）"
+
+msgid "Name"
+msgstr "名称"
+
+msgid "New glossary term"
+msgstr "新建词汇表术语"
+
+msgid "New project..."
+msgstr "新建项目..."
+
+msgid "New translation project"
+msgstr "新建翻译项目"
+
+msgid "Next line"
+msgstr "下一行(N)"
+
+msgid "Next untranslated line"
+msgstr "下一条未翻译行(U)"
+
+msgid "No"
+msgstr "否"
+
+msgid "No .msg file found under text/%1 or text/%2 in the sources of \"%3\"."
+msgstr "在“%3”的来源中，text/%1 和 text/%2 下均未找到 .msg 文件。"
+
+msgid "No DeepL API key. Enter it in Tools > Settings."
+msgstr "没有 DeepL API 密钥。请在“工具 > 设置”中输入。"
+
+msgid "No DeepL API key: enter it in Tools > Settings."
+msgstr "没有 DeepL 密钥：请在“工具 > 设置”中输入。"
+
+msgid "No glossary can be created for this language pair."
+msgstr "无法为这一语言对创建术语表。"
+
+msgid "No problem found."
+msgstr "未发现问题。"
+
+msgid "No project open."
+msgstr "没有打开的项目。"
+
+msgid "No remark found in this file."
+msgstr "此文件中没有找到任何备注。"
+
+msgid "No result."
+msgstr "没有结果。"
+
+msgid "No script found for this dialogue."
+msgstr "未找到此对话对应的脚本。"
+
+msgid "No similar translated text."
+msgstr "没有相似的已翻译文本。"
+
+msgid "No term found in this file."
+msgstr "此文件中没有找到任何术语。"
+
+msgid "No term yet. The glossary is built from the /game message files."
+msgstr "暂无术语。术语表由 /game 消息文件生成。"
+
+msgid "No text/<language>/ folder found here."
+msgstr "此处未找到 text/<语言>/ 文件夹。"
+
+msgid "No text/<language>/ folder found in these sources."
+msgstr "在这些来源中未找到 text/<语言>/ 文件夹。"
+
+msgid "None"
+msgstr "无"
+
+msgid "Not enough quota for everything."
+msgstr "配额不足以翻译全部内容。"
+
+msgid "Not found:"
+msgstr "未找到："
+
+msgid "Not translated"
+msgstr "未翻译"
+
+msgid "Not translated in the game files yet"
+msgstr "游戏文件中尚未翻译"
+
+msgid "Not translated yet: translate the matching /game file first."
+msgstr "尚未翻译：请先翻译对应的 /game 文件。"
+
+msgid "Not validated"
+msgstr "未验证"
+
+msgid "Not written:"
+msgstr "未写入："
+
+msgid "Note"
+msgstr "备注"
+
+msgid "Nothing to export yet: save some translated files first.\n(%1 does not exist)"
+msgstr "暂无可导出的内容：请先保存一些已翻译的文件。\n（%1 不存在）"
+
+msgid "Nothing to review. Mark lines with Ctrl+R."
+msgstr "没有待复查的内容。用 Ctrl+R 标记行。"
+
+msgid "Nothing to translate with this choice."
+msgstr "按此选择没有可翻译的内容。"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Only the terms you added (in bold) can be deleted."
+msgstr "只能删除您添加的术语（粗体显示）。"
+
+msgid "Only unfinished files"
+msgstr "仅显示未完成的文件"
+
+msgid "Open"
+msgstr "打开"
+
+msgid "Open a Fallout game or mod folder"
+msgstr "打开 Fallout 游戏或模组文件夹"
+
+msgid "Open a dialogue file to see its tree."
+msgstr "打开对话文件即可查看其对话树。"
+
+msgid "Open a game folder..."
+msgstr "打开游戏文件夹..."
+
+msgid "Open as is"
+msgstr "按原样打开"
+
+msgid "Open game/pipboy.msg and select a holodisk line."
+msgstr "请打开 game/pipboy.msg 并选择一行全息磁盘文本。"
+
+msgid "Open the output folder"
+msgstr "打开输出文件夹"
+
+msgid "Origin"
+msgstr "来源"
+
+msgid "Original text"
+msgstr "原文"
+
+msgid "Other"
+msgstr "其他"
+
+msgid "Output"
+msgstr "输出"
+
+msgid "Output archive"
+msgstr "输出归档"
+
+msgid "Output folder"
+msgstr "输出文件夹"
+
+msgid "Override with my own translation..."
+msgstr "用我自己的译文替换..."
+
+msgid "Partially translated"
+msgstr "部分翻译"
+
+msgid "Paste"
+msgstr "粘贴"
+
+msgid "Pip-Boy holodisk"
+msgstr "Pip-Boy 全息磁盘"
+
+msgid "Pip-Boy holodisks"
+msgstr "Pip-Boy 全息碟"
+
+msgid "Preparing the glossary..."
+msgstr "正在准备术语表..."
+
+msgid "Press \"Run the checks\"."
+msgstr "请点击“运行检查”。"
+
+msgid "Press \"Scan the scripts\"."
+msgstr "请点击“分析脚本”。"
+
+msgid "Previous line"
+msgstr "上一行(P)"
+
+msgid "Previous translation restored"
+msgstr "已恢复上一个译文"
+
+msgid "Previous translation: %1"
+msgstr "上一个译文：%1"
+
+msgid "Previous untranslated line"
+msgstr "上一条未翻译行"
+
+msgid "Problem"
+msgstr "问题"
+
+msgid "Progress"
+msgstr "进度"
+
+msgid "Project"
+msgstr "项目"
+
+msgid "Project settings"
+msgstr "项目设置"
+
+msgid "Project settings..."
+msgstr "项目设置(S)..."
+
+msgid "Projects"
+msgstr "项目"
+
+msgid "Put the previous translation back"
+msgstr "恢复上一个译文"
+
+msgid "Quality report"
+msgstr "质量报告"
+
+msgid "Quality report..."
+msgstr "质量报告(Q)..."
+
+msgid "Quest %1: the Pip-Boy wraps the text (after the number) at %2 px."
+msgstr "任务 %1：Pip-Boy 在 %2 px 处对文本（编号之后）换行。"
+
+msgid "Quit"
+msgstr "退出(Q)"
+
+msgid "Reading the game files..."
+msgstr "正在读取游戏文件..."
+
+msgid "Reading the script..."
+msgstr "正在读取脚本..."
+
+msgid "Rebuild glossary"
+msgstr "重建术语表"
+
+msgid "Rebuild the glossary"
+msgstr "重建术语表(G)"
+
+msgid "Rebuild the text of the translation from the records of the file."
+msgstr "根据文件中的记录重建译文文本。"
+
+msgid "Recent"
+msgstr "最近"
+
+msgid "Recent folders"
+msgstr "最近的文件夹(R)"
+
+msgid "Recommended: translate the /game files before the /dialog files. They hold the names of items, creatures, skills and places, which feed the glossary."
+msgstr "建议：先翻译 /game 文件，再翻译 /dialog 文件。前者包含物品、生物、技能和地点的名称，这些会用于生成术语表。"
+
+msgid "Redo"
+msgstr "重做"
+
+msgid "Redo the operation"
+msgstr "重做操作"
+
+msgid "Redo the operation: %1"
+msgstr "重做操作：%1"
+
+msgid "Refresh statistics"
+msgstr "刷新统计(S)"
+
+msgid "Regular expression"
+msgstr "正则表达式"
+
+msgid "Reload from the lines"
+msgstr "从各行重新加载"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Repair"
+msgstr "修复"
+
+msgid "Replace"
+msgstr "替换"
+
+msgid "Replace \"%1\" by \"%2\" in the translation of %3 line(s) of %4 file(s)?\n\nFiles that are not open are saved immediately."
+msgstr "在 %4 个文件的 %3 行译文中，将“%1”替换为“%2”？\n\n未打开的文件会立即保存。"
+
+msgid "Replace all"
+msgstr "全部替换"
+
+msgid "Replace existing translations"
+msgstr "替换现有译文"
+
+msgid "Replace the checked lines"
+msgstr "替换选中的行"
+
+msgid "Replace the translations the project already has? This rewrites the files of the output folder."
+msgstr "替换项目已有的翻译？这将重写输出文件夹中的文件。"
+
+msgid "Replace translations the project already has"
+msgstr "替换项目已有的翻译"
+
+msgid "Replace with \"%1\""
+msgstr "替换为“%1”"
+
+msgid "Replace with (in the translation)..."
+msgstr "替换为（在译文中）..."
+
+msgid "Restore"
+msgstr "恢复"
+
+msgid "Reuse the translation of another version of the mod (for instance an older installation translated into %1). Only untranslated lines are filled in unless you ask to replace."
+msgstr "重用模组其他版本的翻译（例如已翻译成 %1 的旧安装）。除非您要求替换，否则只填充未翻译的行。"
+
+msgid "Review mark"
+msgstr "“待审阅”标记"
+
+msgid "Room"
+msgstr "空间"
+
+msgid "Run the checks"
+msgstr "运行检查"
+
+msgid "Save"
+msgstr "保存(S)"
+
+msgid "Save all"
+msgstr "全部保存(A)"
+
+msgid "Save failed"
+msgstr "保存失败"
+
+msgid "Save or close the modified files of this project first."
+msgstr "请先保存或关闭此项目中已修改的文件。"
+
+msgid "Saved projects"
+msgstr "已保存的项目(S)"
+
+msgid "Saved, but these characters cannot be written in the target encoding: %1"
+msgstr "已保存，但这些字符无法用目标编码写入：%1"
+
+msgid "Saved."
+msgstr "已保存。"
+
+msgid "Scan the scripts"
+msgstr "分析脚本"
+
+msgid "Scanning the scripts..."
+msgstr "正在分析脚本..."
+
+msgid "Scanning the scripts... %1 / %2"
+msgstr "正在分析脚本... %1 / %2"
+
+msgid "Script"
+msgstr "脚本"
+
+msgid "Search"
+msgstr "搜索"
+
+msgid "Search (text or ID)..."
+msgstr "搜索（文本或 ID）..."
+
+msgid "Search and replace"
+msgstr "查找和替换"
+
+msgid "Search and replace in the project..."
+msgstr "在项目中查找和替换(P)..."
+
+msgid "Search in the whole project..."
+msgstr "在整个项目中搜索..."
+
+msgid "Search in this file (text or ID)..."
+msgstr "在此文件中搜索（文本或 ID）..."
+
+msgid "Search the glossary..."
+msgstr "在术语表中搜索..."
+
+msgid "Searching..."
+msgstr "正在搜索..."
+
+msgid "Select a line to see what was already translated for the same or a similar text."
+msgstr "选择一行，查看相同或相似文本已有的译文。"
+
+msgid "Select a quest line to see how the Pip-Boy wraps it."
+msgstr "选择一行任务文本，查看 Pip-Boy 如何换行。"
+
+msgid "Select a term first."
+msgstr "请先选择一个术语。"
+
+msgid "Select all"
+msgstr "全选"
+
+msgid "Select at least one check."
+msgstr "请至少选择一项检查。"
+
+msgid "Selected lines (%1)"
+msgstr "选中的行 (%1)"
+
+msgid "Send %1 line(s) (about %2 characters) to DeepL?"
+msgstr "将 %1 行（约 %2 个字符）发送到 DeepL 吗？"
+
+msgid "Send the neighbouring lines as context (not translated, not billed)"
+msgstr "将相邻行作为上下文发送（不翻译，不计费）"
+
+msgid "Server error %1"
+msgstr "服务器错误 %1"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Settings..."
+msgstr "设置(S)..."
+
+msgid "Similar text"
+msgstr "相似文本"
+
+msgid "Some characters cannot be represented in the encoding of the target files (%1) and were replaced by '?':\n\n%2\n\nChoose another encoding in the project settings or reword the text."
+msgstr "部分字符无法用目标文件的编码 (%1) 表示，已被替换为“?”：\n\n%2\n\n请在项目设置中选择其他编码，或改写文本。"
+
+msgid "Some sources could not be read:"
+msgstr "部分来源无法读取："
+
+msgid "Some sources could not be read:\n\n%1"
+msgstr "部分来源无法读取：\n\n%1"
+
+msgid "Source"
+msgstr "原文"
+
+msgid "Source (%1)"
+msgstr "原文 (%1)"
+
+msgid "Source (paragraphs)"
+msgstr "原文（段落）"
+
+msgid "Source encoding"
+msgstr "源编码"
+
+msgid "Source language"
+msgstr "源语言"
+
+msgid "Sources"
+msgstr "来源"
+
+msgid "Spacing"
+msgstr "空格"
+
+msgid "St."
+msgstr "状态"
+
+msgid "Statistics"
+msgstr "统计"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Stop following the game report"
+msgstr "停止跟踪游戏报告"
+
+msgid "Stopped: %1 of %2 line(s) translated, %3 failed."
+msgstr "已停止：%2 行中已翻译 %1 行，%3 行失败。"
+
+msgid "Stopping..."
+msgstr "正在停止..."
+
+msgid "Suggestion used"
+msgstr "已使用建议"
+
+msgid "Suggestions"
+msgstr "建议"
+
+msgid "System"
+msgstr "系统"
+
+msgid "Target encoding"
+msgstr "目标编码"
+
+msgid "Target language"
+msgstr "目标语言"
+
+msgid "Term"
+msgstr "术语"
+
+msgid "Term (source language):"
+msgstr "术语（源语言）："
+
+msgid "Test"
+msgstr "测试"
+
+msgid "Text"
+msgstr "文本"
+
+msgid "Text files"
+msgstr "文本文件"
+
+msgid "Text files (*.txt *.log);;All files (*)"
+msgstr "文本文件 (*.txt *.log);;所有文件 (*)"
+
+msgid "Texts in the scripts"
+msgstr "脚本中的文本"
+
+msgid "Texts in the scripts..."
+msgstr "脚本中的文本(T)..."
+
+msgid "The DAT archive could not be written:"
+msgstr "无法写入 DAT 归档："
+
+msgid "The DAT archive could not be written:\n%1"
+msgstr "无法写入 DAT 归档：\n%1"
+
+msgid "The DeepL quota is exhausted."
+msgstr "DeepL 配额已用完。"
+
+msgid "The checks apply to the saved files: save your changes first."
+msgstr "检查针对已保存的文件：请先保存更改。"
+
+msgid "The dialogue tree is available for files of the /dialog folder."
+msgstr "对话树适用于 /dialog 文件夹中的文件。"
+
+msgid "The files of this project that are open will be closed first. Continue?"
+msgstr "此项目中已打开的文件将先被关闭。继续吗？"
+
+msgid "The holodisk editor works on game/pipboy.msg."
+msgstr "全息磁盘编辑器适用于 game/pipboy.msg。"
+
+msgid "The language will change the next time the application starts."
+msgstr "语言将在下次启动应用程序时更改。"
+
+msgid "The output archive cannot be one of the sources of the project."
+msgstr "输出归档不能是项目的来源之一。"
+
+msgid "The output archive must be a .dat file."
+msgstr "输出归档必须是 .dat 文件。"
+
+msgid "The report is empty."
+msgstr "报告为空。"
+
+msgid "The source and target languages must differ."
+msgstr "源语言和目标语言必须不同。"
+
+msgid "The sources of this project contain no compiled script."
+msgstr "此项目的来源不包含已编译的脚本。"
+
+msgid "The text of the line being edited is sent to these servers: use servers you trust."
+msgstr "正在编辑的行的文本会发送到这些服务器：请使用可信的服务器。"
+
+msgid "The translation file %1 contains malformed records; the game ignores everything after the first one, so part of the translation is not read:\n\n%2\n\nRepair it automatically? A copy of the original is kept as .bak."
+msgstr "翻译文件 %1 含有格式错误的记录；游戏会忽略第一条之后的全部内容，因此部分译文不会被读取：\n\n%2\n\n自动修复吗？原文件的副本将保留为 .bak。"
+
+msgid "The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files"
+msgstr "译文将提供在 %1 中，每次保存后重建。其中 text/%2/ 包含已翻译的文件"
+
+msgid "The translation needs %1 entries but only %2 ids are free before record %3. Shorten it."
+msgstr "译文需要 %1 条，但记录 %3 之前只有 %2 个空闲 ID。请缩短译文。"
+
+msgid "Theme"
+msgstr "主题(T)"
+
+msgid "There is no term of your own to export yet."
+msgstr "还没有可导出的自有术语。"
+
+msgid "These files have unsaved changes:\n\n%1"
+msgstr "这些文件有未保存的更改：\n\n%1"
+
+msgid "This line has nothing to translate."
+msgstr "这一行没有需要翻译的内容。"
+
+msgid "This line is not part of a holodisk body (a holodisk body ends with **END-DISK**)."
+msgstr "此行不属于全息磁盘正文（正文以 **END-DISK** 结尾）。"
+
+msgid "This script contains no dialogue structure."
+msgstr "此脚本不包含对话结构。"
+
+msgid "To review"
+msgstr "待复查"
+
+msgid "Tokens"
+msgstr "占位符"
+
+msgid "Too long"
+msgstr "过长"
+
+msgid "Too many matches (give the file and the id):"
+msgstr "匹配项过多（请给出文件和 ID）："
+
+msgid "Tools"
+msgstr "工具(T)"
+
+msgid "Total"
+msgstr "合计"
+
+msgid "Translate"
+msgstr "翻译"
+
+msgid "Translate this line with DeepL"
+msgstr "用 DeepL 翻译此行(T)"
+
+msgid "Translated"
+msgstr "已翻译"
+
+msgid "Translated files are written to %1 (this folder overrides the sources)."
+msgstr "译文文件将写入 %1（此文件夹的优先级高于各来源）。"
+
+msgid "Translating with DeepL..."
+msgstr "正在用 DeepL 翻译..."
+
+msgid "Translating..."
+msgstr "正在翻译..."
+
+msgid "Translation"
+msgstr "译文"
+
+msgid "Translation (%1)"
+msgstr "译文 (%1)"
+
+msgid "Translation (write freely: a blank line starts a paragraph)"
+msgstr "译文（可自由书写：空行表示新段落）"
+
+msgid "Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods."
+msgstr "用于《辐射》1 和《辐射》2 模组对话与文本文件的翻译编辑器。"
+
+msgid "Translation:"
+msgstr "译文："
+
+msgid "Tree"
+msgstr "树"
+
+msgid "Type"
+msgstr "类型"
+
+msgid "Type a text and press Enter."
+msgstr "输入文本后按回车键。"
+
+msgid "Type a text to search."
+msgstr "请输入要搜索的文本。"
+
+msgid "Types (%1/%2)"
+msgstr "类型（%1/%2）"
+
+msgid "Underline spelling and grammar errors in the translation"
+msgstr "在译文中为拼写和语法错误加下划线"
+
+msgid "Undo"
+msgstr "撤销"
+
+msgid "Undo the last operation"
+msgstr "撤销上一个操作"
+
+msgid "Undo the operation: %1"
+msgstr "撤销操作：%1"
+
+msgid "Unknown word: %1"
+msgstr "未知单词：%1"
+
+msgid "Unsaved changes"
+msgstr "未保存的更改"
+
+msgid "Untranslated"
+msgstr "未翻译"
+
+msgid "Untranslated lines (%1)"
+msgstr "未翻译的行 (%1)"
+
+msgid "Up"
+msgstr "上移"
+
+msgid "Update the output DAT archive now"
+msgstr "立即更新输出 DAT 归档(U)"
+
+msgid "Updating the DAT archive..."
+msgstr "正在更新 DAT 归档..."
+
+msgid "Use the project glossary (terms of the /game files; the free plan allows one glossary)"
+msgstr "使用项目术语表（来自 /game 文件的术语；免费套餐允许一个术语表）"
+
+msgid "Validate (or remove the validation)"
+msgstr "验证(V)（或取消验证）"
+
+msgid "Validated"
+msgstr "已验证"
+
+msgid "Validation"
+msgstr "验证"
+
+msgid "View"
+msgstr "视图(V)"
+
+msgid "When the source text changed, import the old translation marked \"to review\""
+msgstr "源文本已更改时，导入标记为“待审阅”的旧翻译"
+
+msgid "Whole words"
+msgstr "全字匹配"
+
+msgid "Width of the Pip-Boy text area (374 px in the game)."
+msgstr "Pip-Boy 文本区域的宽度（游戏中为 374 px）。"
+
+msgid "Width:"
+msgstr "宽度："
+
+msgid "With a comment"
+msgstr "有注释"
+
+msgid "Words left"
+msgstr "剩余词数"
+
+msgid "Write the translated scripts"
+msgstr "写入已翻译的脚本"
+
+msgid "Writes scripts/<name>.int with the translations into the output (folder or archive)."
+msgstr "将带译文的 scripts/<名称>.int 写入输出（文件夹或归档）。"
+
+msgid "Yes"
+msgstr "是"
+
+msgid "Your DeepL account already contains a glossary:\n\n%1\n\nThe free plan allows a single glossary. Delete it and replace it with the glossary of this project?\n\nThis cannot be undone."
+msgstr "您的 DeepL 账户中已有一个术语表：\n\n%1\n\n免费套餐只允许一个术语表。是否删除它并替换为此项目的术语表？\n\n此操作无法撤销。"
+
+msgid "a text contains a NUL character"
+msgstr "文本中含有 NUL 字符"
+
+msgid "cannot be written as %1: %2"
+msgstr "无法以 %1 写入：%2"
+
+msgid "doubled spaces"
+msgstr "连续空格"
+
+msgid "e.g. RPU — French"
+msgstr "例如：RPU — 中文"
+
+msgid "e.g. french.dat"
+msgstr "例如 french.dat"
+
+msgid "elsewhere (%1 times): %2"
+msgstr "其他位置（%1 次）：%2"
+
+msgid "int2ssl was not found next to the application."
+msgstr "在应用程序旁找不到 int2ssl。"
+
+msgid "line %1 (%2): %3"
+msgstr "第 %1 行（%2）：%3"
+
+msgid "missing: %1"
+msgstr "缺少：%1"
+
+msgid "no limit"
+msgstr "无限制"
+
+msgid "not a readable script (%1)"
+msgstr "无法读取的脚本（%1）"
+
+msgid "only the first %1 are listed (use the export for all)"
+msgstr "仅列出前 %1 个（全部内容请使用导出）"
+
+msgid "only the first results are shown"
+msgstr "仅显示前面的结果"
+
+msgid "short label of the interface: %1 characters for %2 in the source"
+msgstr "界面短标签：%1 个字符，源文为 %2 个"
+
+msgid "spaces at the start or the end"
+msgstr "开头或结尾有空格"
+
+msgid "the game only reads 500 entries per holodisk"
+msgstr "游戏每个全息磁盘只读取 500 条"
+
+msgid "the source has spaces at the start or the end"
+msgstr "源文开头或结尾有空格"
+
+msgid "the translation only contains spaces"
+msgstr "译文只包含空格"
+
+msgid "too long"
+msgstr "过长"
+
+msgid "unexpected: %1"
+msgstr "意外：%1"
+
+msgid "will be appended"
+msgstr "将追加到末尾"
+
+msgid "written to the file"
+msgstr "已写入文件"
+
+msgid "⚠ Several different translations exist in the game files."
+msgstr "⚠ 游戏文件中存在多个不同的译法。"
+
+msgid "✔ Key accepted. Usage: %L1 / %L2 characters this period."
+msgstr "✔ 密钥已接受。本期用量：%L1 / %L2 个字符。"
+
+msgid "✔ The server answers (%1 issue(s) found in the test sentence)."
+msgstr "✔ 服务器已响应（测试句中发现 %1 个问题）。"
+
+msgid "⤴ %1 (see above)"
+msgstr "⤴ %1（见上方）"

@@ -1,0 +1,36 @@
+import { CheckBox } from "std-widgets.slint";
+import { Colors, DataTable, TableRow } from "../widgets.slint";
+
+export global StatsData {
+    in property <string> title;
+    in property <string> current-summary;
+    in property <[TableRow]> categories;
+    in property <[TableRow]> files;
+    in-out property <bool> only-incomplete: true;
+    callback toggled();
+    callback file-activated(int);
+}
+
+export component StatsPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    Text { text: StatsData.title; color: Colors.fore; font-weight: 700; wrap: word-wrap; }
+    DataTable {
+        height: 24px + 4 * 24px + 2px;
+        headers: ["", @tr("Lines"), @tr("Done"), @tr("To review"), @tr("Words left"), @tr("Chars left")];
+        widths: [90px, 60px, 54px, 70px, 80px, 80px];
+        rows: StatsData.categories;
+    }
+    Text { text: StatsData.current-summary; color: Colors.fore; wrap: word-wrap; }
+    CheckBox {
+        text: @tr("Only unfinished files");
+        checked <=> StatsData.only-incomplete;
+        toggled => { StatsData.toggled(); }
+    }
+    DataTable {
+        headers: [@tr("File / character"), @tr("Done"), @tr("Lines left"), @tr("Words left")];
+        widths: [180px, 60px, 80px, 80px];
+        rows: StatsData.files;
+        double-clicked(i) => { StatsData.file-activated(i); }
+    }
+}

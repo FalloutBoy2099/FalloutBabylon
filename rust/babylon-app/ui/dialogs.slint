@@ -1,0 +1,193 @@
+import { LineEdit, CheckBox, Button, ComboBox } from "std-widgets.slint";
+import { Colors, DialogShell, TabStrip } from "widgets.slint";
+
+/// Add or edit a glossary term of the project.
+export component TermDialog inherits Window {
+    title: root.new-term ? @tr("New glossary term") : @tr("Edit the glossary term");
+    min-width: 440px;
+    in property <bool> new-term: true;
+    in-out property <string> term;
+    in-out property <string> translation;
+    in-out property <bool> keep;
+    in property <string> error;
+    callback confirmed();
+    callback dismissed();
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("OK"), primary: true, enabled: true }, { text: @tr("Cancel"), primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.confirmed(); } else if i == 1 { root.dismissed(); } }
+        VerticalLayout {
+            spacing: 8px;
+            padding: 12px;
+            Text { text: @tr("Term (source language):"); color: Colors.fore; }
+            LineEdit { text <=> root.term; read-only: !root.new-term; }
+            Text { text: @tr("Translation:"); color: Colors.fore; }
+            LineEdit { text <=> root.translation; enabled: !root.keep; }
+            CheckBox { text: @tr("Do not translate (keep the term as is)"); checked <=> root.keep; }
+            if root.error != "": Text { text: root.error; color: Colors.issue; wrap: word-wrap; }
+        }
+    }
+}
+
+/// A short message with an OK button.
+export component MessageDialog inherits Window {
+    in property <string> heading;
+    in property <string> message;
+    callback confirmed();
+    title: root.heading;
+    min-width: 420px;
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("OK"), primary: true, enabled: true }];
+        clicked(i) => { if i == 0 { root.confirmed(); } }
+        VerticalLayout {
+            padding: 12px;
+            Text { text: root.message; wrap: word-wrap; color: Colors.fore; }
+        }
+    }
+}
+
+/// A question with Yes / No (and optionally Cancel).
+export component ConfirmDialog inherits Window {
+    in property <string> heading;
+    in property <string> message;
+    in property <string> accept-text: @tr("Yes");
+    in property <string> reject-text: @tr("No");
+    callback confirmed();
+    callback dismissed();
+    title: root.heading;
+    min-width: 420px;
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: root.accept-text, primary: true, enabled: true }, { text: root.reject-text, primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.confirmed(); } else if i == 1 { root.dismissed(); } }
+        VerticalLayout {
+            padding: 12px;
+            Text { text: root.message; wrap: word-wrap; color: Colors.fore; }
+        }
+    }
+}
+
+/// Application settings: DeepL and the spelling / grammar servers.
+export component SettingsDialog inherits Window {
+    title: @tr("Settings");
+    preferred-width: 640px;
+    preferred-height: 440px;
+    min-width: 560px;
+    in-out property <int> tab: 0;
+    in-out property <string> deepl-key;
+    in-out property <int> formality: 0;
+    in-out property <bool> use-glossary: true;
+    in-out property <bool> use-context: true;
+    in-out property <bool> mark-review: true;
+    in-out property <bool> check-enabled: true;
+    in-out property <string> grammalecte-url;
+    in-out property <string> language-tool-url;
+    in property <string> key-status;
+    in property <string> grammalecte-status;
+    in property <string> language-tool-status;
+    callback confirmed();
+    callback dismissed();
+    callback test-deepl();
+    callback test-grammalecte();
+    callback test-language-tool();
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("OK"), primary: true, enabled: true }, { text: @tr("Cancel"), primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.confirmed(); } else if i == 1 { root.dismissed(); } }
+        VerticalLayout {
+            spacing: 8px;
+            padding: 12px;
+            TabStrip { names: [@tr("DeepL"), @tr("Correction")]; current <=> root.tab; }
+            Rectangle {
+                vertical-stretch: 1;
+                if root.tab == 0: VerticalLayout {
+                    spacing: 22px;
+                    padding-top: 12px;
+                    alignment: start;
+                    VerticalLayout {
+                        spacing: 6px;
+                        Text { text: @tr("DeepL"); font-weight: 700; color: Colors.fore; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            LineEdit {
+                                placeholder-text: @tr("DeepL API key (free keys end with :fx)");
+                                text <=> root.deepl-key;
+                                input-type: password;
+                                horizontal-stretch: 1;
+                            }
+                            Button { text: @tr("Test"); clicked => { root.test-deepl(); } }
+                        }
+                        if root.key-status != "": Text { text: root.key-status; color: Colors.muted; wrap: word-wrap; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            Text { text: @tr("Formality"); color: Colors.fore; vertical-alignment: center; }
+                            ComboBox {
+                                model: [@tr("Default"), @tr("More formal"), @tr("Less formal")];
+                                current-index <=> root.formality;
+                            }
+                        }
+                    }
+                    VerticalLayout {
+                        spacing: 12px;
+                        CheckBox { text: @tr("Use the project glossary (terms of the /game files; the free plan allows one glossary)"); checked <=> root.use-glossary; }
+                        CheckBox { text: @tr("Send the neighbouring lines as context (not translated, not billed)"); checked <=> root.use-context; }
+                        CheckBox { text: @tr("Mark machine translations as \"to review\""); checked <=> root.mark-review; }
+                    }
+                }
+                if root.tab == 1: VerticalLayout {
+                    spacing: 18px;
+                    padding-top: 12px;
+                    alignment: start;
+                    CheckBox { text: @tr("Underline spelling and grammar errors in the translation"); checked <=> root.check-enabled; }
+                    VerticalLayout {
+                        spacing: 6px;
+                        Text { text: @tr("Grammalecte server (French)"); color: Colors.fore; font-weight: 700; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            LineEdit { placeholder-text: "http://host:7050/"; text <=> root.grammalecte-url; horizontal-stretch: 1; }
+                            Button { text: @tr("Test"); clicked => { root.test-grammalecte(); } }
+                        }
+                        Text { text: root.grammalecte-status; color: Colors.muted; wrap: word-wrap; }
+                    }
+                    VerticalLayout {
+                        spacing: 6px;
+                        Text { text: @tr("LanguageTool server (other languages)"); color: Colors.fore; font-weight: 700; }
+                        HorizontalLayout {
+                            spacing: 8px;
+                            LineEdit { placeholder-text: "http://host:7060/"; text <=> root.language-tool-url; horizontal-stretch: 1; }
+                            Button { text: @tr("Test"); clicked => { root.test-language-tool(); } }
+                        }
+                        Text { text: root.language-tool-status; color: Colors.muted; wrap: word-wrap; }
+                    }
+                    Text { text: @tr("The text of the line being edited is sent to these servers: use servers you trust."); color: Colors.muted; wrap: word-wrap; }
+                }
+            }
+        }
+    }
+}
+
+/// Modified files: save them, discard the changes, or cancel.
+export component SaveChangesDialog inherits Window {
+    in property <string> heading;
+    in property <string> message;
+    callback save();
+    callback discard();
+    callback cancel();
+    title: root.heading;
+    min-width: 440px;
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("Save"), primary: true, enabled: true }, { text: @tr("Discard"), primary: false, enabled: true }, { text: @tr("Cancel"), primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.save(); } else if i == 1 { root.discard(); } else if i == 2 { root.cancel(); } }
+        VerticalLayout {
+            padding: 12px;
+            Text { text: root.message; wrap: word-wrap; color: Colors.fore; }
+        }
+    }
+}

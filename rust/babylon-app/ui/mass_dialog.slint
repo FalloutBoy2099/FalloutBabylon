@@ -1,0 +1,81 @@
+import { ComboBox, CheckBox, LineEdit, Button, ProgressIndicator } from "std-widgets.slint";
+import { Colors, DataTable, TableRow, DialogShell } from "widgets.slint";
+
+/// Translate many lines with DeepL: proposals are listed, can be edited and are applied when checked.
+export component MassTranslateDialog inherits Window {
+    title: @tr("Mass translation with DeepL");
+    preferred-width: 980px;
+    preferred-height: 640px;
+    min-width: 700px;
+    min-height: 420px;
+    in property <[string]> scope-names;
+    in-out property <int> scope: 0;
+    in-out property <bool> overwrite;
+    in property <bool> can-overwrite;
+    in property <string> estimate;
+    in property <string> status;
+    in property <[TableRow]> rows;
+    in property <int> current: -1;
+    in-out property <string> proposal;
+    in property <string> source-of-current;
+    in property <bool> editing;
+    in property <bool> running;
+    in property <float> progress;
+    in property <bool> can-translate: true;
+    in property <bool> can-apply;
+    callback scope-changed();
+    callback translate();
+    callback stop();
+    callback apply();
+    callback dismissed();
+    callback selected(int);
+    callback toggled(int);
+    callback proposal-edited(string);
+    background: Colors.window;
+
+    DialogShell {
+        buttons: [{ text: @tr("Translate"), primary: false, enabled: root.can-translate && !root.running }, { text: @tr("Stop"), primary: false, enabled: root.running }, { text: @tr("Apply the checked proposals"), primary: true, enabled: root.can-apply }, { text: @tr("Close"), primary: false, enabled: true }];
+        clicked(i) => { if i == 0 { root.translate(); } else if i == 1 { root.stop(); } else if i == 2 { root.apply(); } else if i == 3 { root.dismissed(); } }
+        VerticalLayout {
+            spacing: 6px;
+            padding: 8px;
+            HorizontalLayout {
+                spacing: 8px;
+                ComboBox {
+                    model: root.scope-names;
+                    current-index <=> root.scope;
+                    selected(v) => { root.scope-changed(); }
+                    enabled: !root.running;
+                    min-width: 280px;
+                }
+                CheckBox {
+                    text: @tr("Replace existing translations");
+                    checked <=> root.overwrite;
+                    enabled: root.can-overwrite && !root.running;
+                    toggled => { root.scope-changed(); }
+                }
+            }
+            Text { text: root.estimate; color: Colors.fore; wrap: word-wrap; }
+            DataTable {
+                vertical-stretch: 1;
+                headers: [@tr("Apply"), @tr("ID"), @tr("Source"), @tr("DeepL proposal (editable)"), @tr("Note")];
+                widths: [52px, 56px, 300px, 300px, 160px];
+                rows: root.rows;
+                current: root.current;
+                clicked(i) => { root.selected(i); }
+                toggled(i) => { root.toggled(i); }
+            }
+            if root.editing: VerticalLayout {
+                spacing: 2px;
+                Text { text: root.source-of-current; color: Colors.muted; wrap: word-wrap; max-height: 60px; overflow: elide; }
+                LineEdit {
+                    placeholder-text: @tr("DeepL proposal (editable)");
+                    text <=> root.proposal;
+                    edited(t) => { root.proposal-edited(t); }
+                }
+            }
+            if root.running: ProgressIndicator { progress: root.progress; }
+            Text { text: root.status; color: Colors.muted; wrap: word-wrap; }
+        }
+    }
+}

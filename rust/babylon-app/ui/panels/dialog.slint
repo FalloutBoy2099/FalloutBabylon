@@ -1,0 +1,237 @@
+import { ListView, ScrollView } from "std-widgets.slint";
+import { Colors, Pane, FlatButton } from "../widgets.slint";
+
+export struct DialogRow {
+    text: string,
+    indent: int,
+    /// 0 NPC, 1 player option, 2 call, 3 reference
+    kind: int,
+    /// "NPC [292]", "▶ [349]", "↪ proc"
+    header: string,
+    body: string,
+    /// 0 untranslated, 1 translated, 2 to review, 3 unknown
+    status: int,
+    /// Position and size in the graph (unzoomed pixels).
+    x: float,
+    y: float,
+    w: float,
+    h: float,
+}
+
+export global DialogData {
+    in property <[DialogRow]> rows;
+    in property <string> status;
+    in property <int> current: -1;
+    in-out property <bool> graph: true;
+    /// The tree starts at the top and grows downwards (otherwise it starts on the left).
+    in-out property <bool> vertical;
+    in-out property <float> zoom: 1;
+    in property <float> canvas-w;
+    in property <float> canvas-h;
+    /// SVG path data of every link of the tree.
+    in property <string> edges;
+    /// The graph scrolls to (focus-x, focus-y) each time `focus-serial` changes.
+    in property <float> focus-x;
+    in property <float> focus-y;
+    in property <int> focus-serial;
+    callback clicked(int);
+    /// A click on the graph, in unzoomed canvas pixels.
+    callback canvas-clicked(float, float);
+    callback layout-changed();
+}
+
+component Node inherits Rectangle {
+    in property <DialogRow> item;
+    in property <bool> selected;
+    in property <float> zoom: 1;
+    background: Colors.back;
+    border-width: root.selected ? 2px : 1px;
+    border-color: root.selected ? Colors.accent : root.item.kind == 1 ? Colors.accent.with-alpha(0.55) : Colors.line;
+    border-radius: 6px * root.zoom;
+    clip: true;
+    // state of the line: a bar on the left
+    Rectangle {
+        x: 0px;
+        width: 4px * root.zoom;
+        background: root.item.status == 1 ? Colors.good
+            : root.item.status == 2 ? Colors.issue
+            : root.item.status == 0 ? #c05050
+            : Colors.muted;
+    }
+    Text {
+        x: 10px * root.zoom;
+        y: 4px * root.zoom;
+        width: parent.width - 16px * root.zoom;
+        text: root.item.header;
+        font-size: 10.5px * root.zoom;
+        font-weight: 700;
+        color: root.item.kind == 1 ? Colors.accent : Colors.muted;
+        overflow: elide;
+    }
+    if root.item.body != "": Text {
+        x: 10px * root.zoom;
+        y: 20px * root.zoom;
+        width: parent.width - 16px * root.zoom;
+        height: parent.height - 24px * root.zoom;
+        text: root.item.body;
+        font-size: 12px * root.zoom;
+        color: Colors.fore;
+        wrap: word-wrap;
+        overflow: elide;
+    }
+}
+
+export component DialogPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    HorizontalLayout {
+        spacing: 4px;
+        height: 28px;
+        FlatButton { text: @tr("Tree"); checked: DialogData.graph; clicked => { DialogData.graph = true; } }
+        FlatButton { text: @tr("List"); checked: !DialogData.graph; clicked => { DialogData.graph = false; } }
+        Rectangle { horizontal-stretch: 1; }
+        if DialogData.graph: FlatButton { text: "→"; width: 30px; checked: !DialogData.vertical; clicked => { DialogData.vertical = false; DialogData.layout-changed(); } }
+        if DialogData.graph: FlatButton { text: "↓"; width: 30px; checked: DialogData.vertical; clicked => { DialogData.vertical = true; DialogData.layout-changed(); } }
+        if DialogData.graph: Rectangle { width: 6px; }
+        if DialogData.graph: FlatButton { text: "−"; width: 30px; clicked => { DialogData.zoom = max(0.2, DialogData.zoom - 0.15); } }
+        if DialogData.graph: FlatButton { text: "100%"; clicked => { DialogData.zoom = 1; } }
+        if DialogData.graph: FlatButton { text: "+"; width: 30px; clicked => { DialogData.zoom = min(2.5, DialogData.zoom + 0.15); } }
+    }
+    Text { text: DialogData.status; color: Colors.muted; wrap: word-wrap; }
+
+    if DialogData.graph: graph := Pane {
+        vertical-stretch: 1;
+        // the tree is a canvas moved inside a clipped viewport: drag to slide, wheel to zoom around the pointer
+        property <length> ox: 0px;
+        property <length> oy: 0px;
+        property <float> last-zoom: 1;
+        // the canvas can be slid far past its edges: only this much of it has to stay in view
+        property <length> margin: 120px;
+        property <length> vw: view.width;
+        property <length> vh: view.height;
+        function clamp-x(v: length) -> length {
+            return max(graph.margin - DialogData.canvas-w * DialogData.zoom * 1px, min(graph.vw - graph.margin, v));
+        }
+        function clamp-y(v: length) -> length {
+            return max(graph.margin - DialogData.canvas-h * DialogData.zoom * 1px, min(graph.vh - graph.margin, v));
+        }
+        view := Rectangle {
+            clip: true;
+            Rectangle {
+                x: graph.ox;
+                y: graph.oy;
+                width: DialogData.canvas-w * DialogData.zoom * 1px;
+                height: DialogData.canvas-h * DialogData.zoom * 1px;
+                Path {
+                    x: 0px;
+                    y: 0px;
+                    width: parent.width;
+                    height: parent.height;
+                    viewbox-width: DialogData.canvas-w;
+                    viewbox-height: DialogData.canvas-h;
+                    commands: DialogData.edges;
+                    stroke: Colors.muted;
+                    stroke-width: 1.4px;
+                }
+                for row[i] in DialogData.rows: Node {
+                    x: row.x * DialogData.zoom * 1px;
+                    y: row.y * DialogData.zoom * 1px;
+                    width: row.w * DialogData.zoom * 1px;
+                    height: row.h * DialogData.zoom * 1px;
+                    item: row;
+                    selected: i == DialogData.current;
+                    zoom: DialogData.zoom;
+                }
+            }
+            pan := TouchArea {
+                property <length> start-x;
+                property <length> start-y;
+                // where the button went down (pressed-x only follows the left button)
+                property <length> down-x;
+                property <length> down-y;
+                property <bool> dragged;
+                mouse-cursor: self.pressed ? MouseCursor.grabbing : MouseCursor.default;
+                pointer-event(e) => {
+                    if e.kind == PointerEventKind.down {
+                        self.start-x = graph.ox;
+                        self.start-y = graph.oy;
+                        self.down-x = self.mouse-x;
+                        self.down-y = self.mouse-y;
+                        self.dragged = false;
+                    }
+                }
+                moved => {
+                    if abs(self.mouse-x - self.down-x) + abs(self.mouse-y - self.down-y) > 5px {
+                        self.dragged = true;
+                    }
+                    if self.dragged {
+                        graph.ox = graph.clamp-x(self.start-x + self.mouse-x - self.down-x);
+                        graph.oy = graph.clamp-y(self.start-y + self.mouse-y - self.down-y);
+                    }
+                }
+                clicked => {
+                    if !self.dragged {
+                        DialogData.canvas-clicked((self.mouse-x - graph.ox) / (DialogData.zoom * 1px), (self.mouse-y - graph.oy) / (DialogData.zoom * 1px));
+                    }
+                }
+                scroll-event(event) => {
+                    let z = DialogData.zoom;
+                    let z2 = max(0.2, min(2.5, z * exp(event.delta-y / 1px * 0.0015)));
+                    let ux = (self.mouse-x - graph.ox) / z;
+                    let uy = (self.mouse-y - graph.oy) / z;
+                    graph.last-zoom = z2;
+                    DialogData.zoom = z2;
+                    graph.ox = graph.clamp-x(self.mouse-x - ux * z2);
+                    graph.oy = graph.clamp-y(self.mouse-y - uy * z2);
+                    return accept;
+                }
+            }
+        }
+        // the buttons zoom around the middle of the view
+        property <float> zoom: DialogData.zoom;
+        changed zoom => {
+            if graph.zoom != graph.last-zoom {
+                graph.ox = graph.clamp-x(graph.vw / 2 - (graph.vw / 2 - graph.ox) * graph.zoom / graph.last-zoom);
+                graph.oy = graph.clamp-y(graph.vh / 2 - (graph.vh / 2 - graph.oy) * graph.zoom / graph.last-zoom);
+                graph.last-zoom = graph.zoom;
+            }
+        }
+        property <int> serial: DialogData.focus-serial;
+        changed serial => {
+            graph.ox = graph.clamp-x(graph.vw / 2 - DialogData.focus-x * DialogData.zoom * 1px);
+            graph.oy = graph.clamp-y(graph.vh / 2 - DialogData.focus-y * DialogData.zoom * 1px);
+        }
+    }
+
+    if !DialogData.graph: Pane {
+        vertical-stretch: 1;
+        list := ListView {
+            for row[i] in DialogData.rows: Rectangle {
+                height: 22px;
+                background: i == DialogData.current ? Colors.selection : touch.has-hover ? Colors.window : transparent;
+                Text {
+                    x: 6px + row.indent * 16px;
+                    width: parent.width - self.x - 4px;
+                    text: row.text;
+                    overflow: elide;
+                    vertical-alignment: center;
+                    color: row.kind == 1 ? Colors.accent : row.kind >= 2 && row.kind < 4 ? Colors.muted : Colors.fore;
+                    font-italic: row.kind == 3;
+                    font-weight: row.kind == 2 ? 700 : 400;
+                }
+                touch := TouchArea { clicked => { DialogData.clicked(i); } }
+            }
+        }
+        // keep the current node in view
+        property <int> cur: DialogData.current;
+        changed cur => {
+            if cur >= 0 {
+                if cur * 22px < -list.content-y {
+                    list.content-y = -cur * 22px;
+                } else if (cur + 1) * 22px > -list.content-y + list.visible-height {
+                    list.content-y = -((cur + 1) * 22px - list.visible-height);
+                }
+            }
+        }
+    }
+}

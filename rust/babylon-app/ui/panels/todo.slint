@@ -1,0 +1,19 @@
+import { Colors, DataTable, TableRow } from "../widgets.slint";
+
+export global TodoData {
+    in property <[TableRow]> rows;
+    in property <string> summary;
+    callback activated(int);
+}
+
+export component TodoPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    Text { text: TodoData.summary; color: Colors.muted; wrap: word-wrap; }
+    DataTable {
+        headers: [@tr("File"), @tr("ID"), @tr("Source"), @tr("Translation")];
+        widths: [110px, 50px, 200px, 200px];
+        rows: TodoData.rows;
+        double-clicked(i) => { TodoData.activated(i); }
+    }
+}

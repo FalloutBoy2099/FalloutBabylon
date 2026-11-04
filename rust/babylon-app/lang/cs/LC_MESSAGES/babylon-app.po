@@ -1,0 +1,1616 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: cs\n"
+
+msgid " (IQ %1+)"
+msgstr " (INT %1+)"
+
+msgid " (low IQ)"
+msgstr " (nízká INT)"
+
+msgid " (source)"
+msgstr " (zdroj)"
+
+msgid " Remaining quota: %L1 characters."
+msgstr " Zbývající kvóta: %L1 znaků."
+
+msgid " px"
+msgstr " px"
+
+msgid " — %1 shown"
+msgstr " — zobrazeno: %1"
+
+msgid "\"%1\": %2 characters for %3 available"
+msgstr "„%1“: %2 znaků při %3 dostupných"
+
+msgid "\"%1\": not translated in the game files yet"
+msgstr "„%1“: v souborech hry zatím nepřeloženo"
+
+msgid "\"%1\": the code cannot be read safely, the text cannot be lengthened"
+msgstr "„%1“: kód nelze bezpečně přečíst, text nelze prodloužit"
+
+msgid "\"%1\": used by the start-up code of the script, the text cannot be lengthened"
+msgstr "„%1“: používá úvodní kód skriptu, text nelze prodloužit"
+
+msgid "%"
+msgstr "%"
+
+msgid "%1\n%2 lines, %3 untranslated, %4 to review\n%5 words / %6 characters left"
+msgstr "%1\n%2 řádků, %3 nepřeložených, %4 ke kontrole\nZbývá %5 slov / %6 znaků"
+
+msgid "%1 / %2 lines"
+msgstr "%1 / %2 řádků"
+
+msgid "%1 characters (limit %2)"
+msgstr "znaků: %1 (limit %2)"
+
+msgid "%1 characters for %2 in the source"
+msgstr "znaků: %1 oproti %2 ve zdroji"
+
+msgid "%1 contains malformed records; everything after the first one is ignored by the game:\n\n%2"
+msgstr "%1 obsahuje poškozené záznamy; hra ignoruje vše za prvním:\n\n%2"
+
+msgid "%1 does not exist in the sources of this project."
+msgstr "%1 ve zdrojích tohoto projektu neexistuje."
+
+msgid "%1 entries, %2 page(s) in the Pip-Boy"
+msgstr "%1 položek, %2 stran v Pip-Boyi"
+
+msgid "%1 file(s) examined, %2 written.\n%3 line(s) with the same text, %4 with a changed source (to review), %5 found under another id; %6 already translated and kept."
+msgstr "Prozkoumáno souborů: %1, zapsáno: %2.\nŘádků se stejným textem: %3, se změněným zdrojem (ke kontrole): %4, nalezených pod jiným ID: %5; již přeložených a zachovaných: %6."
+
+msgid "%1 file(s) taken from the cache"
+msgstr "Souborů z mezipaměti: %1"
+
+msgid "%1 files written to\n%2"
+msgstr "Zapsáno %1 souborů do\n%2"
+
+msgid "%1 files — %2 lines, %3 untranslated, %4 to review (%5%)"
+msgstr "%1 souborů — %2 řádků, %3 nepřeloženo, %4 ke kontrole (%5 %)"
+
+msgid "%1 line(s) in the translation, %2 in the source"
+msgstr "Řádků v překladu: %1, ve zdroji: %2"
+
+msgid "%1 line(s) marked \"to review\"."
+msgstr "Označeno řádků „ke kontrole“: %1."
+
+msgid "%1 line(s) to review — double-click to open"
+msgstr "%1 řádků ke kontrole — otevřete dvojitým kliknutím"
+
+msgid "%1 line(s) wider than the screen"
+msgstr "%1 řádků širších než obrazovka"
+
+msgid "%1 line(s), %2 occurrence(s)"
+msgstr "Řádků: %1, výskytů: %2"
+
+msgid "%1 line(s), about %2 characters to send to DeepL."
+msgstr "%1 řádků, přibližně %2 znaků k odeslání do DeepL."
+
+msgid "%1 lines"
+msgstr "%1 řádků"
+
+msgid "%1 max"
+msgstr "max. %1"
+
+msgid "%1 nodes · %2 line(s) of the file are not part of the tree"
+msgstr "%1 uzlů · %2 řádků souboru není součástí stromu"
+
+msgid "%1 problem(s)"
+msgstr "Problémů: %1"
+
+msgid "%1 record(s) repaired, %2 left as they are.\n\n%3"
+msgstr "Opraveno záznamů: %1, ponecháno beze změny: %2.\n\n%3"
+
+msgid "%1 replacement(s) in %2 file(s)."
+msgstr "Nahrazení: %1 v souborech: %2."
+
+msgid "%1 script(s) written: %2 text(s) in place, %3 lengthened."
+msgstr "Zapsáno skriptů: %1; textů na místě: %2, prodloužených: %3."
+
+msgid "%1 source(s) found; languages: %2."
+msgstr "Nalezeno zdrojů: %1; jazyky: %2."
+
+msgid "%1 suggestion(s): double-click to use one."
+msgstr "Návrhů: %1 — dvojitým kliknutím jeden použijete."
+
+msgid "%1 term(s) exported."
+msgstr "Exportováno pojmů: %1."
+
+msgid "%1 term(s) imported, %2 line(s) ignored."
+msgstr "Importováno pojmů: %1, přeskočeno řádků: %2."
+
+msgid "%1 terms · %2 without translation · %3 inconsistent"
+msgstr "%1 pojmů · %2 bez překladu · %3 nejednotných"
+
+msgid "%1 text(s) in the scripts, %2 translated."
+msgstr "Textů ve skriptech: %1, přeloženo: %2."
+
+msgid "%1 translation(s) applied. Save the file to keep them."
+msgstr "Použito %1 překladů. Uložte soubor, abyste je zachovali."
+
+msgid "%1 — %2 done\n%3 lines (%4 untranslated, %5 to review)\n%6 words and %7 characters left (of %8 words)"
+msgstr "%1 — hotovo %2\n%3 řádků (%4 nepřeloženo, %5 ke kontrole)\nZbývá %6 slov a %7 znaků (z %8 slov)"
+
+msgid "%1 — computing..."
+msgstr "%1 — výpočet..."
+
+msgid "%1 → %2  ·  encoding %3 / %4"
+msgstr "%1 → %2  ·  kódování %3 / %4"
+
+msgid "(line %1 not found in this file)"
+msgstr "(řádek %1 nebyl v tomto souboru nalezen)"
+
+msgid "(none)"
+msgstr "(žádné)"
+
+msgid ", and the original texts under text/%1/."
+msgstr " a původní texty v text/%1/."
+
+msgid "1 · Game files — do first"
+msgstr "1 · Soubory hry — nejprve"
+
+msgid "2 · Dialogues"
+msgstr "2 · Dialogy"
+
+msgid "3 · Other files"
+msgstr "3 · Ostatní soubory"
+
+msgid "<b>%1</b>"
+msgstr "<b>%1</b>"
+
+msgid "<b>%1</b> — %2 done<br>%3 lines (%4 untranslated, %5 to review)<br>%6 words and %7 characters left (of %8 words)"
+msgstr "<b>%1</b> — %2 hotovo<br>%3 řádků (%4 nepřeložených, %5 ke kontrole)<br>Zbývá %6 slov a %7 znaků (z %8 slov)"
+
+msgid "<b>%1</b> — computing..."
+msgstr "<b>%1</b> — počítá se..."
+
+msgid "<h2>Fallout Babylon</h2><p>Translation editor for Fallout 1 and Fallout 2 mods.</p>"
+msgstr "<h2>Fallout Babylon</h2><p>Překladatelský editor pro módy Falloutu 1 a Falloutu 2.</p>"
+
+msgid "<h3>Fallout Babylon %1</h3><p>Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods.</p><p>Built with Qt %2 and Scintilla.</p>"
+msgstr "<h3>Fallout Babylon %1</h3><p>Překladatelský editor souborů dialogů a textů módů Falloutu 1 a Falloutu 2.</p><p>Vytvořeno pomocí Qt %2 a Scintilly.</p>"
+
+msgid "<i>Not translated in the game files yet</i>"
+msgstr "<i>V souborech hry zatím nepřeloženo</i>"
+
+msgid "A placeholder (@...@, %s...) was altered: check this line."
+msgstr "Zástupný znak (@...@, %s...) byl změněn: zkontrolujte tento řádek."
+
+msgid "A text longer than the original is appended at the end of the script and the code is redirected to it. The game reads strings through their offset and does not check where it points, but this is not guaranteed: test it in the game. Without it, only translations that fit the room of the original are written."
+msgstr "Text delší než originál se připojí na konec skriptu a kód se na něj přesměruje. Hra čte řetězce podle jejich pozice a nekontroluje, kam míří, ale není to zaručeno: vyzkoušejte ve hře. Bez této volby se zapisují jen překlady, které se vejdou do místa originálu."
+
+msgid "API key"
+msgstr "Klíč API"
+
+msgid "About Fallout Babylon"
+msgstr "O programu Fallout Babylon"
+
+msgid "About Qt..."
+msgstr "O Qt..."
+
+msgid "About..."
+msgstr "O programu..."
+
+msgid "Accept as is"
+msgstr "Přijmout beze změny"
+
+msgid "Add a term of your own (a name to keep, a word with a fixed translation...)"
+msgstr "Přidat vlastní pojem (jméno k zachování, slovo s pevným překladem...)"
+
+msgid "Add at least one source."
+msgstr "Přidejte alespoň jeden zdroj."
+
+msgid "Add the game folder or the archives of the mod to translate."
+msgstr "Přidejte složku hry nebo archivy módu k překladu."
+
+msgid "Add..."
+msgstr "Přidat..."
+
+msgid "Adds a Fallout folder: its DAT archives and its data folder are detected."
+msgstr "Přidá složku Falloutu: jsou rozpoznány její archivy DAT a složka data."
+
+msgid "Adds text/<source language>/ copies of the translated files, so that the reference of each translation is in the archive. Turn it off if a later mod must keep providing the original texts."
+msgstr "Přidá kopie text/<zdrojový jazyk>/ přeložených souborů, aby byla reference každého překladu v archivu. Vypněte, pokud má později načtený mod dál poskytovat původní texty."
+
+msgid "After replacement"
+msgstr "Po nahrazení"
+
+msgid "All"
+msgstr "Vše"
+
+msgid "All files"
+msgstr "Všechny soubory"
+
+msgid "All lines"
+msgstr "Všechny řádky"
+
+msgid "All lines (%1)"
+msgstr "Všechny řádky (%1)"
+
+msgid "All problems"
+msgstr "Všechny problémy"
+
+msgid "All types"
+msgstr "Všechny typy"
+
+msgid "Allow longer texts (experimental)"
+msgstr "Povolit delší texty (experimentální)"
+
+msgid "Also reuse translations of identical texts found under another id"
+msgstr "Použít také překlady shodných textů nalezených pod jiným ID"
+
+msgid "Also store the original texts (reference files)"
+msgstr "Uložit také původní texty (referenční soubory)"
+
+msgid "Analysing \"%1\"..."
+msgstr "Analýza „%1“..."
+
+msgid "Analysing \"%1\": %2 / %3 files"
+msgstr "Analýza „%1“: %2 / %3 souborů"
+
+msgid "Analysing %1 / %2"
+msgstr "Analýza %1 / %2"
+
+msgid "Apply"
+msgstr "Použít"
+
+msgid "Apply the checked proposals"
+msgstr "Použít zaškrtnuté návrhy"
+
+msgid "Automatic (system)"
+msgstr "Automaticky (systém)"
+
+msgid "Both the term and its translation are required."
+msgstr "Je třeba zadat pojem i jeho překlad."
+
+msgid "Browse..."
+msgstr "Procházet..."
+
+msgid "Building the glossary..."
+msgstr "Vytváření glosáře..."
+
+msgid "Building the translation memory of the project..."
+msgstr "Sestavuje se překladová paměť projektu..."
+
+msgid "Built with Rust and Slint."
+msgstr "Vytvořeno v Rustu a Slintu."
+
+msgid "CSV files"
+msgstr "Soubory CSV"
+
+msgid "CSV files (*.csv)"
+msgstr "Soubory CSV (*.csv)"
+
+msgid "Cancel"
+msgstr "Zrušit"
+
+msgid "Cancelling..."
+msgstr "Ruší se..."
+
+msgid "Cannot read %1."
+msgstr "Nelze přečíst %1."
+
+msgid "Cannot read %1:\n%2"
+msgstr "Nelze přečíst %1:\n%2"
+
+msgid "Cannot repair %1:\n%2"
+msgstr "Nelze opravit %1:\n%2"
+
+msgid "Cannot save %1:\n%2"
+msgstr "Nelze uložit %1:\n%2"
+
+msgid "Cannot write %1."
+msgstr "Nelze zapsat %1."
+
+msgid "Cannot write the archive:\n%1"
+msgstr "Archiv nelze zapsat:\n%1"
+
+msgid "Changed since it was validated"
+msgstr "Změněno od schválení"
+
+msgid "Changed since validation"
+msgstr "Změněno od schválení"
+
+msgid "Characters (fallback):"
+msgstr "Znaky (záložní):"
+
+msgid "Characters per line, used when the game font cannot be read."
+msgstr "Znaků na řádek, použito, když nelze přečíst písmo hry."
+
+msgid "Characters the encoding cannot hold"
+msgstr "Znaky, které kódování neumí uložit"
+
+msgid "Chars left"
+msgstr "Zbývající znaky"
+
+msgid "Check"
+msgstr "Kontrola"
+
+msgid "Checking..."
+msgstr "Kontroluje se..."
+
+msgid "Checking... %1 / %2 files"
+msgstr "Kontroluje se... souborů: %1 / %2"
+
+msgid "Choose an output folder."
+msgstr "Vyberte výstupní složku."
+
+msgid "Choose the output archive."
+msgstr "Vyberte výstupní archiv."
+
+msgid "Choose the source and the target language."
+msgstr "Vyberte zdrojový a cílový jazyk."
+
+msgid "Click to jump to the first occurrence"
+msgstr "Kliknutím přejdete na první výskyt"
+
+msgid "Close"
+msgstr "Zavřít"
+
+msgid "Close all"
+msgstr "Zavřít vše"
+
+msgid "Close all but this one"
+msgstr "Zavřít ostatní"
+
+msgid "Close file"
+msgstr "Zavřít soubor"
+
+msgid "Close project"
+msgstr "Zavřít projekt"
+
+msgid "Close the project"
+msgstr "Zavřít projekt"
+
+msgid "Close the tabs to the left"
+msgstr "Zavřít karty vlevo"
+
+msgid "Close the tabs to the right"
+msgstr "Zavřít karty vpravo"
+
+msgid "Comment on this line (kept in the project, not in the game files)..."
+msgstr "Komentář k tomuto řádku (uložen v projektu, ne v souborech hry)..."
+
+msgid "Comment: %1"
+msgstr "Komentář: %1"
+
+msgid "Complete"
+msgstr "Dokončené"
+
+msgid "Contacting DeepL..."
+msgstr "Připojování k DeepL..."
+
+msgid "Contacting the server..."
+msgstr "Připojování k serveru..."
+
+msgid "Copy"
+msgstr "Kopírovat"
+
+msgid "Copy the source"
+msgstr "Kopírovat originál"
+
+msgid "Copy the term"
+msgstr "Kopírovat pojem"
+
+msgid "Copy the translation"
+msgstr "Kopírovat překlad"
+
+msgid "Correction"
+msgstr "Korektura"
+
+msgid "Custom"
+msgstr "Vlastní"
+
+msgid "Cut"
+msgstr "Vyjmout"
+
+msgid "DAT archive"
+msgstr "Archiv DAT"
+
+msgid "DAT archive NOT updated: %1"
+msgstr "Archiv DAT NEBYL aktualizován: %1"
+
+msgid "DAT archive updated: %1 translated file(s), %2 original(s)."
+msgstr "Archiv DAT aktualizován: přeložených souborů: %1, originálů: %2."
+
+msgid "DAT archive..."
+msgstr "Archiv DAT..."
+
+msgid "DAT archives"
+msgstr "Archivy DAT"
+
+msgid "DAT archives (*.dat)"
+msgstr "Archivy DAT (*.dat)"
+
+msgid "DAT archives (*.dat);;All files (*)"
+msgstr "Archivy DAT (*.dat);;Všechny soubory (*)"
+
+msgid "Dark"
+msgstr "Tmavý"
+
+msgid "Decompilation failed: %1"
+msgstr "Dekompilace selhala: %1"
+
+msgid "DeepL"
+msgstr "DeepL"
+
+msgid "DeepL API key (free keys end with :fx)"
+msgstr "Klíč API DeepL (bezplatné končí na :fx)"
+
+msgid "DeepL does not support %1."
+msgstr "DeepL nepodporuje jazyk %1."
+
+msgid "DeepL error %1"
+msgstr "Chyba DeepL %1"
+
+msgid "DeepL glossary"
+msgstr "Glosář DeepL"
+
+msgid "DeepL glossary not used: %1"
+msgstr "Glosář DeepL nebyl použit: %1"
+
+msgid "DeepL proposal (editable)"
+msgstr "Návrh DeepL (upravitelný)"
+
+msgid "DeepL refused the glossary: the free plan allows a single glossary (delete the existing one in your DeepL account to use the project glossary)."
+msgstr "DeepL glosář odmítl: bezplatný plán povoluje pouze jeden (smažte stávající ve svém účtu DeepL, abyste mohli použít glosář projektu)."
+
+msgid "DeepL rejected the API key."
+msgstr "DeepL odmítl klíč API."
+
+msgid "DeepL translation"
+msgstr "Překlad DeepL"
+
+msgid "Default"
+msgstr "Výchozí"
+
+msgid "Delete"
+msgstr "Smazat"
+
+msgid "Delete this term"
+msgstr "Smazat tento pojem"
+
+msgid "Detach into a window"
+msgstr "Odpojit do okna"
+
+msgid "Dialogue tree"
+msgstr "Strom dialogu"
+
+msgid "Dialogues"
+msgstr "Dialogy"
+
+msgid "Discard"
+msgstr "Zahodit"
+
+msgid "Do not translate (keep the term as is)"
+msgstr "Nepřekládat (ponechat pojem beze změny)"
+
+msgid "Do not translate: this term must stay unchanged."
+msgstr "Nepřekládat: tento pojem musí zůstat beze změny."
+
+msgid "Dock"
+msgstr "Ukotvit"
+
+msgid "Done"
+msgstr "Hotovo"
+
+msgid "Done: %1 line(s) translated, %2 failed. Check the proposals, then apply."
+msgstr "Hotovo: přeloženo %1 řádků, %2 selhalo. Zkontrolujte návrhy a poté je použijte."
+
+msgid "Down"
+msgstr "Dolů"
+
+msgid "Edit"
+msgstr "Úpravy"
+
+msgid "Edit / override this term..."
+msgstr "Upravit / přepsat tento pojem..."
+
+msgid "Edit the glossary term"
+msgstr "Upravit pojem slovníku"
+
+msgid "Edit this term..."
+msgstr "Upravit tento pojem..."
+
+msgid "Edit..."
+msgstr "Upravit..."
+
+msgid "Editing..."
+msgstr "Úpravy..."
+
+msgid "Empty answer from DeepL."
+msgstr "Prázdná odpověď od DeepL."
+
+msgid "Encoding"
+msgstr "Kódování"
+
+msgid "Enter the server address first."
+msgstr "Nejprve zadejte adresu serveru."
+
+msgid "Enter your DeepL API key in Tools > Settings first."
+msgstr "Nejprve zadejte svůj klíč API DeepL v Nástroje > Nastavení."
+
+msgid "Export"
+msgstr "Exportovat"
+
+msgid "Export (CSV)..."
+msgstr "Exportovat (CSV)..."
+
+msgid "Export glossary terms"
+msgstr "Exportovat pojmy slovníku"
+
+msgid "Export the report"
+msgstr "Exportovat zprávu"
+
+msgid "Export to a DAT archive"
+msgstr "Exportovat do archivu DAT"
+
+msgid "Export to a DAT archive..."
+msgstr "Exportovat do archivu DAT..."
+
+msgid "Export your own terms to a CSV file"
+msgstr "Exportovat vlastní pojmy do souboru CSV"
+
+msgid "Export..."
+msgstr "Exportovat..."
+
+msgid "Fallout 1"
+msgstr "Fallout 1"
+
+msgid "Fallout 1 archive (*.dat)"
+msgstr "Archiv Fallout 1 (*.dat)"
+
+msgid "Fallout 2 (zlib)"
+msgstr "Fallout 2 (zlib)"
+
+msgid "Fallout 2 archive (zlib) (*.dat)"
+msgstr "Archiv Fallout 2 (zlib) (*.dat)"
+
+msgid "Fallout folder"
+msgstr "Složka Falloutu"
+
+msgid "File"
+msgstr "Soubor"
+
+msgid "File / character"
+msgstr "Soubor / postava"
+
+msgid "File the game writes its report to"
+msgstr "Soubor, do kterého hra zapisuje své hlášení"
+
+msgid "Filter files..."
+msgstr "Filtrovat soubory..."
+
+msgid "Filter the texts..."
+msgstr "Filtrovat texty..."
+
+msgid "Find in this file"
+msgstr "Hledat v tomto souboru"
+
+msgid "Folder"
+msgstr "Složka"
+
+msgid "Folder holding the translation"
+msgstr "Složka s překladem"
+
+msgid "Folder of loose files"
+msgstr "Složka volných souborů"
+
+msgid "Follow a game report file..."
+msgstr "Sledovat soubor s hlášením ze hry..."
+
+msgid "Following %1: lines written there are marked \"to review\"."
+msgstr "Sleduje se %1: řádky tam zapsané se označí „ke kontrole“."
+
+msgid "Formality"
+msgstr "Formálnost"
+
+msgid "Format:"
+msgstr "Formát:"
+
+msgid "Game files"
+msgstr "Soubory hry"
+
+msgid "Game folder..."
+msgstr "Složka hry..."
+
+msgid "Game font not available (or multi-byte encoding): approximate measure."
+msgstr "Písmo hry není k dispozici (nebo vícebajtové kódování): přibližné měření."
+
+msgid "Game font not available (or multi-byte encoding): lines are cut at about %1 characters."
+msgstr "Písmo hry není k dispozici (nebo vícebajtové kódování): řádky se zalamují přibližně při %1 znacích."
+
+msgid "Game or mod folder holding the translation"
+msgstr "Složka hry nebo modu s překladem"
+
+msgid "Game report"
+msgstr "Hlášení ze hry"
+
+msgid "Game report: %1 line(s) marked \"to review\", %2 not found."
+msgstr "Hlášení ze hry: označeno řádků „ke kontrole“: %1, nenalezeno: %2."
+
+msgid "General"
+msgstr "Obecné"
+
+msgid "Give the project a name."
+msgstr "Pojmenujte projekt."
+
+msgid "Glossaries"
+msgstr "Slovníčky"
+
+msgid "Glossaries (*.csv *.tsv *.txt);;All files (*)"
+msgstr "Slovníky (*.csv *.tsv *.txt);;Všechny soubory (*)"
+
+msgid "Glossary"
+msgstr "Glosář"
+
+msgid "Glossary alerts"
+msgstr "Upozornění glosáře"
+
+msgid "Glossary:"
+msgstr "Glosář:"
+
+msgid "Glossary: %1 terms"
+msgstr "Slovníček: %1 pojmů"
+
+msgid "Glossary: %1 → %2"
+msgstr "Glosář: %1 → %2"
+
+msgid "Grammalecte server (French)"
+msgstr "Server Grammalecte (francouzština)"
+
+msgid "Help"
+msgstr "Nápověda"
+
+msgid "Holodisk: records %1 to %2 (%3 entries, %4 page(s) in the Pip-Boy)."
+msgstr "Holodisk: záznamy %1 až %2 (%3 položek, %4 stran v Pip-Boyi)."
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Import"
+msgstr "Importovat"
+
+msgid "Import a game report"
+msgstr "Importovat hlášení ze hry"
+
+msgid "Import a game report..."
+msgstr "Importovat hlášení ze hry..."
+
+msgid "Import an existing translation"
+msgstr "Importovat existující překlad"
+
+msgid "Import an existing translation..."
+msgstr "Importovat existující překlad..."
+
+msgid "Import glossary terms"
+msgstr "Importovat pojmy slovníku"
+
+msgid "Import terms from a CSV / TSV file (term; translation; keep)"
+msgstr "Importovat pojmy ze souboru CSV / TSV (pojem; překlad; zachovat)"
+
+msgid "Import..."
+msgstr "Importovat..."
+
+msgid "Importing..."
+msgstr "Importuje se..."
+
+msgid "In both"
+msgstr "V obou"
+
+msgid "In the source"
+msgstr "Ve zdroji"
+
+msgid "In the translation"
+msgstr "V překladu"
+
+msgid "Inconsistent duplicate"
+msgstr "Nekonzistentní duplicita"
+
+msgid "Inconsistent duplicates"
+msgstr "Nekonzistentní duplicity"
+
+msgid "Inconsistent translations in the game files"
+msgstr "Nejednotné překlady v souborech hry"
+
+msgid "Insert \"%1\""
+msgstr "Vložit „%1“"
+
+msgid "Insert \"%1\" in the translation"
+msgstr "Vložit „%1“ do překladu"
+
+msgid "Insert the translation"
+msgstr "Vložit překlad"
+
+msgid "Invalid regular expression: %1"
+msgstr "Neplatný regulární výraz: %1"
+
+msgid "Keep this term as is (do not translate)"
+msgstr "Ponechat tento pojem beze změny (nepřekládat)"
+
+msgid "Language"
+msgstr "Jazyk"
+
+msgid "Language of its source texts"
+msgstr "Jazyk jejích zdrojových textů"
+
+msgid "Language of its translation"
+msgstr "Jazyk jejího překladu"
+
+msgid "LanguageTool does not support %1."
+msgstr "LanguageTool nepodporuje jazyk %1."
+
+msgid "LanguageTool server (other languages)"
+msgstr "Server LanguageTool (ostatní jazyky)"
+
+msgid "Languages"
+msgstr "Jazyky"
+
+msgid "Languages found: %1."
+msgstr "Nalezené jazyky: %1."
+
+msgid "Length"
+msgstr "Délka"
+
+msgid "Less formal"
+msgstr "Méně formálně"
+
+msgid "Light"
+msgstr "Světlý"
+
+msgid "Lines"
+msgstr "Řádky"
+
+msgid "Lines left"
+msgstr "Zbývající řádky"
+
+msgid "Lines written to the file"
+msgstr "Řádky zapsané do souboru"
+
+msgid "List"
+msgstr "Seznam"
+
+msgid "Looks for the texts written in the code of the scripts (not in the .msg files)."
+msgstr "Hledá texty zapsané v kódu skriptů (ne v souborech .msg)."
+
+msgid "Lost tokens (@Name@, %d, {field})"
+msgstr "Ztracené zástupné značky (@Jméno@, %d, {pole})"
+
+msgid "Lowest priority first: a later source overrides an earlier one, like in the game."
+msgstr "Nejprve nejnižší priorita: pozdější zdroj přepisuje dřívější, stejně jako ve hře."
+
+msgid "Mark as to review"
+msgstr "Označit jako ke kontrole"
+
+msgid "Mark machine translations as \"to review\""
+msgstr "Označovat strojové překlady jako „ke kontrole“"
+
+msgid "Mass translation"
+msgstr "Hromadný překlad"
+
+msgid "Mass translation with DeepL"
+msgstr "Hromadný překlad pomocí DeepL"
+
+msgid "Mass translation with DeepL..."
+msgstr "Hromadný překlad pomocí DeepL..."
+
+msgid "Match case"
+msgstr "Rozlišovat velikost písmen"
+
+msgid "Maximum length:"
+msgstr "Maximální délka:"
+
+msgid "Maximum number of characters of a translation (0: only report translations much longer than the source)"
+msgstr "Nejvyšší počet znaků překladu (0: hlásit jen překlady mnohem delší než zdroj)"
+
+msgid "Measured with the game font (font1.aaf)."
+msgstr "Změřeno písmem hry (font1.aaf)."
+
+msgid "Measured with the game font (font1.aaf): lines are cut at %1 px."
+msgstr "Změřeno písmem hry (font1.aaf): řádky se zalamují při %1 px."
+
+msgid "Minimum similarity of the texts offered"
+msgstr "Minimální podobnost nabízených textů"
+
+msgid "Minimum:"
+msgstr "Minimum:"
+
+msgid "Mod folder (containing text/ or data/)"
+msgstr "Složka módu (obsahující text/ nebo data/)"
+
+msgid "Mod folder..."
+msgstr "Složka módu..."
+
+msgid "More formal"
+msgstr "Formálněji"
+
+msgid "Move to the bottom"
+msgstr "Přesunout dolů"
+
+msgid "Move to the right"
+msgstr "Přesunout doprava"
+
+msgid "NPC"
+msgstr "NPC"
+
+msgid "NPC (no answer)"
+msgstr "NPC (bez odpovědi)"
+
+msgid "Name"
+msgstr "Název"
+
+msgid "New glossary term"
+msgstr "Nový pojem slovníku"
+
+msgid "New project..."
+msgstr "Nový projekt..."
+
+msgid "New translation project"
+msgstr "Nový překladatelský projekt"
+
+msgid "Next line"
+msgstr "Další řádek"
+
+msgid "Next untranslated line"
+msgstr "Další nepřeložený řádek"
+
+msgid "No"
+msgstr "Ne"
+
+msgid "No .msg file found under text/%1 or text/%2 in the sources of \"%3\"."
+msgstr "Ve zdrojích „%3“ nebyl v text/%1 ani text/%2 nalezen žádný soubor .msg."
+
+msgid "No DeepL API key. Enter it in Tools > Settings."
+msgstr "Chybí klíč API DeepL. Zadejte ho v Nástroje > Nastavení."
+
+msgid "No DeepL API key: enter it in Tools > Settings."
+msgstr "Chybí klíč DeepL: zadejte ho v Nástroje > Nastavení."
+
+msgid "No glossary can be created for this language pair."
+msgstr "Pro tuto dvojici jazyků nelze vytvořit glosář."
+
+msgid "No problem found."
+msgstr "Nenalezen žádný problém."
+
+msgid "No project open."
+msgstr "Žádný otevřený projekt."
+
+msgid "No remark found in this file."
+msgstr "V tomto souboru nebyla nalezena žádná poznámka."
+
+msgid "No result."
+msgstr "Žádný výsledek."
+
+msgid "No script found for this dialogue."
+msgstr "Pro tento dialog nebyl nalezen žádný skript."
+
+msgid "No similar translated text."
+msgstr "Žádný podobný přeložený text."
+
+msgid "No term found in this file."
+msgstr "V tomto souboru nebyl nalezen žádný pojem."
+
+msgid "No term yet. The glossary is built from the /game message files."
+msgstr "Zatím žádné pojmy. Glosář se vytváří ze souborů zpráv /game."
+
+msgid "No text/<language>/ folder found here."
+msgstr "Zde nebyla nalezena žádná složka text/<jazyk>/."
+
+msgid "No text/<language>/ folder found in these sources."
+msgstr "V těchto zdrojích nebyla nalezena žádná složka text/<jazyk>/."
+
+msgid "None"
+msgstr "Žádný"
+
+msgid "Not enough quota for everything."
+msgstr "Kvóta nestačí na vše."
+
+msgid "Not found:"
+msgstr "Nenalezeno:"
+
+msgid "Not translated"
+msgstr "Nepřeložené"
+
+msgid "Not translated in the game files yet"
+msgstr "V herních souborech zatím nepřeloženo"
+
+msgid "Not translated yet: translate the matching /game file first."
+msgstr "Zatím nepřeloženo: nejprve přeložte příslušný soubor /game."
+
+msgid "Not validated"
+msgstr "Neschváleno"
+
+msgid "Not written:"
+msgstr "Nezapsáno:"
+
+msgid "Note"
+msgstr "Poznámka"
+
+msgid "Nothing to export yet: save some translated files first.\n(%1 does not exist)"
+msgstr "Zatím není co exportovat: nejprve uložte nějaké přeložené soubory.\n(%1 neexistuje)"
+
+msgid "Nothing to review. Mark lines with Ctrl+R."
+msgstr "Není co kontrolovat. Řádky označíte pomocí Ctrl+R."
+
+msgid "Nothing to translate with this choice."
+msgstr "Při této volbě není co překládat."
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Only the terms you added (in bold) can be deleted."
+msgstr "Smazat lze jen pojmy, které jste přidali (tučně)."
+
+msgid "Only unfinished files"
+msgstr "Pouze nedokončené soubory"
+
+msgid "Open"
+msgstr "Otevřít"
+
+msgid "Open a Fallout game or mod folder"
+msgstr "Otevřít složku hry nebo módu Fallout"
+
+msgid "Open a dialogue file to see its tree."
+msgstr "Otevřete soubor dialogu, abyste viděli jeho strom."
+
+msgid "Open a game folder..."
+msgstr "Otevřít složku hry..."
+
+msgid "Open as is"
+msgstr "Otevřít beze změny"
+
+msgid "Open game/pipboy.msg and select a holodisk line."
+msgstr "Otevřete game/pipboy.msg a vyberte řádek holodisku."
+
+msgid "Open the output folder"
+msgstr "Otevřít výstupní složku"
+
+msgid "Origin"
+msgstr "Původ"
+
+msgid "Original text"
+msgstr "Původní text"
+
+msgid "Other"
+msgstr "Ostatní"
+
+msgid "Output"
+msgstr "Výstup"
+
+msgid "Output archive"
+msgstr "Výstupní archiv"
+
+msgid "Output folder"
+msgstr "Výstupní složka"
+
+msgid "Override with my own translation..."
+msgstr "Nahradit vlastním překladem..."
+
+msgid "Partially translated"
+msgstr "Částečně přeložené"
+
+msgid "Paste"
+msgstr "Vložit"
+
+msgid "Pip-Boy holodisk"
+msgstr "Holodisk Pip-Boye"
+
+msgid "Pip-Boy holodisks"
+msgstr "Hologramy Pip-Boye"
+
+msgid "Preparing the glossary..."
+msgstr "Příprava glosáře..."
+
+msgid "Press \"Run the checks\"."
+msgstr "Stiskněte „Spustit kontroly“."
+
+msgid "Press \"Scan the scripts\"."
+msgstr "Stiskněte „Analyzovat skripty“."
+
+msgid "Previous line"
+msgstr "Předchozí řádek"
+
+msgid "Previous translation restored"
+msgstr "Předchozí překlad obnoven"
+
+msgid "Previous translation: %1"
+msgstr "Předchozí překlad: %1"
+
+msgid "Previous untranslated line"
+msgstr "Předchozí nepřeložený řádek"
+
+msgid "Problem"
+msgstr "Problém"
+
+msgid "Progress"
+msgstr "Průběh"
+
+msgid "Project"
+msgstr "Projekt"
+
+msgid "Project settings"
+msgstr "Nastavení projektu"
+
+msgid "Project settings..."
+msgstr "Nastavení projektu..."
+
+msgid "Projects"
+msgstr "Projekty"
+
+msgid "Put the previous translation back"
+msgstr "Vrátit předchozí překlad"
+
+msgid "Quality report"
+msgstr "Zpráva o kvalitě"
+
+msgid "Quality report..."
+msgstr "Zpráva o kvalitě..."
+
+msgid "Quest %1: the Pip-Boy wraps the text (after the number) at %2 px."
+msgstr "Úkol %1: Pip-Boy zalamuje text (za číslem) při %2 px."
+
+msgid "Quit"
+msgstr "Konec"
+
+msgid "Reading the game files..."
+msgstr "Čtení herních souborů..."
+
+msgid "Reading the script..."
+msgstr "Čtení skriptu..."
+
+msgid "Rebuild glossary"
+msgstr "Znovu vytvořit glosář"
+
+msgid "Rebuild the glossary"
+msgstr "Znovu vytvořit glosář"
+
+msgid "Rebuild the text of the translation from the records of the file."
+msgstr "Znovu sestaví text překladu ze záznamů souboru."
+
+msgid "Recent"
+msgstr "Nedávné"
+
+msgid "Recent folders"
+msgstr "Nedávné složky"
+
+msgid "Recommended: translate the /game files before the /dialog files. They hold the names of items, creatures, skills and places, which feed the glossary."
+msgstr "Doporučeno: překládejte soubory /game před soubory /dialog. Obsahují názvy předmětů, tvorů, dovedností a míst, které plní glosář."
+
+msgid "Redo"
+msgstr "Znovu"
+
+msgid "Redo the operation"
+msgstr "Opakovat operaci"
+
+msgid "Redo the operation: %1"
+msgstr "Opakovat operaci: %1"
+
+msgid "Refresh statistics"
+msgstr "Obnovit statistiky"
+
+msgid "Regular expression"
+msgstr "Regulární výraz"
+
+msgid "Reload from the lines"
+msgstr "Znovu načíst z řádků"
+
+msgid "Remove"
+msgstr "Odebrat"
+
+msgid "Repair"
+msgstr "Opravit"
+
+msgid "Replace"
+msgstr "Nahradit"
+
+msgid "Replace \"%1\" by \"%2\" in the translation of %3 line(s) of %4 file(s)?\n\nFiles that are not open are saved immediately."
+msgstr "Nahradit „%1“ za „%2“ v překladu %3 řádků v %4 souborech?\n\nSoubory, které nejsou otevřené, se uloží okamžitě."
+
+msgid "Replace all"
+msgstr "Nahradit vše"
+
+msgid "Replace existing translations"
+msgstr "Nahradit existující překlady"
+
+msgid "Replace the checked lines"
+msgstr "Nahradit zaškrtnuté řádky"
+
+msgid "Replace the translations the project already has? This rewrites the files of the output folder."
+msgstr "Nahradit překlady, které projekt už má? Soubory ve výstupní složce se přepíší."
+
+msgid "Replace translations the project already has"
+msgstr "Nahradit překlady, které projekt už má"
+
+msgid "Replace with \"%1\""
+msgstr "Nahradit „%1“"
+
+msgid "Replace with (in the translation)..."
+msgstr "Nahradit za (v překladu)..."
+
+msgid "Restore"
+msgstr "Obnovit"
+
+msgid "Reuse the translation of another version of the mod (for instance an older installation translated into %1). Only untranslated lines are filled in unless you ask to replace."
+msgstr "Znovu použije překlad jiné verze modu (například starší instalace přeložené do jazyka %1). Doplní se jen nepřeložené řádky, pokud nepožádáte o nahrazení."
+
+msgid "Review mark"
+msgstr "Označení „ke kontrole“"
+
+msgid "Room"
+msgstr "Místo"
+
+msgid "Run the checks"
+msgstr "Spustit kontroly"
+
+msgid "Save"
+msgstr "Uložit"
+
+msgid "Save all"
+msgstr "Uložit vše"
+
+msgid "Save failed"
+msgstr "Uložení se nezdařilo"
+
+msgid "Save or close the modified files of this project first."
+msgstr "Nejprve uložte nebo zavřete změněné soubory tohoto projektu."
+
+msgid "Saved projects"
+msgstr "Uložené projekty"
+
+msgid "Saved, but these characters cannot be written in the target encoding: %1"
+msgstr "Uloženo, ale tyto znaky nelze zapsat v cílovém kódování: %1"
+
+msgid "Saved."
+msgstr "Uloženo."
+
+msgid "Scan the scripts"
+msgstr "Analyzovat skripty"
+
+msgid "Scanning the scripts..."
+msgstr "Analyzují se skripty..."
+
+msgid "Scanning the scripts... %1 / %2"
+msgstr "Analyzují se skripty... %1 / %2"
+
+msgid "Script"
+msgstr "Skript"
+
+msgid "Search"
+msgstr "Hledat"
+
+msgid "Search (text or ID)..."
+msgstr "Hledat (text nebo ID)..."
+
+msgid "Search and replace"
+msgstr "Najít a nahradit"
+
+msgid "Search and replace in the project..."
+msgstr "Najít a nahradit v projektu..."
+
+msgid "Search in the whole project..."
+msgstr "Hledat v celém projektu..."
+
+msgid "Search in this file (text or ID)..."
+msgstr "Hledat v tomto souboru (text nebo ID)..."
+
+msgid "Search the glossary..."
+msgstr "Hledat v glosáři..."
+
+msgid "Searching..."
+msgstr "Hledá se..."
+
+msgid "Select a line to see what was already translated for the same or a similar text."
+msgstr "Vyberte řádek, abyste viděli, co už bylo přeloženo pro stejný nebo podobný text."
+
+msgid "Select a quest line to see how the Pip-Boy wraps it."
+msgstr "Vyberte řádek úkolu, abyste viděli, jak ho Pip-Boy zalamuje."
+
+msgid "Select a term first."
+msgstr "Nejprve vyberte pojem."
+
+msgid "Select all"
+msgstr "Vybrat vše"
+
+msgid "Select at least one check."
+msgstr "Vyberte alespoň jednu kontrolu."
+
+msgid "Selected lines (%1)"
+msgstr "Vybrané řádky (%1)"
+
+msgid "Send %1 line(s) (about %2 characters) to DeepL?"
+msgstr "Odeslat %1 řádků (přibližně %2 znaků) do DeepL?"
+
+msgid "Send the neighbouring lines as context (not translated, not billed)"
+msgstr "Posílat sousední řádky jako kontext (nepřekládají se ani neúčtují)"
+
+msgid "Server error %1"
+msgstr "Chyba serveru %1"
+
+msgid "Settings"
+msgstr "Nastavení"
+
+msgid "Settings..."
+msgstr "Nastavení..."
+
+msgid "Similar text"
+msgstr "Podobný text"
+
+msgid "Some characters cannot be represented in the encoding of the target files (%1) and were replaced by '?':\n\n%2\n\nChoose another encoding in the project settings or reword the text."
+msgstr "Některé znaky nelze v kódování cílových souborů (%1) vyjádřit a byly nahrazeny znakem '?':\n\n%2\n\nVyberte v nastavení projektu jiné kódování nebo text přeformulujte."
+
+msgid "Some sources could not be read:"
+msgstr "Některé zdroje se nepodařilo přečíst:"
+
+msgid "Some sources could not be read:\n\n%1"
+msgstr "Některé zdroje se nepodařilo přečíst:\n\n%1"
+
+msgid "Source"
+msgstr "Originál"
+
+msgid "Source (%1)"
+msgstr "Originál (%1)"
+
+msgid "Source (paragraphs)"
+msgstr "Originál (odstavce)"
+
+msgid "Source encoding"
+msgstr "Zdrojové kódování"
+
+msgid "Source language"
+msgstr "Zdrojový jazyk"
+
+msgid "Sources"
+msgstr "Zdroje"
+
+msgid "Spacing"
+msgstr "Mezery"
+
+msgid "St."
+msgstr "Stav"
+
+msgid "Statistics"
+msgstr "Statistiky"
+
+msgid "Stop"
+msgstr "Zastavit"
+
+msgid "Stop following the game report"
+msgstr "Přestat sledovat hlášení hry"
+
+msgid "Stopped: %1 of %2 line(s) translated, %3 failed."
+msgstr "Zastaveno: přeloženo %1 z %2 řádků, %3 selhalo."
+
+msgid "Stopping..."
+msgstr "Zastavování..."
+
+msgid "Suggestion used"
+msgstr "Návrh použit"
+
+msgid "Suggestions"
+msgstr "Návrhy"
+
+msgid "System"
+msgstr "Systémový"
+
+msgid "Target encoding"
+msgstr "Cílové kódování"
+
+msgid "Target language"
+msgstr "Cílový jazyk"
+
+msgid "Term"
+msgstr "Pojem"
+
+msgid "Term (source language):"
+msgstr "Pojem (zdrojový jazyk):"
+
+msgid "Test"
+msgstr "Vyzkoušet"
+
+msgid "Text"
+msgstr "Text"
+
+msgid "Text files"
+msgstr "Textové soubory"
+
+msgid "Text files (*.txt *.log);;All files (*)"
+msgstr "Textové soubory (*.txt *.log);;Všechny soubory (*)"
+
+msgid "Texts in the scripts"
+msgstr "Texty ve skriptech"
+
+msgid "Texts in the scripts..."
+msgstr "Texty ve skriptech..."
+
+msgid "The DAT archive could not be written:"
+msgstr "Archiv DAT se nepodařilo zapsat:"
+
+msgid "The DAT archive could not be written:\n%1"
+msgstr "Archiv DAT se nepodařilo zapsat:\n%1"
+
+msgid "The DeepL quota is exhausted."
+msgstr "Kvóta DeepL je vyčerpána."
+
+msgid "The checks apply to the saved files: save your changes first."
+msgstr "Kontroly se týkají uložených souborů: nejprve uložte změny."
+
+msgid "The dialogue tree is available for files of the /dialog folder."
+msgstr "Strom dialogu je dostupný pro soubory ve složce /dialog."
+
+msgid "The files of this project that are open will be closed first. Continue?"
+msgstr "Otevřené soubory tohoto projektu budou nejprve zavřeny. Pokračovat?"
+
+msgid "The holodisk editor works on game/pipboy.msg."
+msgstr "Editor holodisků pracuje se souborem game/pipboy.msg."
+
+msgid "The language will change the next time the application starts."
+msgstr "Jazyk se změní při příštím spuštění aplikace."
+
+msgid "The output archive cannot be one of the sources of the project."
+msgstr "Výstupní archiv nemůže být jedním ze zdrojů projektu."
+
+msgid "The output archive must be a .dat file."
+msgstr "Výstupní archiv musí být soubor .dat."
+
+msgid "The report is empty."
+msgstr "Hlášení je prázdné."
+
+msgid "The source and target languages must differ."
+msgstr "Zdrojový a cílový jazyk se musí lišit."
+
+msgid "The sources of this project contain no compiled script."
+msgstr "Zdroje tohoto projektu neobsahují žádný zkompilovaný skript."
+
+msgid "The text of the line being edited is sent to these servers: use servers you trust."
+msgstr "Text upravovaného řádku se odesílá na tyto servery: používejte důvěryhodné servery."
+
+msgid "The translation file %1 contains malformed records; the game ignores everything after the first one, so part of the translation is not read:\n\n%2\n\nRepair it automatically? A copy of the original is kept as .bak."
+msgstr "Soubor překladu %1 obsahuje vadné záznamy; hra ignoruje vše za prvním z nich, takže část překladu se nečte:\n\n%2\n\nOpravit automaticky? Kopie originálu zůstane jako .bak."
+
+msgid "The translation is delivered in %1, rebuilt after each save. It contains text/%2/ with the translated files"
+msgstr "Překlad je dodáván v %1, přestavěném po každém uložení. Obsahuje text/%2/ s přeloženými soubory"
+
+msgid "The translation needs %1 entries but only %2 ids are free before record %3. Shorten it."
+msgstr "Překlad potřebuje %1 položek, ale před záznamem %3 je volných jen %2 ID. Zkraťte ho."
+
+msgid "Theme"
+msgstr "Motiv"
+
+msgid "There is no term of your own to export yet."
+msgstr "Zatím není co exportovat: nemáte žádný vlastní pojem."
+
+msgid "These files have unsaved changes:\n\n%1"
+msgstr "Tyto soubory mají neuložené změny:\n\n%1"
+
+msgid "This line has nothing to translate."
+msgstr "Tento řádek nemá co překládat."
+
+msgid "This line is not part of a holodisk body (a holodisk body ends with **END-DISK**)."
+msgstr "Tento řádek není součástí těla holodisku (končí **END-DISK**)."
+
+msgid "This script contains no dialogue structure."
+msgstr "Tento skript neobsahuje žádnou strukturu dialogu."
+
+msgid "To review"
+msgstr "Ke kontrole"
+
+msgid "Tokens"
+msgstr "Zástupné značky"
+
+msgid "Too long"
+msgstr "Příliš dlouhé"
+
+msgid "Too many matches (give the file and the id):"
+msgstr "Příliš mnoho shod (uveďte soubor a ID):"
+
+msgid "Tools"
+msgstr "Nástroje"
+
+msgid "Total"
+msgstr "Celkem"
+
+msgid "Translate"
+msgstr "Přeložit"
+
+msgid "Translate this line with DeepL"
+msgstr "Přeložit tento řádek pomocí DeepL"
+
+msgid "Translated"
+msgstr "Přeloženo"
+
+msgid "Translated files are written to %1 (this folder overrides the sources)."
+msgstr "Přeložené soubory se zapisují do %1 (tato složka má přednost před zdroji)."
+
+msgid "Translating with DeepL..."
+msgstr "Překlad pomocí DeepL..."
+
+msgid "Translating..."
+msgstr "Překlad probíhá..."
+
+msgid "Translation"
+msgstr "Překlad"
+
+msgid "Translation (%1)"
+msgstr "Překlad (%1)"
+
+msgid "Translation (write freely: a blank line starts a paragraph)"
+msgstr "Překlad (pište volně: prázdný řádek začíná odstavec)"
+
+msgid "Translation editor for the dialogue and text files of Fallout 1 and Fallout 2 mods."
+msgstr "Překladatelský editor dialogových a textových souborů modů pro Fallout 1 a Fallout 2."
+
+msgid "Translation:"
+msgstr "Překlad:"
+
+msgid "Tree"
+msgstr "Strom"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Type a text and press Enter."
+msgstr "Zadejte text a stiskněte Enter."
+
+msgid "Type a text to search."
+msgstr "Zadejte hledaný text."
+
+msgid "Types (%1/%2)"
+msgstr "Typy (%1/%2)"
+
+msgid "Underline spelling and grammar errors in the translation"
+msgstr "Podtrhávat pravopisné a gramatické chyby v překladu"
+
+msgid "Undo"
+msgstr "Zpět"
+
+msgid "Undo the last operation"
+msgstr "Vrátit poslední operaci"
+
+msgid "Undo the operation: %1"
+msgstr "Vrátit operaci: %1"
+
+msgid "Unknown word: %1"
+msgstr "Neznámé slovo: %1"
+
+msgid "Unsaved changes"
+msgstr "Neuložené změny"
+
+msgid "Untranslated"
+msgstr "Nepřeloženo"
+
+msgid "Untranslated lines (%1)"
+msgstr "Nepřeložené řádky (%1)"
+
+msgid "Up"
+msgstr "Nahoru"
+
+msgid "Update the output DAT archive now"
+msgstr "Aktualizovat výstupní archiv DAT nyní"
+
+msgid "Updating the DAT archive..."
+msgstr "Aktualizuje se archiv DAT..."
+
+msgid "Use the project glossary (terms of the /game files; the free plan allows one glossary)"
+msgstr "Použít glosář projektu (pojmy ze souborů /game; bezplatný plán povoluje jeden glosář)"
+
+msgid "Validate (or remove the validation)"
+msgstr "Schválit (nebo zrušit schválení)"
+
+msgid "Validated"
+msgstr "Schváleno"
+
+msgid "Validation"
+msgstr "Schválení"
+
+msgid "View"
+msgstr "Zobrazení"
+
+msgid "When the source text changed, import the old translation marked \"to review\""
+msgstr "Pokud se zdrojový text změnil, importovat starý překlad označený „ke kontrole“"
+
+msgid "Whole words"
+msgstr "Celá slova"
+
+msgid "Width of the Pip-Boy text area (374 px in the game)."
+msgstr "Šířka textové oblasti Pip-Boye (374 px ve hře)."
+
+msgid "Width:"
+msgstr "Šířka:"
+
+msgid "With a comment"
+msgstr "S komentářem"
+
+msgid "Words left"
+msgstr "Zbývající slova"
+
+msgid "Write the translated scripts"
+msgstr "Zapsat přeložené skripty"
+
+msgid "Writes scripts/<name>.int with the translations into the output (folder or archive)."
+msgstr "Zapíše scripts/<název>.int s překlady do výstupu (složka nebo archiv)."
+
+msgid "Yes"
+msgstr "Ano"
+
+msgid "Your DeepL account already contains a glossary:\n\n%1\n\nThe free plan allows a single glossary. Delete it and replace it with the glossary of this project?\n\nThis cannot be undone."
+msgstr "Váš účet DeepL už obsahuje glosář:\n\n%1\n\nBezplatný plán povoluje pouze jeden. Smazat ho a nahradit glosářem tohoto projektu?\n\nTuto akci nelze vrátit zpět."
+
+msgid "a text contains a NUL character"
+msgstr "text obsahuje znak NUL"
+
+msgid "cannot be written as %1: %2"
+msgstr "nelze zapsat v kódování %1: %2"
+
+msgid "doubled spaces"
+msgstr "dvojité mezery"
+
+msgid "e.g. RPU — French"
+msgstr "např. RPU — čeština"
+
+msgid "e.g. french.dat"
+msgstr "např. french.dat"
+
+msgid "elsewhere (%1 times): %2"
+msgstr "jinde (%1×): %2"
+
+msgid "int2ssl was not found next to the application."
+msgstr "Vedle aplikace nebyl nalezen int2ssl."
+
+msgid "line %1 (%2): %3"
+msgstr "řádek %1 (%2): %3"
+
+msgid "missing: %1"
+msgstr "chybí: %1"
+
+msgid "no limit"
+msgstr "bez omezení"
+
+msgid "not a readable script (%1)"
+msgstr "nečitelný skript (%1)"
+
+msgid "only the first %1 are listed (use the export for all)"
+msgstr "uvedeno je jen prvních %1 (pro všechny použijte export)"
+
+msgid "only the first results are shown"
+msgstr "zobrazeny jsou jen první výsledky"
+
+msgid "short label of the interface: %1 characters for %2 in the source"
+msgstr "krátký popisek rozhraní: znaků %1 oproti %2 ve zdroji"
+
+msgid "spaces at the start or the end"
+msgstr "mezery na začátku nebo na konci"
+
+msgid "the game only reads 500 entries per holodisk"
+msgstr "hra čte jen 500 položek na holodisk"
+
+msgid "the source has spaces at the start or the end"
+msgstr "zdroj má mezery na začátku nebo na konci"
+
+msgid "the translation only contains spaces"
+msgstr "překlad obsahuje jen mezery"
+
+msgid "too long"
+msgstr "příliš dlouhý"
+
+msgid "unexpected: %1"
+msgstr "neočekávané: %1"
+
+msgid "will be appended"
+msgstr "bude připojen na konec"
+
+msgid "written to the file"
+msgstr "zapsáno do souboru"
+
+msgid "⚠ Several different translations exist in the game files."
+msgstr "⚠ V souborech hry existuje několik různých překladů."
+
+msgid "✔ Key accepted. Usage: %L1 / %L2 characters this period."
+msgstr "✔ Klíč přijat. Využití: %L1 / %L2 znaků v tomto období."
+
+msgid "✔ The server answers (%1 issue(s) found in the test sentence)."
+msgstr "✔ Server odpovídá (v testovací větě nalezeno %1 problémů)."
+
+msgid "⤴ %1 (see above)"
+msgstr "⤴ %1 (viz výše)"

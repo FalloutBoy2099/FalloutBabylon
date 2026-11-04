@@ -1,0 +1,60 @@
+import { LineEdit, CheckBox, ComboBox } from "std-widgets.slint";
+import { Colors, DataTable, TableRow, FlatButton } from "../widgets.slint";
+
+export global SearchData {
+    in-out property <string> find;
+    in-out property <string> replace;
+    in-out property <int> scope: 0;
+    in-out property <bool> regex;
+    in-out property <bool> match-case;
+    in-out property <bool> whole-word;
+    in property <[TableRow]> rows;
+    in property <string> status;
+    in property <bool> can-replace;
+    in property <bool> busy;
+    callback search();
+    callback replace-checked();
+    callback replace-all();
+    callback activated(int);
+    callback toggled(int);
+}
+
+export component SearchPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    LineEdit {
+        placeholder-text: @tr("Search in the whole project...");
+        text <=> SearchData.find;
+        accepted(t) => { SearchData.search(); }
+    }
+    LineEdit {
+        placeholder-text: @tr("Replace with (in the translation)...");
+        text <=> SearchData.replace;
+        accepted(t) => { SearchData.search(); }
+    }
+    ComboBox {
+        model: [@tr("In the translation"), @tr("In the source"), @tr("In both")];
+        current-index <=> SearchData.scope;
+    }
+    HorizontalLayout {
+        spacing: 6px;
+        CheckBox { text: @tr("Regular expression"); checked <=> SearchData.regex; }
+        CheckBox { text: @tr("Match case"); checked <=> SearchData.match-case; }
+        CheckBox { text: @tr("Whole words"); checked <=> SearchData.whole-word; }
+    }
+    HorizontalLayout {
+        spacing: 4px;
+        FlatButton { text: @tr("Search"); enabled: !SearchData.busy; clicked => { SearchData.search(); } }
+        Rectangle { horizontal-stretch: 1; }
+        FlatButton { text: @tr("Replace the checked lines"); enabled: SearchData.can-replace; clicked => { SearchData.replace-checked(); } }
+        FlatButton { text: @tr("Replace all"); enabled: SearchData.can-replace; clicked => { SearchData.replace-all(); } }
+    }
+    Text { text: SearchData.status; color: Colors.muted; wrap: word-wrap; }
+    DataTable {
+        headers: ["", @tr("File"), @tr("ID"), @tr("Text"), @tr("After replacement")];
+        widths: [28px, 110px, 50px, 240px, 240px];
+        rows: SearchData.rows;
+        toggled(i) => { SearchData.toggled(i); }
+        double-clicked(i) => { SearchData.activated(i); }
+    }
+}

@@ -1,0 +1,910 @@
+import { Button, ComboBox, LineEdit, ListView, ScrollView, ProgressIndicator, Palette } from "std-widgets.slint";
+import { Colors, ThemeMode, Pane, FlatButton, OverlayEditor, TableRow, DataTable } from "widgets.slint";
+import { GlossaryPanel, GlossaryData } from "panels/glossary.slint";
+import { StatsPanel, StatsData } from "panels/stats.slint";
+import { TodoPanel, TodoData } from "panels/todo.slint";
+import { SuggestionPanel, SuggestionData } from "panels/suggestions.slint";
+import { SearchPanel, SearchData } from "panels/search.slint";
+import { QualityPanel, QualityData } from "panels/quality.slint";
+import { ScriptsPanel, ScriptsData } from "panels/scripts.slint";
+import { DialogPanel, DialogData, DialogRow } from "panels/dialog.slint";
+import { PipboyPanel, PipboyData } from "panels/pipboy.slint";
+import { TermDialog, MessageDialog, ConfirmDialog, SaveChangesDialog, SettingsDialog } from "dialogs.slint";
+import { MassTranslateDialog } from "mass_dialog.slint";
+import { ProjectDialog } from "project_dialog.slint";
+import { ImportDialog } from "import_dialog.slint";
+
+export { Colors, ThemeMode, TableRow, GlossaryData, StatsData, TodoData, SuggestionData, SearchData, QualityData, ScriptsData, DialogData, DialogRow, PipboyData, TermDialog, MessageDialog, ConfirmDialog, SaveChangesDialog, SettingsDialog, MassTranslateDialog, ProjectDialog, ImportDialog }
+
+export struct TreeRow {
+    label: string,
+    detail: string,
+    indent: int,
+    percent: float,
+    /// 0 project, 1 group, 2 file
+    kind: int,
+    expanded: bool,
+    current: bool,
+    open: bool,
+    dirty: bool,
+}
+
+export struct RowItem {
+    row: int,
+    id: int,
+    source: string,
+    target: string,
+    /// 0 untranslated, 1 translated, 2 to review
+    status: int,
+    issues: int,
+    comment: bool,
+    /// 0 no, 1 validated, 2 changed since validation
+    validated: int,
+    selected: bool,
+}
+
+export struct TabItem {
+    title: string,
+    tooltip: string,
+    dirty: bool,
+}
+
+export struct InfoAction {
+    label: string,
+}
+
+component TreeView inherits Pane {
+    in property <[TreeRow]> rows;
+    callback activated(int);
+    callback toggled(int);
+    callback project-menu(int, int);
+    ListView {
+        for row[i] in root.rows: Rectangle {
+            height: 24px;
+            background: row.current ? Colors.selection : touch.has-hover ? Colors.window : transparent;
+            HorizontalLayout {
+                padding-left: 6px + row.indent * 14px;
+                padding-right: 6px;
+                spacing: 6px;
+                Text {
+                    text: row.kind != 2 ? (row.expanded ? "−" : "+") : "";
+                    width: row.kind != 2 ? 12px : 0px;
+                    color: Colors.muted;
+                    vertical-alignment: center;
+                }
+                Text {
+                    text: row.label + (row.dirty ? " *" : "");
+                    color: row.open ? Colors.accent : Colors.fore;
+                    font-weight: row.kind != 2 ? 700 : 400;
+                    vertical-alignment: center;
+                    overflow: elide;
+                    horizontal-stretch: 1;
+                    min-width: 0px;
+                }
+                Text {
+                    text: row.detail;
+                    color: row.percent >= 100 ? Colors.good : Colors.muted;
+                    vertical-alignment: center;
+                    horizontal-alignment: right;
+                    min-width: 44px;
+                }
+            }
+            touch := TouchArea {
+                clicked => { root.activated(i); }
+            }
+            if row.kind == 0: ContextMenuArea {
+                Menu {
+                    MenuItem { title: @tr("Refresh statistics"); activated => { root.project-menu(i, 0); } }
+                    MenuItem { title: @tr("Rebuild the glossary"); activated => { root.project-menu(i, 1); } }
+                    MenuItem { title: @tr("Export to a DAT archive..."); activated => { root.project-menu(i, 2); } }
+                    MenuItem { title: @tr("Open the output folder"); activated => { root.project-menu(i, 3); } }
+                    MenuSeparator {}
+                    MenuItem { title: @tr("Project settings..."); activated => { root.project-menu(i, 4); } }
+                    MenuItem { title: @tr("Close project"); activated => { root.project-menu(i, 5); } }
+                }
+            }
+        }
+    }
+}
+
+component RowTable inherits Pane {
+    in property <[RowItem]> rows;
+    in property <int> current: -1;
+    in property <int> sort-column: -1;
+    in property <bool> sort-ascending: true;
+    callback clicked(int, bool, bool);
+    callback step(int);
+    callback page(int);
+    callback sort-clicked(int);
+
+    changed current => { self.ensure-visible(); }
+
+    public function ensure-visible() {
+        if root.current < 0 { return; }
+        if root.current * 26px < -list.content-y {
+            list.content-y = -root.current * 26px;
+        } else if (root.current + 1) * 26px > -list.content-y + list.visible-height {
+            list.content-y = -((root.current + 1) * 26px - list.visible-height);
+        }
+    }
+
+    // header: click a title to sort
+    Rectangle {
+        y: 0px;
+        height: 24px;
+        background: Colors.window;
+        HorizontalLayout {
+            padding-left: 6px;
+            padding-right: 6px;
+            spacing: 8px;
+            for title[c] in [@tr("ID"), @tr("Source"), @tr("Translation"), ""]: Rectangle {
+                horizontal-stretch: c == 1 || c == 2 ? 1 : 0;
+                preferred-width: c == 1 || c == 2 ? 0px : (c == 0 ? 64px : 30px);
+                min-width: c == 1 || c == 2 ? 0px : (c == 0 ? 64px : 30px);
+                max-width: c == 1 || c == 2 ? 100000px : (c == 0 ? 64px : 30px);
+                Text {
+                    width: parent.width;
+                    text: title + (c == root.sort-column ? (root.sort-ascending ? " ▲" : " ▼") : "");
+                    color: Colors.fore;
+                    font-weight: 700;
+                    overflow: elide;
+                    vertical-alignment: center;
+                    horizontal-alignment: c == 0 ? right : left;
+                }
+                TouchArea { clicked => { root.sort-clicked(c); } }
+            }
+        }
+        Rectangle { y: parent.height - 1px; height: 1px; background: Colors.line; }
+    }
+
+    fs := FocusScope {
+        y: 24px;
+        height: parent.height - 24px;
+        key-pressed(event) => {
+            if event.text == Key.UpArrow && !event.modifiers.control {
+                root.step(-1);
+                return accept;
+            }
+            if event.text == Key.DownArrow && !event.modifiers.control {
+                root.step(1);
+                return accept;
+            }
+            if event.text == Key.PageUp {
+                root.page(-1);
+                return accept;
+            }
+            if event.text == Key.PageDown {
+                root.page(1);
+                return accept;
+            }
+            reject
+        }
+        list := ListView {
+            for row[i] in root.rows: Rectangle {
+                height: 26px;
+                background: row.selected || i == root.current ? Colors.selection
+                    : row.status == 0 ? Colors.untranslated
+                    : row.status == 2 ? Colors.review
+                    : Colors.translated;
+                HorizontalLayout {
+                    padding-left: 6px;
+                    padding-right: 6px;
+                    spacing: 8px;
+                    Text {
+                        text: row.id;
+                        width: 64px;
+                        color: Colors.muted;
+                        vertical-alignment: center;
+                        horizontal-alignment: right;
+                    }
+                    Text {
+                        text: row.source;
+                        color: Colors.fore;
+                        vertical-alignment: center;
+                        overflow: elide;
+                        horizontal-stretch: 1;
+                        preferred-width: 0px;
+                        min-width: 0px;
+                    }
+                    Text {
+                        text: row.target;
+                        color: Colors.fore;
+                        vertical-alignment: center;
+                        overflow: elide;
+                        horizontal-stretch: 1;
+                        preferred-width: 0px;
+                        min-width: 0px;
+                    }
+                    Text {
+                        text: (row.validated == 1 ? "✓" : row.validated == 2 ? "≠" : "") + (row.issues > 0 ? "!" : "") + (row.comment ? "*" : "");
+                        color: row.issues > 0 || row.validated == 2 ? Colors.issue : Colors.good;
+                        width: 30px;
+                        vertical-alignment: center;
+                    }
+                }
+                TouchArea {
+                    pointer-event(event) => {
+                        if event.button == PointerEventButton.left && event.kind == PointerEventKind.down {
+                            fs.focus();
+                            root.clicked(i, event.modifiers.control, event.modifiers.shift);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+component TabBar inherits Rectangle {
+    in property <[TabItem]> tabs;
+    in property <int> current: -1;
+    callback selected(int);
+    callback closed(int);
+    callback menu(int, int);
+    height: 28px;
+    HorizontalLayout {
+        spacing: 2px;
+        alignment: start;
+        for tab[i] in root.tabs: Rectangle {
+            width: min(220px, label.preferred-width + 40px);
+            background: i == root.current ? Colors.back : Colors.window;
+            border-width: 1px;
+            border-color: Colors.line;
+            label := Text {
+                x: 8px;
+                width: parent.width - 30px;
+                text: tab.title + (tab.dirty ? " *" : "");
+                color: Colors.fore;
+                font-weight: i == root.current ? 700 : 400;
+                vertical-alignment: center;
+                overflow: elide;
+            }
+            TouchArea {
+                width: parent.width - 22px;
+                clicked => { root.selected(i); }
+            }
+            Rectangle {
+                x: parent.width - 20px;
+                width: 18px;
+                height: 18px;
+                border-radius: 3px;
+                background: close-touch.has-hover ? Colors.line : transparent;
+                Text { text: "×"; color: Colors.muted; horizontal-alignment: center; vertical-alignment: center; }
+                close-touch := TouchArea { clicked => { root.closed(i); } }
+            }
+            ContextMenuArea {
+                Menu {
+                    MenuItem { title: @tr("Close"); activated => { root.menu(i, 0); } }
+                    MenuItem { title: @tr("Close all but this one"); activated => { root.menu(i, 1); } }
+                    MenuItem { title: @tr("Close the tabs to the left"); activated => { root.menu(i, 2); } }
+                    MenuItem { title: @tr("Close the tabs to the right"); activated => { root.menu(i, 3); } }
+                    MenuSeparator {}
+                    MenuItem { title: @tr("Close all"); activated => { root.menu(i, 4); } }
+                }
+            }
+        }
+    }
+}
+
+/// A column of a horizontal layout that takes the same share as its siblings whatever its content.
+component EqualColumn inherits Rectangle {
+    horizontal-stretch: 1;
+    preferred-width: 0px;
+    min-width: 0px;
+    VerticalLayout {
+        spacing: 2px;
+        @children
+    }
+}
+
+/// The panel number `current` (see the order of the panel names).
+component PanelContent inherits Pane {
+    in property <int> current;
+    if root.current == 0: GlossaryPanel { }
+    if root.current == 1: StatsPanel { }
+    if root.current == 2: TodoPanel { }
+    if root.current == 3: SuggestionPanel { }
+    if root.current == 4: SearchPanel { }
+    if root.current == 5: QualityPanel { }
+    if root.current == 6: ScriptsPanel { }
+    if root.current == 7: DialogPanel { }
+    if root.current == 8: PipboyPanel { }
+}
+
+/// A panel detached from the main window.
+export component FloatPanelWindow inherits Window {
+    in property <int> panel;
+    in property <string> name;
+    callback redock();
+    title: root.name;
+    preferred-width: 520px;
+    preferred-height: 680px;
+    min-width: 320px;
+    min-height: 240px;
+    background: Colors.window;
+    VerticalLayout {
+        padding: 6px;
+        spacing: 4px;
+        HorizontalLayout {
+            height: 28px;
+            spacing: 6px;
+            Rectangle { horizontal-stretch: 1; }
+            FlatButton { text: @tr("Dock"); clicked => { root.redock(); } }
+        }
+        PanelContent {
+            vertical-stretch: 1;
+            current: root.panel;
+        }
+    }
+}
+
+/// A dock: a tab for each panel it holds, and the panel that is in front. Two docks exist (right and bottom);
+/// a panel lives in one of them and can be moved with the context menu of its tab.
+component PanelDock inherits VerticalLayout {
+    in property <[string]> names;
+    in property <[bool]> visible-panels;
+    in property <[bool]> bottom-panels;
+    in property <bool> bottom: false;
+    in-out property <int> current;
+    callback tab-clicked(int);
+    callback closed(int);
+    callback moved(int);
+    callback detached(int);
+    spacing: 4px;
+    HorizontalLayout {
+        spacing: 4px;
+        height: 30px;
+        for name[i] in root.names: Rectangle {
+            property <bool> shown: root.visible-panels[i] && root.bottom-panels[i] == root.bottom;
+            visible: shown;
+            width: shown ? max(70px, tab-label.preferred-width + 24px) : 0px;
+            background: i == root.current ? Colors.back : tab-touch.has-hover ? Colors.window : transparent;
+            border-width: 1px;
+            border-color: i == root.current ? Colors.line : transparent;
+            tab-label := Text {
+                text: name;
+                color: Colors.fore;
+                font-weight: i == root.current ? 700 : 400;
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                overflow: elide;
+            }
+            Rectangle {
+                y: parent.height - 3px;
+                height: 3px;
+                background: i == root.current ? Colors.accent : transparent;
+            }
+            tab-touch := TouchArea { clicked => { root.current = i; root.tab-clicked(i); } }
+            ContextMenuArea {
+                Menu {
+                    MenuItem { title: root.bottom ? @tr("Move to the right") : @tr("Move to the bottom"); activated => { root.moved(i); } }
+                    MenuItem { title: @tr("Detach into a window"); activated => { root.detached(i); } }
+                    MenuItem { title: @tr("Close"); activated => { root.closed(i); } }
+                }
+            }
+        }
+        Rectangle { horizontal-stretch: 1; }
+        FlatButton { text: "×"; width: 30px; clicked => { root.closed(root.current); } }
+    }
+    PanelContent {
+        vertical-stretch: 1;
+        current: root.current;
+    }
+}
+
+export component MainWindow inherits Window {
+    title: root.window-title;
+    icon: @image-url("../assets/icon.png");
+    preferred-width: 1280px;
+    preferred-height: 800px;
+    min-width: 880px;
+    min-height: 480px;
+    background: Colors.window;
+
+    // project / tree
+    in property <[TreeRow]> tree;
+    in property <bool> busy;
+    in property <float> progress: 0;
+    in property <string> status-text;
+    in property <string> summary-text;
+    in property <string> window-title: "Fallout Babylon";
+    in property <[string]> recent-folders;
+    in property <bool> report-watching;
+    in property <[string]> language-names;
+    in property <int> language-index: 0;
+    in property <[string]> theme-names;
+    callback language-chosen(int);
+    callback about();
+    in property <[string]> tree-filter-names;
+    in-out property <string> tree-filter-text;
+    in-out property <int> tree-filter-index: 0;
+    callback tree-filter-changed();
+
+    // editor tabs and table
+    in property <[TabItem]> tabs;
+    in property <int> current-tab: -1;
+    in property <[RowItem]> rows;
+    in property <int> current-row: -1;
+    in property <string> line-info;
+    in property <[string]> filter-names;
+    in property <[string]> saved-projects;
+    in-out property <int> filter-index: 0;
+    in-out property <string> search-text;
+    in property <bool> has-editor: false;
+    in property <bool> editor-enabled: false;
+
+    // line editors
+    in property <string> source-label;
+    in property <string> target-label;
+    in-out property <string> source-text;
+    in-out property <string> target-text;
+    in property <styled-text> source-overlay;
+    in property <styled-text> target-overlay;
+    in property <string> issue-text;
+    in property <string> previous-text;
+    in-out property <string> comment-text;
+    in property <string> info-text;
+    in property <[InfoAction]> info-actions;
+    in property <bool> review-on;
+    in property <int> validated-state;
+    in property <bool> can-undo;
+    in property <bool> can-redo;
+    in property <string> undo-label;
+    in property <string> redo-label;
+
+    // dock of panels
+    in property <[string]> panel-names;
+    in property <[bool]> panel-visible;
+    in property <[bool]> panel-bottom;
+    in-out property <int> bottom-index: 0;
+    in property <bool> bottom-open: false;
+    in-out property <length> bottom-height: 240px;
+    callback move-panel(int);
+    callback detach-panel(int);
+    in property <[bool]> panel-docked;
+    callback toggle-panel(int);
+    in-out property <int> panel-index: 0;
+    in-out property <bool> dock-open: true;
+    in-out property <length> dock-width: 440px;
+    callback panel-changed(int);
+    callback show-panel(int);
+
+    // layout state
+    in-out property <length> tree-width: 280px;
+    in-out property <length> editor-height: 300px;
+
+    callback tree-activated(int);
+    callback tab-selected(int);
+    callback tab-closed(int);
+    callback tab-menu(int, int);
+    callback row-clicked(int, bool, bool);
+    in property <int> sort-column: -1;
+    in property <bool> sort-ascending: true;
+    callback sort-requested(int);
+    in property <styled-text> source-tip;
+    in property <styled-text> target-tip;
+    in property <bool> source-has-tip;
+    in property <bool> target-has-tip;
+    callback row-step(int);
+    callback row-page(int);
+    callback filter-changed();
+    callback target-edited(string);
+    callback target-caret(int);
+    callback source-caret(int);
+    callback comment-edited(string);
+    callback restore-previous();
+    callback info-action(int);
+
+    // commands
+    callback save();
+    callback save-all();
+    callback close-tab();
+    callback refresh();
+    callback accept-as-is();
+    callback toggle-review();
+    callback toggle-validated();
+    callback copy-source();
+    callback go-next();
+    callback go-previous();
+    callback go-next-untranslated();
+    callback go-previous-untranslated();
+    callback undo-operation();
+    callback redo-operation();
+    callback quit();
+    callback open-saved(int);
+    callback new-project();
+    callback open-folder();
+    callback open-recent-folder(int);
+    callback project-settings();
+    callback close-project();
+    callback export-dat();
+    callback build-archive();
+    callback project-menu(int, int);
+    callback import-translation();
+    callback import-report();
+    callback follow-report();
+    callback translate-line();
+    callback mass-translate();
+    callback open-settings();
+    callback theme-chosen(int);
+
+    public function set-target-caret(offset: int) { target-editor.set-caret(offset); }
+    public function focus-target() { target-editor.focus-editor(); }
+    public function focus-search() { search-edit.focus(); }
+    public function current-target-caret() -> int { return target-editor.caret; }
+
+    MenuBar {
+        Menu {
+            title: @tr("File");
+            MenuItem { title: @tr("New project..."); shortcut: @keys(Control + N); activated => { root.new-project(); } }
+            MenuItem { title: @tr("Open a game folder..."); shortcut: @keys(Control + O); activated => { root.open-folder(); } }
+            Menu {
+                title: @tr("Recent folders");
+                for name[i] in root.recent-folders: MenuItem { title: name; activated => { root.open-recent-folder(i); } }
+            }
+            Menu {
+                title: @tr("Saved projects");
+                for name[i] in root.saved-projects: MenuItem { title: name; activated => { root.open-saved(i); } }
+            }
+            MenuSeparator {}
+            MenuItem { title: @tr("Save"); shortcut: @keys(Control + S); enabled: root.has-editor; activated => { root.save(); } }
+            MenuItem { title: @tr("Save all"); shortcut: @keys(Control + Shift + S); activated => { root.save-all(); } }
+            MenuItem { title: @tr("Close file"); shortcut: @keys(Control + W); enabled: root.has-editor; activated => { root.close-tab(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Project settings..."); activated => { root.project-settings(); } }
+            MenuItem { title: @tr("Export to a DAT archive..."); activated => { root.export-dat(); } }
+            MenuItem { title: @tr("Update the output DAT archive now"); activated => { root.build-archive(); } }
+            MenuItem { title: @tr("Close the project"); activated => { root.close-project(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Quit"); shortcut: @keys(Control + Q); activated => { root.quit(); } }
+        }
+        Menu {
+            title: @tr("Edit");
+            MenuItem { title: @tr("Undo the last operation"); shortcut: @keys(Control + Alt + Z); enabled: root.can-undo; activated => { root.undo-operation(); } }
+            MenuItem { title: @tr("Redo the operation"); shortcut: @keys(Control + Alt + Y); enabled: root.can-redo; activated => { root.redo-operation(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Next line"); shortcut: @keys(Control + DownArrow); enabled: root.has-editor; activated => { root.go-next(); } }
+            MenuItem { title: @tr("Previous line"); shortcut: @keys(Control + UpArrow); enabled: root.has-editor; activated => { root.go-previous(); } }
+            MenuItem { title: @tr("Next untranslated line"); shortcut: @keys(Control + Shift + DownArrow); enabled: root.has-editor; activated => { root.go-next-untranslated(); } }
+            MenuItem { title: @tr("Previous untranslated line"); shortcut: @keys(Control + Shift + UpArrow); enabled: root.has-editor; activated => { root.go-previous-untranslated(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Copy the source"); shortcut: @keys(Control + Shift + C); enabled: root.editor-enabled; activated => { root.copy-source(); } }
+            MenuItem { title: @tr("Accept as is"); shortcut: @keys(Control + Return); enabled: root.editor-enabled; activated => { root.accept-as-is(); } }
+            MenuItem { title: @tr("Mark as to review"); shortcut: @keys(Control + R); enabled: root.editor-enabled; activated => { root.toggle-review(); } }
+            MenuItem { title: @tr("Validate (or remove the validation)"); shortcut: @keys(Control + Alt + V); enabled: root.editor-enabled; activated => { root.toggle-validated(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Find in this file"); shortcut: @keys(Control + F); enabled: root.has-editor; activated => { root.focus-search(); } }
+            MenuItem { title: @tr("Search and replace in the project..."); shortcut: @keys(Control + Shift + F); activated => { root.show-panel(4); } }
+        }
+        Menu {
+            title: @tr("View");
+            for name[i] in root.panel-names: MenuItem {
+                title: name;
+                checkable: true;
+                checked: root.panel-visible[i];
+                activated => { root.toggle-panel(i); self.checked = root.panel-visible[i]; }
+            }
+            MenuSeparator {}
+            Menu {
+                title: @tr("Language");
+                for name[i] in root.language-names: MenuItem {
+                    title: name;
+                    checkable: true;
+                    checked: root.language-index == i;
+                    activated => { root.language-chosen(i); self.checked = root.language-index == i; }
+                }
+            }
+            Menu {
+                title: @tr("Theme");
+                for name[i] in root.theme-names: MenuItem {
+                    title: name;
+                    checkable: true;
+                    checked: ThemeMode.mode == i;
+                    activated => { ThemeMode.mode = i; root.theme-chosen(i); self.checked = ThemeMode.mode == i; }
+                }
+            }
+        }
+        Menu {
+            title: @tr("Tools");
+            MenuItem { title: @tr("Translate this line with DeepL"); shortcut: @keys(Control + T); enabled: root.editor-enabled; activated => { root.translate-line(); } }
+            MenuItem { title: @tr("Mass translation with DeepL..."); shortcut: @keys(Control + Shift + T); enabled: root.has-editor; activated => { root.mass-translate(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Import an existing translation..."); activated => { root.import-translation(); } }
+            MenuItem { title: @tr("Import a game report..."); activated => { root.import-report(); } }
+            MenuItem { title: root.report-watching ? @tr("Stop following the game report") : @tr("Follow a game report file..."); activated => { root.follow-report(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Quality report..."); activated => { root.show-panel(5); } }
+            MenuItem { title: @tr("Texts in the scripts..."); activated => { root.show-panel(6); } }
+            MenuItem { title: @tr("Refresh statistics"); shortcut: @keys(F5); activated => { root.refresh(); } }
+            MenuSeparator {}
+            MenuItem { title: @tr("Settings..."); activated => { root.open-settings(); } }
+        }
+        Menu {
+            title: @tr("Help");
+            MenuItem { title: @tr("About..."); activated => { root.about(); } }
+        }
+    }
+
+    // The scheme the system reported at start (assigning Palette.color-scheme replaces the system binding).
+    property <bool> system-dark;
+    init => { root.system-dark = Palette.color-scheme == ColorScheme.dark; }
+    property <int> theme-mode: ThemeMode.mode;
+    changed theme-mode => {
+        Palette.color-scheme = ThemeMode.mode == 1 ? ColorScheme.light
+            : ThemeMode.mode == 2 ? ColorScheme.dark
+            : root.system-dark ? ColorScheme.dark : ColorScheme.light;
+    }
+
+    VerticalLayout {
+        padding: 8px;
+        spacing: 6px;
+
+        HorizontalLayout {
+            spacing: 0px;
+            vertical-stretch: 1;
+
+            VerticalLayout {
+                preferred-width: root.tree-width;
+                min-width: 140px;
+                horizontal-stretch: 0;
+                spacing: 4px;
+            TreeView {
+                vertical-stretch: 1;
+                rows: root.tree;
+                activated(i) => { root.tree-activated(i); }
+                project-menu(i, a) => { root.project-menu(i, a); }
+            }
+                LineEdit {
+                    height: 30px;
+                    placeholder-text: @tr("Filter files...");
+                    text <=> root.tree-filter-text;
+                    edited(t) => { root.tree-filter-changed(); }
+                }
+                ComboBox {
+                    height: 30px;
+                    model: root.tree-filter-names;
+                    current-index <=> root.tree-filter-index;
+                    selected(v) => { root.tree-filter-changed(); }
+                }
+            }
+
+            // vertical splitter
+            Rectangle {
+                width: 6px;
+                TouchArea {
+                    mouse-cursor: ew-resize;
+                    moved => {
+                        root.tree-width = max(160px, min(600px, root.tree-width + (self.mouse-x - self.pressed-x)));
+                    }
+                }
+            }
+
+            Rectangle {
+              clip: true;
+              horizontal-stretch: 1;
+              preferred-width: 0px;
+              min-width: 380px;
+              VerticalLayout {
+                spacing: 4px;
+
+                TabBar {
+                    tabs: root.tabs;
+                    current: root.current-tab;
+                    selected(i) => { root.tab-selected(i); }
+                    closed(i) => { root.tab-closed(i); }
+                    menu(i, a) => { root.tab-menu(i, a); }
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    height: root.has-editor ? 30px : 0px;
+                    visible: root.has-editor;
+                    search-edit := LineEdit {
+                        placeholder-text: @tr("Search (text or ID)...");
+                        text <=> root.search-text;
+                        edited(t) => { root.filter-changed(); }
+                        horizontal-stretch: 1;
+                    }
+                    ComboBox {
+                        model: root.filter-names;
+                        current-index <=> root.filter-index;
+                        selected(v) => { root.filter-changed(); }
+                        width: 190px;
+                    }
+                    Text {
+                        text: root.line-info;
+                        color: Colors.muted;
+                        vertical-alignment: center;
+                        min-width: 90px;
+                    }
+                }
+
+                RowTable {
+                    rows: root.rows;
+                    current: root.current-row;
+                    vertical-stretch: 1;
+                    clicked(i, ctrl, shift) => { root.row-clicked(i, ctrl, shift); }
+                    step(d) => { root.row-step(d); }
+                    sort-column: root.sort-column;
+                    sort-ascending: root.sort-ascending;
+                    sort-clicked(c) => { root.sort-requested(c); }
+                    page(d) => { root.row-page(d); }
+                }
+
+                // horizontal splitter
+                Rectangle {
+                    height: 6px;
+                    TouchArea {
+                        mouse-cursor: ns-resize;
+                        moved => {
+                            root.editor-height = max(150px, min(700px, root.editor-height - (self.mouse-y - self.pressed-y)));
+                        }
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    height: root.editor-height;
+
+                    EqualColumn {
+                        Text { text: root.source-label; font-weight: 700; color: Colors.fore; height: 18px; }
+                        OverlayEditor {
+                            text <=> root.source-text;
+                            overlay: root.source-overlay;
+                            tip: root.source-tip;
+                            has-tip: root.source-has-tip;
+                            read-only: true;
+                            caret-moved(c) => { root.source-caret(c); }
+                        }
+                    }
+                    EqualColumn {
+                        Text { text: root.target-label; font-weight: 700; color: Colors.fore; height: 18px; }
+                        target-editor := OverlayEditor {
+                            text <=> root.target-text;
+                            overlay: root.target-overlay;
+                            tip: root.target-tip;
+                            has-tip: root.target-has-tip;
+                            enabled: root.editor-enabled;
+                            edited(t) => { root.target-edited(t); }
+                            caret-moved(c) => { root.target-caret(c); }
+                        }
+                        if root.issue-text != "": Text {
+                            min-width: 0px;
+                            text: root.issue-text;
+                            color: Colors.issue;
+                            wrap: word-wrap;
+                        }
+                        if root.previous-text != "": HorizontalLayout {
+                            spacing: 6px;
+                            Text {
+                                text: root.previous-text;
+                                color: Colors.muted;
+                                wrap: word-wrap;
+                                horizontal-stretch: 1;
+                                vertical-alignment: center;
+                            }
+                            FlatButton { text: @tr("Restore"); clicked => { root.restore-previous(); } }
+                        }
+                        LineEdit {
+                            min-width: 0px;
+                            placeholder-text: @tr("Comment on this line (kept in the project, not in the game files)...");
+                            text <=> root.comment-text;
+                            enabled: root.editor-enabled;
+                            edited(t) => { root.comment-edited(t); }
+                        }
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    height: 28px;
+                    FlatButton { text: @tr("Accept as is"); enabled: root.editor-enabled; clicked => { root.accept-as-is(); } }
+                    FlatButton { text: @tr("Copy the source"); enabled: root.editor-enabled; clicked => { root.copy-source(); } }
+                    FlatButton { text: @tr("To review"); enabled: root.editor-enabled; checked: root.review-on; clicked => { root.toggle-review(); } }
+                    FlatButton {
+                        text: root.validated-state == 2 ? @tr("Changed since validation") : @tr("Validated");
+                        enabled: root.editor-enabled;
+                        checked: root.validated-state != 0;
+                        clicked => { root.toggle-validated(); }
+                    }
+                    Text {
+                        text: root.info-text;
+                        color: Colors.muted;
+                        vertical-alignment: center;
+                        overflow: elide;
+                        horizontal-stretch: 1;
+                    }
+                    for action[i] in root.info-actions: FlatButton {
+                        text: action.label;
+                        clicked => { root.info-action(i); }
+                    }
+                }
+
+                // bottom dock
+                Rectangle {
+                    height: root.bottom-open ? 6px : 0px;
+                    visible: root.bottom-open;
+                    TouchArea {
+                        mouse-cursor: ns-resize;
+                        moved => {
+                            root.bottom-height = max(120px, min(600px, root.bottom-height - (self.mouse-y - self.pressed-y)));
+                        }
+                    }
+                }
+                Rectangle {
+                    height: root.bottom-open ? root.bottom-height : 0px;
+                    visible: root.bottom-open;
+                    clip: true;
+                    PanelDock {
+                        names: root.panel-names;
+                        visible-panels: root.panel-docked;
+                        bottom-panels: root.panel-bottom;
+                        bottom: true;
+                        current <=> root.bottom-index;
+                        tab-clicked(i) => { root.panel-changed(i); }
+                        closed(i) => { root.toggle-panel(i); }
+                        moved(i) => { root.move-panel(i); }
+                        detached(i) => { root.detach-panel(i); }
+                    }
+                }
+            }
+            }
+
+            // vertical splitter of the dock
+            Rectangle {
+                width: root.dock-open ? 6px : 0px;
+                visible: root.dock-open;
+                TouchArea {
+                    mouse-cursor: ew-resize;
+                    moved => {
+                        root.dock-width = max(280px, min(900px, root.dock-width - (self.mouse-x - self.pressed-x)));
+                    }
+                }
+            }
+
+            Rectangle {
+              preferred-width: root.dock-open ? root.dock-width : 0px;
+              min-width: root.dock-open ? 300px : 0px;
+              max-width: root.dock-open ? 2000px : 0px;
+              horizontal-stretch: 0;
+              visible: root.dock-open;
+              clip: true;
+              PanelDock {
+                names: root.panel-names;
+                visible-panels: root.panel-docked;
+                bottom-panels: root.panel-bottom;
+                bottom: false;
+                current <=> root.panel-index;
+                tab-clicked(i) => { root.panel-changed(i); }
+                closed(i) => { root.toggle-panel(i); }
+                moved(i) => { root.move-panel(i); }
+                detached(i) => { root.detach-panel(i); }
+              }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 12px;
+            height: 18px;
+            Text {
+                text: root.status-text;
+                color: Colors.muted;
+                overflow: elide;
+                horizontal-stretch: 1;
+                min-width: 0px;
+            }
+            Text {
+                text: root.summary-text;
+                color: Colors.muted;
+                overflow: elide;
+                horizontal-alignment: right;
+                horizontal-stretch: 0;
+            }
+            if root.busy: ProgressIndicator {
+                width: 120px;
+                progress: root.progress;
+                indeterminate: root.progress <= 0;
+            }
+        }
+    }
+}

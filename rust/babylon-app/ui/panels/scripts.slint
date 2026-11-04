@@ -1,0 +1,59 @@
+import { LineEdit, CheckBox } from "std-widgets.slint";
+import { Colors, DataTable, TableRow, FlatButton } from "../widgets.slint";
+
+export global ScriptsData {
+    in property <[TableRow]> rows;
+    in property <string> status;
+    in property <bool> can-scan: true;
+    in property <bool> can-apply: false;
+    in-out property <bool> enlarge;
+    in-out property <string> filter;
+    in property <int> current: -1;
+    in-out property <string> translation;
+    in property <string> original;
+    in property <bool> editing;
+    callback scan();
+    callback apply();
+    callback enlarge-toggled();
+    callback filter-changed();
+    callback selected(int);
+    callback translation-edited(string);
+}
+
+export component ScriptsPanel inherits VerticalLayout {
+    padding: 4px;
+    spacing: 4px;
+    HorizontalLayout {
+        spacing: 4px;
+        alignment: start;
+        FlatButton { text: @tr("Scan the scripts"); enabled: ScriptsData.can-scan; clicked => { ScriptsData.scan(); } }
+        FlatButton { text: @tr("Write the translated scripts"); enabled: ScriptsData.can-apply; clicked => { ScriptsData.apply(); } }
+    }
+    CheckBox {
+        text: @tr("Allow longer texts (experimental)");
+        checked <=> ScriptsData.enlarge;
+        toggled => { ScriptsData.enlarge-toggled(); }
+    }
+    LineEdit {
+        placeholder-text: @tr("Filter the texts...");
+        text <=> ScriptsData.filter;
+        edited(t) => { ScriptsData.filter-changed(); }
+    }
+    Text { text: ScriptsData.status; color: Colors.muted; wrap: word-wrap; }
+    DataTable {
+        headers: [@tr("Script"), @tr("Original text"), @tr("Translation"), @tr("Room")];
+        widths: [80px, 220px, 220px, 120px];
+        rows: ScriptsData.rows;
+        current: ScriptsData.current;
+        clicked(i) => { ScriptsData.selected(i); }
+    }
+    if ScriptsData.editing: VerticalLayout {
+        spacing: 2px;
+        Text { text: ScriptsData.original; color: Colors.muted; wrap: word-wrap; }
+        LineEdit {
+            placeholder-text: @tr("Translation");
+            text <=> ScriptsData.translation;
+            edited(t) => { ScriptsData.translation-edited(t); }
+        }
+    }
+}
